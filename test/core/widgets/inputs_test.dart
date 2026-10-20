@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:receipt_maker/core/widgets/inputs/amount_field.dart';
+import 'package:receipt_maker/core/widgets/inputs/app_search_field.dart';
 import 'package:receipt_maker/core/widgets/inputs/date_field.dart';
 import 'package:receipt_maker/core/widgets/inputs/dropdown_field.dart';
+import 'package:receipt_maker/core/widgets/inputs/percent_field.dart';
 
 import '../../helpers/pump_app.dart';
 
@@ -103,5 +105,46 @@ void main() {
     await tester.tap(find.text('Dollar').last);
     await tester.pumpAndSettle();
     expect(chosen, 'USD');
+  });
+
+  group('PercentField', () {
+    testWidgets('reports basis points and shows the initial compactly', (
+      tester,
+    ) async {
+      final values = <int?>[];
+      await tester.pumpApp(
+        PercentField(
+          label: 'Tax',
+          initialBasisPoints: 1500,
+          onChanged: values.add,
+        ),
+      );
+      expect(find.text('15'), findsOneWidget);
+      expect(find.text('%'), findsOneWidget);
+
+      await tester.enterText(find.byType(TextField), '৭.৫');
+      expect(values.last, 750);
+      await tester.enterText(find.byType(TextField), '');
+      expect(values.last, isNull);
+    });
+  });
+
+  group('AppSearchField', () {
+    testWidgets('clear button appears with text and empties the query', (
+      tester,
+    ) async {
+      final queries = <String>[];
+      await tester.pumpApp(
+        AppSearchField(hint: 'Search', onChanged: queries.add),
+      );
+      expect(find.byTooltip('Clear search'), findsNothing);
+
+      await tester.enterText(find.byType(TextField), 'rah');
+      await tester.pump();
+      await tester.tap(find.byTooltip('Clear search'));
+      await tester.pump();
+      expect(queries, ['rah', '']);
+      expect(find.text('rah'), findsNothing);
+    });
   });
 }

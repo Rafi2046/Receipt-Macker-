@@ -69,4 +69,12 @@ void main() {
     expect(MoneyInputParser.clampFraction('12.5', decimalDigits: 2), '12.5');
     expect(MoneyInputParser.clampFraction('12', decimalDigits: 2), '12');
   });
+
+  test('formatCompact drops trailing fraction zeros only', () {
+    expect(MoneyInputParser.formatCompact(1500, decimalDigits: 2), '15');
+    expect(MoneyInputParser.formatCompact(750, decimalDigits: 2), '7.5');
+    expect(MoneyInputParser.formatCompact(1005, decimalDigits: 2), '10.05');
+    expect(MoneyInputParser.formatCompact(10000, decimalDigits: 2), '100');
+    expect(MoneyInputParser.formatCompact(0, decimalDigits: 2), '0');
+  });
 }

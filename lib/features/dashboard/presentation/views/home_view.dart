@@ -15,8 +15,10 @@ import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../core/widgets/layout/section_header.dart';
 import '../../../business_profile/business_profile.dart';
 import '../widgets/business_summary_card.dart';
+import '../widgets/home_link_tile.dart';
 
-/// Temporary home until the dashboard (M7): the business card and what's next.
+/// Temporary home until the dashboard (M7): the business card, links to
+/// clients and items, and what's next.
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});
 
@@ -41,6 +43,7 @@ class HomeView extends ConsumerWidget {
                 actionLabel: l10n.homeEditProfile,
                 onTap: () => context.pushNamed(RouteNames.businessProfile),
               ),
+            const _ListLinks(),
             EmptyState(
               icon: AppIcons.invoice,
               title: l10n.homeComingSoonTitle,
@@ -49,6 +52,35 @@ class HomeView extends ConsumerWidget {
             if (kDebugMode) const _DebugLinks(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ListLinks extends StatelessWidget {
+  const _ListLinks();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.sectionGap),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: AppSpacing.sm,
+        children: [
+          SectionHeader(title: l10n.homeListsSection),
+          HomeLinkTile(
+            icon: AppIcons.client,
+            label: l10n.clientsTitle,
+            onTap: () => context.pushNamed(RouteNames.clients),
+          ),
+          HomeLinkTile(
+            icon: AppIcons.item,
+            label: l10n.itemsTitle,
+            onTap: () => context.pushNamed(RouteNames.items),
+          ),
+        ],
       ),
     );
   }

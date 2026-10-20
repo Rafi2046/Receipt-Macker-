@@ -5,4 +5,5 @@ enum ValidationError {
   invalidEmail,
   invalidPhone,
   invalidUrl,
+  percentTooHigh,
 }

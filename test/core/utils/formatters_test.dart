@@ -65,4 +65,22 @@ void main() {
       expect(AppFormatters('en').currency(1500, 'JPY'), '¥1,500');
     });
   });
+
+  group('percent', () {
+    test('drops trailing zeros', () {
+      final f = AppFormatters('en');
+      expect(f.percent(1500), '15%');
+      expect(f.percent(750), '7.5%');
+      expect(f.percent(1234), '12.34%');
+      expect(f.percent(10000), '100%');
+      expect(f.percent(0), '0%');
+    });
+
+    test('uses Bangla digits in Bangla', () {
+      final f = AppFormatters('bn');
+      expect(f.percent(1500), '১৫%');
+      expect(f.percent(750), '৭.৫%');
+      expect(f.percent(10000), '১০০%');
+    });
+  });
 }

@@ -9,6 +9,9 @@ abstract final class Validators {
   static const int minPhoneDigits = 6;
   static const int maxPhoneDigits = 15;
 
+  /// 100% in basis points.
+  static const int maxBasisPoints = 10000;
+
   static final RegExp _email = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]{2,}$');
   static final RegExp _phoneChars = RegExp(r'^\+?[\d\s\-().]+$');
   static final RegExp _url = RegExp(
@@ -48,4 +51,14 @@ abstract final class Validators {
     if (text.isEmpty) return null;
     return _url.hasMatch(text) ? null : ValidationError.invalidUrl;
   }
+
+  /// A money amount in minor units must be entered (zero is allowed).
+  static ValidationError? requiredAmount(int? minor) =>
+      minor == null ? ValidationError.required : null;
+
+  /// Empty (null) or 0-100%, in basis points.
+  static ValidationError? optionalPercent(int? basisPoints) =>
+      (basisPoints ?? 0) > maxBasisPoints
+      ? ValidationError.percentTooHigh
+      : null;
 }

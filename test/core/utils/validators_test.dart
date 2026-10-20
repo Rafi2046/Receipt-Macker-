@@ -68,4 +68,17 @@ void main() {
     expect(Validators.optionalText('x' * 2000), isNull);
     expect(Validators.optionalText('x' * 2001), ValidationError.tooLong);
   });
+
+  test('requiredAmount accepts zero but not empty', () {
+    expect(Validators.requiredAmount(null), ValidationError.required);
+    expect(Validators.requiredAmount(0), isNull);
+    expect(Validators.requiredAmount(150000), isNull);
+  });
+
+  test('optionalPercent allows empty and 0-100%', () {
+    expect(Validators.optionalPercent(null), isNull);
+    expect(Validators.optionalPercent(0), isNull);
+    expect(Validators.optionalPercent(10000), isNull);
+    expect(Validators.optionalPercent(10001), ValidationError.percentTooHigh);
+  });
 }

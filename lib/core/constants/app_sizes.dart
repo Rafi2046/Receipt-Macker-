@@ -16,4 +16,11 @@ abstract final class AppSizes {
   static const double borderWidth = 1;
   static const double selectedBorderWidth = 2;
   static const double maxContentWidth = 640;
+
+  /// Space under the last list row so the floating button never covers it.
+  static const double fabClearance = 88;
+
+  /// Widest an extended floating button's label may get, as a share of
+  /// the screen width.
+  static const double fabLabelMaxWidthFactor = 0.6;
 }

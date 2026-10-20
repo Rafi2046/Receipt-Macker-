@@ -10,5 +10,6 @@ extension ValidationMessageX on AppLocalizations {
     ValidationError.invalidEmail => validationEmail,
     ValidationError.invalidPhone => validationPhone,
     ValidationError.invalidUrl => validationUrl,
+    ValidationError.percentTooHigh => validationPercent,
   };
 }

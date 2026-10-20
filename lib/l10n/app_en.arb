@@ -147,9 +147,82 @@
   "sectionBusinessDetails": "Business details",
   "sectionInvoiceDefaults": "Invoice defaults",
   "discardChangesTitle": "Discard changes?",
-  "discardChangesMessage": "Your edits to the business profile won't be saved.",
+  "discardChangesMessage": "Your changes won't be saved.",
   "homeEditProfile": "Edit business profile",
   "homeComingSoonTitle": "Invoices are coming next",
-  "homeComingSoonBody": "Your business profile is ready. Clients, items and invoices arrive in the next updates.",
-  "debugTools": "Developer tools"
+  "homeComingSoonBody": "Your business profile is ready. Invoices arrive in the next update.",
+  "debugTools": "Developer tools",
+  "percentSymbol": "%",
+  "clearSearch": "Clear search",
+  "validationPercent": "Enter 100% or less",
+  "searchNoResultsTitle": "No matches",
+  "searchNoResultsBody": "Nothing matches \"{query}\". Check the spelling or try fewer letters.",
+  "@searchNoResultsBody": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "homeListsSection": "Your lists",
+  "clientsTitle": "Clients",
+  "clientNewTitle": "New client",
+  "clientEditTitle": "Edit client",
+  "clientAdd": "Add client",
+  "clientsEmptyTitle": "No clients yet",
+  "clientsEmptyBody": "Save the people and businesses you bill, so each invoice takes seconds.",
+  "clientsEmptyAction": "Add your first client",
+  "clientsSearchHint": "Search by name, phone or email",
+  "fieldClientName": "Client name",
+  "fieldClientNameHint": "Person or business",
+  "fieldNotes": "Notes",
+  "fieldNotesHint": "Only for you, not printed on invoices",
+  "clientSaved": "Client saved",
+  "clientDeleted": "Client deleted",
+  "clientDeleteTitle": "Delete this client?",
+  "clientDeleteMessage": "\"{name}\" will be removed from your clients. This can't be undone.",
+  "@clientDeleteMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "itemsTitle": "Items",
+  "itemNewTitle": "New item",
+  "itemEditTitle": "Edit item",
+  "itemAdd": "Add item",
+  "itemsEmptyTitle": "No items yet",
+  "itemsEmptyBody": "Save the products and services you sell, then add them to invoices with one tap.",
+  "itemsEmptyAction": "Add your first item",
+  "itemsSearchHint": "Search items",
+  "fieldItemName": "Name",
+  "fieldItemNameHint": "e.g. Logo design",
+  "fieldDescription": "Description",
+  "fieldUnit": "Unit",
+  "fieldUnitHint": "pcs, hour, kg…",
+  "fieldUnitPrice": "Unit price",
+  "fieldCurrency": "Currency",
+  "fieldDefaultTax": "Default tax",
+  "fieldDefaultTaxHint": "Leave empty for no tax",
+  "itemSaved": "Item saved",
+  "itemDeleted": "Item deleted",
+  "itemDeleteTitle": "Delete this item?",
+  "itemDeleteMessage": "\"{name}\" will be removed from your items. This can't be undone.",
+  "@itemDeleteMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "itemTaxLabel": "Tax {rate}",
+  "@itemTaxLabel": {
+    "placeholders": {
+      "rate": {
+        "type": "String",
+        "example": "15%"
+      }
+    }
+  }
 }

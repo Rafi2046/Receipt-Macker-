@@ -3,9 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/business_profile/presentation/views/business_profile_view.dart';
+import '../../features/clients/presentation/views/client_editor_view.dart';
+import '../../features/clients/presentation/views/client_list_view.dart';
 import '../../features/dashboard/presentation/views/home_view.dart';
 import '../../features/debug/presentation/views/theme_preview_view.dart';
 import '../../features/debug/presentation/views/widget_gallery_view.dart';
+import '../../features/items/presentation/views/item_editor_view.dart';
+import '../../features/items/presentation/views/item_list_view.dart';
 import '../../features/onboarding/presentation/views/onboarding_view.dart';
 import '../../features/onboarding/providers.dart';
 import 'route_names.dart';
@@ -45,10 +49,51 @@ GoRouter appRouter(Ref ref) {
         path: RouteNames.businessProfilePath,
         builder: (_, _) => const BusinessProfileView(),
       ),
+      _clientRoutes,
+      _itemRoutes,
       if (kDebugMode) ..._debugRoutes,
     ],
   );
 }
+
+// "new" is listed before ":id" so it never matches as an id.
+final GoRoute _clientRoutes = GoRoute(
+  name: RouteNames.clients,
+  path: RouteNames.clientsPath,
+  builder: (_, _) => const ClientListView(),
+  routes: [
+    GoRoute(
+      name: RouteNames.clientNew,
+      path: RouteNames.clientNewPath,
+      builder: (_, _) => const ClientEditorView(),
+    ),
+    GoRoute(
+      name: RouteNames.clientEdit,
+      path: RouteNames.clientEditPath,
+      builder: (_, state) =>
+          ClientEditorView(clientId: state.pathParameters[RouteNames.idParam]),
+    ),
+  ],
+);
+
+final GoRoute _itemRoutes = GoRoute(
+  name: RouteNames.items,
+  path: RouteNames.itemsPath,
+  builder: (_, _) => const ItemListView(),
+  routes: [
+    GoRoute(
+      name: RouteNames.itemNew,
+      path: RouteNames.itemNewPath,
+      builder: (_, _) => const ItemEditorView(),
+    ),
+    GoRoute(
+      name: RouteNames.itemEdit,
+      path: RouteNames.itemEditPath,
+      builder: (_, state) =>
+          ItemEditorView(itemId: state.pathParameters[RouteNames.idParam]),
+    ),
+  ],
+);
 
 final List<GoRoute> _debugRoutes = [
   GoRoute(

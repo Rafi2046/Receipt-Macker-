@@ -1,5 +1,7 @@
 import 'package:intl/intl.dart';
 
+import 'money_input_parser.dart';
+
 /// Locale-aware number and date formatting.
 ///
 /// Bangla (`bn`) output uses Bangla digits (০-৯) and Indian grouping (১২,৩৪,৫৬৭);
@@ -38,6 +40,22 @@ class AppFormatters {
     final digits = currencyDecimalDigits(currencyCode);
     return '${currencySymbol(currencyCode)}${minorUnits(minor, decimalDigits: digits)}';
   }
+
+  /// Percentage from basis points without trailing zeros, e.g. 1500 gives
+  /// `15%` and 750 gives `7.5%` (`৭.৫%` in Bangla).
+  String percent(int basisPoints) {
+    final fixed = minorUnits(basisPoints, decimalDigits: percentDecimalDigits);
+    final symbols = _integer.symbols;
+    final text = MoneyInputParser.trimFraction(
+      fixed,
+      _zeroDigit,
+      symbols.DECIMAL_SEP,
+    );
+    return '$text${symbols.PERCENT}';
+  }
+
+  /// Basis points carry two decimals of a percent.
+  static const int percentDecimalDigits = 2;
 
   /// ISO 4217 minor-unit digits: 2 for BDT/USD, 0 for JPY.
   static int currencyDecimalDigits(String currencyCode) =>

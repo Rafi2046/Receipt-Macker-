@@ -33,6 +33,23 @@ abstract final class MoneyInputParser {
     return '$sign$whole.${digits.substring(split)}';
   }
 
+  /// Like [format] without trailing fraction zeros: `1500` with 2 decimals
+  /// gives `"15"`, `750` gives `"7.5"`. Used for percentages.
+  static String formatCompact(int minor, {required int decimalDigits}) =>
+      trimFraction(format(minor, decimalDigits: decimalDigits), '0', '.');
+
+  /// Strips trailing [zero]s after [separator], then a bare [separator].
+  static String trimFraction(String text, String zero, String separator) {
+    if (!text.contains(separator)) return text;
+    var out = text;
+    while (out.endsWith(zero)) {
+      out = out.substring(0, out.length - zero.length);
+    }
+    return out.endsWith(separator)
+        ? out.substring(0, out.length - separator.length)
+        : out;
+  }
+
   /// Drops fraction digits beyond [decimalDigits] (and the `.` when 0),
   /// used when the currency changes under typed text.
   static String clampFraction(String text, {required int decimalDigits}) {

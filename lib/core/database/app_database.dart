@@ -7,7 +7,11 @@ import 'package:path_provider/path_provider.dart';
 import '../constants/app_constants.dart';
 import 'app_database.steps.dart';
 import 'daos/business_profile_dao.dart';
+import 'daos/client_dao.dart';
+import 'daos/item_dao.dart';
 import 'tables/business_profiles_table.dart';
+import 'tables/clients_table.dart';
+import 'tables/items_table.dart';
 
 part 'app_database.g.dart';
 
@@ -15,7 +19,10 @@ part 'app_database.g.dart';
 ///
 /// Every schema change: bump [schemaVersion], add a step in [migration],
 /// add a migration test.
-@DriftDatabase(tables: [BusinessProfilesTable], daos: [BusinessProfileDao])
+@DriftDatabase(
+  tables: [BusinessProfilesTable, ClientsTable, ItemsTable],
+  daos: [BusinessProfileDao, ClientDao, ItemDao],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
@@ -31,7 +38,7 @@ class AppDatabase extends _$AppDatabase {
   );
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -39,6 +46,10 @@ class AppDatabase extends _$AppDatabase {
     onUpgrade: stepByStep(
       from1To2: (m, schema) async {
         await m.createTable(schema.businessProfiles);
+      },
+      from2To3: (m, schema) async {
+        await m.createTable(schema.clients);
+        await m.createTable(schema.items);
       },
     ),
     beforeOpen: (details) async {

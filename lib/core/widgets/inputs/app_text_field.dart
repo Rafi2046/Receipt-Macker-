@@ -18,6 +18,8 @@ class AppTextField extends StatefulWidget {
     this.inputFormatters,
     this.prefixIcon,
     this.prefixText,
+    this.suffixText,
+    this.suffixIcon,
     this.maxLines = 1,
     this.enabled = true,
     this.autofillHints,
@@ -36,6 +38,10 @@ class AppTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final IconData? prefixIcon;
   final String? prefixText;
+  final String? suffixText;
+
+  /// Trailing widget, e.g. a clear button.
+  final Widget? suffixIcon;
   final int maxLines;
   final bool enabled;
   final Iterable<String>? autofillHints;
@@ -79,6 +85,8 @@ class _AppTextFieldState extends State<AppTextField> {
         errorMaxLines: 3,
         prefixIcon: icon == null ? null : Icon(icon),
         prefixText: widget.prefixText,
+        suffixText: widget.suffixText,
+        suffixIcon: widget.suffixIcon,
       ),
     );
   }

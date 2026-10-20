@@ -7,6 +7,25 @@ abstract final class RouteNames {
   static const String businessProfile = 'businessProfile';
   static const String businessProfilePath = '/business-profile';
 
+  /// Path parameter holding a record id, e.g. `/clients/:id`.
+  static const String idParam = 'id';
+  static const String _newPath = 'new';
+  static const String _editPath = ':$idParam';
+
+  static const String clients = 'clients';
+  static const String clientsPath = '/clients';
+  static const String clientNew = 'clientNew';
+  static const String clientNewPath = _newPath;
+  static const String clientEdit = 'clientEdit';
+  static const String clientEditPath = _editPath;
+
+  static const String items = 'items';
+  static const String itemsPath = '/items';
+  static const String itemNew = 'itemNew';
+  static const String itemNewPath = _newPath;
+  static const String itemEdit = 'itemEdit';
+  static const String itemEditPath = _editPath;
+
   // Debug builds only.
   static const String themePreview = 'themePreview';
   static const String themePreviewPath = '/debug/theme';
