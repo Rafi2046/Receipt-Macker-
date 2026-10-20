@@ -21,6 +21,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.success,
     required this.warning,
     required this.danger,
+    required this.onDanger,
     required this.info,
     required this.neutral,
   });
@@ -39,6 +40,7 @@ class AppColors extends ThemeExtension<AppColors> {
     success: Color(0xFF15803D),
     warning: Color(0xFFB45309),
     danger: Color(0xFFB91C1C),
+    onDanger: Color(0xFFFFFFFF),
     info: Color(0xFF1D4ED8),
     neutral: Color(0xFF475569),
   );
@@ -57,6 +59,7 @@ class AppColors extends ThemeExtension<AppColors> {
     success: Color(0xFF4ADE80),
     warning: Color(0xFFFBBF24),
     danger: Color(0xFFF87171),
+    onDanger: Color(0xFF2A0707),
     info: Color(0xFF60A5FA),
     neutral: Color(0xFF94A3B8),
   );
@@ -64,7 +67,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color primary, onPrimary, secondary, onSecondary;
   final Color background, surface, surfaceAlt, border;
   final Color textPrimary, textSecondary;
-  final Color success, warning, danger, info, neutral;
+  final Color success, warning, danger, onDanger, info, neutral;
 
   @override
   AppColors copyWith({
@@ -81,6 +84,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? success,
     Color? warning,
     Color? danger,
+    Color? onDanger,
     Color? info,
     Color? neutral,
   }) => AppColors(
@@ -97,6 +101,7 @@ class AppColors extends ThemeExtension<AppColors> {
     success: success ?? this.success,
     warning: warning ?? this.warning,
     danger: danger ?? this.danger,
+    onDanger: onDanger ?? this.onDanger,
     info: info ?? this.info,
     neutral: neutral ?? this.neutral,
   );
@@ -119,6 +124,7 @@ class AppColors extends ThemeExtension<AppColors> {
       success: mix(success, other.success),
       warning: mix(warning, other.warning),
       danger: mix(danger, other.danger),
+      onDanger: mix(onDanger, other.onDanger),
       info: mix(info, other.info),
       neutral: mix(neutral, other.neutral),
     );

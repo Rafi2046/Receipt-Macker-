@@ -30,6 +30,9 @@ abstract final class AppTheme {
       bodyColor: c.textPrimary,
       displayColor: c.textPrimary,
     );
+    final label = textTheme.labelLarge;
+    const buttonSize = Size(AppSizes.minTapTarget, AppSizes.buttonHeight);
+    const buttonShape = RoundedRectangleBorder(borderRadius: AppRadius.input);
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
@@ -74,11 +77,44 @@ abstract final class AppTheme {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          minimumSize: const Size.fromHeight(AppSizes.buttonHeight),
-          shape: const RoundedRectangleBorder(borderRadius: AppRadius.input),
-          textStyle: textTheme.labelLarge,
+          minimumSize: buttonSize,
+          shape: buttonShape,
+          textStyle: label,
         ),
       ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          minimumSize: buttonSize,
+          shape: buttonShape,
+          textStyle: label,
+          foregroundColor: c.primary,
+          side: BorderSide(color: c.border),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          minimumSize: buttonSize,
+          shape: buttonShape,
+          textStyle: label,
+          foregroundColor: c.primary,
+        ),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        shape: const RoundedRectangleBorder(borderRadius: AppRadius.input),
+        contentTextStyle: textTheme.bodyMedium?.copyWith(
+          color: scheme.onInverseSurface,
+        ),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: c.surface,
+        shape: const RoundedRectangleBorder(borderRadius: AppRadius.card),
+        titleTextStyle: textTheme.titleMedium,
+        contentTextStyle: textTheme.bodyMedium?.copyWith(
+          color: c.textSecondary,
+        ),
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(color: c.primary),
     );
   }
 }

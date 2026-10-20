@@ -19,4 +19,14 @@ abstract final class AppIcons {
   static const IconData themeLight = Icons.light_mode_outlined;
   static const IconData themeDark = Icons.dark_mode_outlined;
   static const IconData themeSystem = Icons.brightness_auto_outlined;
+  static const IconData date = Icons.calendar_today_outlined;
+  static const IconData dropdown = Icons.expand_more;
+  static const IconData chevronRight = Icons.chevron_right;
+  static const IconData close = Icons.close;
+  static const IconData retry = Icons.refresh;
+  static const IconData error = Icons.error_outline;
+  static const IconData success = Icons.check_circle_outline;
+  static const IconData info = Icons.info_outline;
+  static const IconData warning = Icons.warning_amber_outlined;
+  static const IconData widgets = Icons.widgets_outlined;
 }

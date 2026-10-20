@@ -14,6 +14,9 @@ abstract final class AppConstants {
   static const int defaultDueDays = 7;
   static const List<int> dueDayPresets = [0, 7, 15, 30];
 
+  static const int minPickerYear = 2000;
+  static const int maxPickerYear = 2100;
+
   // Interstitial caps (section 9.2).
   static const bool interstitialSkipFirstDay = true;
   static const int interstitialEveryNExports = 5;
