@@ -20,6 +20,11 @@ final class ValidationFailure extends Failure {
   final String field;
 }
 
+/// Making, printing or saving a PDF failed.
+final class PdfFailure extends Failure {
+  const PdfFailure({super.cause, super.stackTrace});
+}
+
 final class NotFoundFailure extends Failure {
   const NotFoundFailure({super.cause});
 }

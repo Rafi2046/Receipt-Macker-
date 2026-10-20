@@ -7,6 +7,7 @@ extension FailureMessageX on AppLocalizations {
     DatabaseFailure() => errorDatabase,
     StorageFailure() => errorStorage,
     NotFoundFailure() => errorNotFound,
+    PdfFailure() => errorPdf,
     ValidationFailure() => errorValidation,
     _ => errorGeneric,
   };

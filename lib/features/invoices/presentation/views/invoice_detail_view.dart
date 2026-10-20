@@ -69,6 +69,11 @@ class InvoiceDetailView extends ConsumerWidget {
     }
   }
 
+  void _openPdf(BuildContext context) => context.pushNamed(
+    RouteNames.invoicePdf,
+    pathParameters: {RouteNames.idParam: invoiceId},
+  );
+
   static void _report(BuildContext context, Result<void> result, String ok) {
     switch (result) {
       case Ok():
@@ -92,6 +97,11 @@ class InvoiceDetailView extends ConsumerWidget {
       title: l10n.invoicesTitle,
       actions: [
         if (state != null) ...[
+          AppIconButton(
+            icon: AppIcons.share,
+            semanticLabel: l10n.previewAndShare,
+            onPressed: () => _openPdf(context),
+          ),
           AppIconButton(
             icon: AppIcons.edit,
             semanticLabel: l10n.edit,
@@ -120,7 +130,8 @@ class InvoiceDetailView extends ConsumerWidget {
         ],
       ],
       body: async.when(
-        data: (s) => InvoiceDetailBody(state: s),
+        data: (s) =>
+            InvoiceDetailBody(state: s, onPreview: () => _openPdf(context)),
         loading: () => const LoadingView(),
         error: (e, _) => ErrorView.fromError(
           e,

@@ -7,6 +7,7 @@ class FakeAppPreferences implements AppPreferences {
     this.languageCode = 'en',
     this.themeName,
     this.defaultCurrency,
+    this.pdfTemplate,
   });
 
   @override
@@ -33,4 +34,10 @@ class FakeAppPreferences implements AppPreferences {
 
   @override
   Future<void> setDefaultCurrency(String code) async => defaultCurrency = code;
+
+  @override
+  String? pdfTemplate;
+
+  @override
+  Future<void> setPdfTemplate(String id) async => pdfTemplate = id;
 }

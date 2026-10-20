@@ -38,4 +38,6 @@ abstract final class AppIcons {
   static const IconData back = Icons.arrow_back;
   static const IconData forward = Icons.arrow_forward;
   static const IconData check = Icons.check;
+  static const IconData pdf = Icons.picture_as_pdf_outlined;
+  static const IconData download = Icons.download_outlined;
 }

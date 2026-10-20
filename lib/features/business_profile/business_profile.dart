@@ -3,6 +3,7 @@
 library;
 
 export 'domain/models/business_profile.dart';
+export 'domain/repositories/business_profile_repository.dart';
 export 'presentation/view_models/profile_form_state.dart';
 export 'presentation/view_models/profile_form_view_model.dart';
 export 'presentation/widgets/profile_details_fields.dart';

@@ -13,11 +13,12 @@ class SharedAppPreferences implements AppPreferences {
   static const String _language = 'language_code';
   static const String _theme = 'theme_name';
   static const String _currency = 'default_currency';
+  static const String _pdfTemplate = 'pdf_template';
 
   static Future<SharedAppPreferences> create() async => SharedAppPreferences._(
     await SharedPreferencesWithCache.create(
       cacheOptions: const SharedPreferencesWithCacheOptions(
-        allowList: {_onboarding, _language, _theme, _currency},
+        allowList: {_onboarding, _language, _theme, _currency, _pdfTemplate},
       ),
     ),
   );
@@ -48,4 +49,10 @@ class SharedAppPreferences implements AppPreferences {
   @override
   Future<void> setDefaultCurrency(String code) =>
       _prefs.setString(_currency, code);
+
+  @override
+  String? get pdfTemplate => _prefs.getString(_pdfTemplate);
+
+  @override
+  Future<void> setPdfTemplate(String id) => _prefs.setString(_pdfTemplate, id);
 }

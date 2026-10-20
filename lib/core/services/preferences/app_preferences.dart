@@ -15,4 +15,8 @@ abstract interface class AppPreferences {
   /// ISO 4217 code; null means the app default.
   String? get defaultCurrency;
   Future<void> setDefaultCurrency(String code);
+
+  /// Id of the last PDF template used; null means the default.
+  String? get pdfTemplate;
+  Future<void> setPdfTemplate(String id);
 }

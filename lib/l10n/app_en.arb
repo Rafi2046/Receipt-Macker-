@@ -353,5 +353,65 @@
       }
     }
   },
-  "lineTotal": "Line total"
+  "lineTotal": "Line total",
+  "errorPdf": "Couldn't make the PDF. Try again, or use Print and choose \"Save as PDF\".",
+  "pdfInvoiceTitle": "Invoice",
+  "pdfColItem": "Item",
+  "pdfColQty": "Qty",
+  "pdfColPrice": "Price",
+  "pdfColAmount": "Amount",
+  "pdfTaxId": "VAT/BIN: {id}",
+  "@pdfTaxId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfLineDiscount": "Less {value}",
+  "@pdfLineDiscount": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfSignature": "Authorized signature",
+  "pdfPageOf": "Page {page} of {pages}",
+  "@pdfPageOf": {
+    "placeholders": {
+      "page": {
+        "type": "String"
+      },
+      "pages": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfPreviewTitle": "Preview",
+  "previewAndShare": "Preview & share",
+  "pdfTemplateLabel": "Design",
+  "templateClassic": "Classic",
+  "templateModern": "Modern",
+  "templateMinimal": "Minimal",
+  "pdfLanguageLabel": "PDF language",
+  "share": "Share",
+  "print": "Print",
+  "saveToDevice": "Save",
+  "pdfSaved": "PDF saved",
+  "pdfMaking": "Making the PDF…",
+  "openPrintDialog": "Open print dialog",
+  "markSentPrompt": "Shared. Mark this invoice as sent?",
+  "shareSubject": "Invoice {number} from {business}",
+  "@shareSubject": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "business": {
+        "type": "String"
+      }
+    }
+  },
+  "debugAddSamples": "Add sample invoices"
 }

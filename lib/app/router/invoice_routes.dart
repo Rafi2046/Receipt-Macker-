@@ -3,10 +3,12 @@ import 'package:go_router/go_router.dart';
 import '../../features/invoices/presentation/views/invoice_detail_view.dart';
 import '../../features/invoices/presentation/views/invoice_editor_view.dart';
 import '../../features/invoices/presentation/views/invoice_list_view.dart';
+import '../../features/invoices/presentation/views/invoice_pdf_view.dart';
 import 'route_names.dart';
 
 /// `/invoices` (list), `/invoices/new?copyOf=` (editor, optionally a copy),
-/// `/invoices/:id` (detail) and `/invoices/:id/edit` (editor).
+/// `/invoices/:id` (detail), `/invoices/:id/edit` (editor) and
+/// `/invoices/:id/pdf` (PDF preview).
 /// "new" is listed before ":id" so it never matches as an id.
 final GoRoute invoiceRoutes = GoRoute(
   name: RouteNames.invoices,
@@ -32,6 +34,13 @@ final GoRoute invoiceRoutes = GoRoute(
           path: RouteNames.invoiceEditPath,
           builder: (_, state) => InvoiceEditorView(
             invoiceId: state.pathParameters[RouteNames.idParam],
+          ),
+        ),
+        GoRoute(
+          name: RouteNames.invoicePdf,
+          path: RouteNames.invoicePdfPath,
+          builder: (_, state) => InvoicePdfView(
+            invoiceId: state.pathParameters[RouteNames.idParam] ?? '',
           ),
         ),
       ],
