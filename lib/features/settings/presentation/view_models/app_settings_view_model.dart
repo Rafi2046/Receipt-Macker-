@@ -1,7 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/models/app_language.dart';
-import '../../domain/models/app_palette_id.dart';
 import '../../domain/models/app_theme_preference.dart';
 import 'app_settings_state.dart';
 
@@ -18,7 +17,4 @@ class AppSettingsViewModel extends _$AppSettingsViewModel {
 
   void setLanguage(AppLanguage language) =>
       state = state.copyWith(language: language);
-
-  void setPalette(AppPaletteId palette) =>
-      state = state.copyWith(palette: palette);
 }

@@ -6,7 +6,6 @@ abstract final class AppSizes {
   static const double avatarMd = 40;
   static const double swatch = 56;
   static const double swatchWidth = 96;
-  static const double paletteDot = 16;
   static const double borderWidth = 1;
   static const double maxContentWidth = 640;
 }

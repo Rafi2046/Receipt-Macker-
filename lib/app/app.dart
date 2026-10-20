@@ -6,7 +6,6 @@ import '../features/settings/domain/models/app_theme_preference.dart';
 import '../features/settings/presentation/view_models/app_settings_view_model.dart';
 import '../l10n/gen/app_localizations.dart';
 import 'router/app_router.dart';
-import 'theme/app_palette.dart';
 import 'theme/app_theme.dart';
 
 class App extends ConsumerWidget {
@@ -15,12 +14,11 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(appSettingsViewModelProvider);
-    final palette = AppPalette.of(settings.palette);
     return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(palette),
-      darkTheme: AppTheme.dark(palette),
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
       themeMode: switch (settings.theme) {
         AppThemePreference.system => ThemeMode.system,
         AppThemePreference.light => ThemeMode.light,

@@ -8,13 +8,12 @@ import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../settings/presentation/view_models/app_settings_view_model.dart';
 import '../widgets/color_swatch_grid.dart';
 import '../widgets/numbers_sample.dart';
-import '../widgets/palette_picker.dart';
 import '../widgets/preferences_panel.dart';
 import '../widgets/preview_section.dart';
 import '../widgets/status_label_row.dart';
 import '../widgets/typography_sample.dart';
 
-/// M0 debug screen: palettes, tokens, light/dark and EN/BN at a glance.
+/// Debug screen: tokens, light/dark and EN/BN at a glance.
 class ThemePreviewView extends ConsumerWidget {
   const ThemePreviewView({super.key});
 
@@ -38,13 +37,6 @@ class ThemePreviewView extends ConsumerWidget {
                 onThemeChanged: vm.setTheme,
               ),
               const SizedBox(height: AppSpacing.sectionGap),
-              PreviewSection(
-                title: l10n.paletteSectionTitle,
-                child: PalettePicker(
-                  selected: settings.palette,
-                  onSelected: vm.setPalette,
-                ),
-              ),
               PreviewSection(
                 title: l10n.colorsSectionTitle,
                 child: const ColorSwatchGrid(),

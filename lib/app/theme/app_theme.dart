@@ -4,15 +4,12 @@ import '../../core/constants/app_radius.dart';
 import '../../core/constants/app_sizes.dart';
 import '../../core/constants/app_text_styles.dart';
 import 'app_colors.dart';
-import 'app_palette.dart';
 
 /// Builds ThemeData for light and dark from the semantic tokens.
 abstract final class AppTheme {
-  static ThemeData light(AppPalette palette) =>
-      _build(AppColors.light(palette), Brightness.light);
+  static ThemeData light() => _build(AppColors.light(), Brightness.light);
 
-  static ThemeData dark(AppPalette palette) =>
-      _build(AppColors.dark(palette), Brightness.dark);
+  static ThemeData dark() => _build(AppColors.dark(), Brightness.dark);
 
   static ThemeData _build(AppColors c, Brightness brightness) {
     final scheme = ColorScheme.fromSeed(

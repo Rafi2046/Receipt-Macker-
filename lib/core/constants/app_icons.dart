@@ -19,5 +19,4 @@ abstract final class AppIcons {
   static const IconData themeLight = Icons.light_mode_outlined;
   static const IconData themeDark = Icons.dark_mode_outlined;
   static const IconData themeSystem = Icons.brightness_auto_outlined;
-  static const IconData palette = Icons.palette_outlined;
 }

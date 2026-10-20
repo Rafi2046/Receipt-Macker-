@@ -14,7 +14,7 @@
 | Package id | `com.rafi.[appname]` (permanent once published) |
 | Developer / publisher | IRR Dev Labs |
 | Support email | irrdevlabs.support@gmail.com |
-| Brand colors | `[PRIMARY_HEX]`, `[SECONDARY_HEX]` (or let Claude propose 2–3 palettes) |
+| Brand colors | Bottle green & gold (decided M0). Light: primary `#006A4E`, secondary `#E0A100`. Dark: primary `#4CC9A0`, secondary `#F5C542`. Source of truth: `app/theme/app_colors.dart` |
 | Logo / app icon | `[path or "Claude proposes"]` |
 | Languages | English + Bangla (from day one) |
 | Default currency | BDT (৳), user can change; every currency supported |
@@ -70,8 +70,8 @@ Use these unless the owner approves a change. Use the latest stable versions tha
 | Immutable models | `freezed`, `json_serializable` |
 | Local database | `drift` (SQLite) + `sqlite3_flutter_libs` |
 | Navigation | `go_router` |
-| PDF | Decide in the Phase 0 spike (see 2.1) |
-| Printing / preview | `printing` (if compatible with the chosen PDF library) |
+| PDF | HTML/CSS templates printed to PDF by the Android System WebView through our own native bridge (decided M0, see 2.1). No Dart PDF library for generation |
+| Printing / preview | `printing` for raster preview, print and share only. Never `Printing.convertHtml` (deprecated, hangs on Android 14) |
 | Share | `share_plus` |
 | Images (logo, signature) | `image_picker`, `signature` |
 | Files | `path_provider`, `file_picker` (restore) |
@@ -90,6 +90,8 @@ Bangla is a complex script (conjuncts like ক্ষ, ন্দ্র). Some Dar
 2. Open it on a phone and in a desktop viewer. Show the owner screenshots.
 3. Check each library's license for commercial use.
 4. Recommend one library with reasons. Wait for approval.
+
+**Result (M0, approved by owner):** `pdf` and `syncfusion_flutter_pdf` both break Bangla (no Indic shaping). Chosen: HTML → PDF via an attached, invisible Android WebView (`createPrintDocumentAdapter`), ~100 lines of Kotlin/Java owned by us. Fonts (Noto Sans + Noto Sans Bengali) are embedded in the HTML. The bridge uses a class in the `android.print` package to reach package-private callbacks: re-test it on the oldest and newest supported API level in M5 and keep the system print dialog as a fallback. Details and screenshots: `spikes/pdf_spike/SPIKE_REPORT.md`.
 
 ---
 
