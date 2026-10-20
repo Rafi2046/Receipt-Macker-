@@ -14,6 +14,7 @@ import '../../../../core/widgets/feedback/loading_view.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../core/widgets/layout/section_header.dart';
 import '../../../business_profile/business_profile.dart';
+import '../../../debug/presentation/view_models/sample_data_view_model.dart';
 import '../widgets/business_summary_card.dart';
 import '../widgets/home_link_tile.dart';
 
@@ -91,6 +92,19 @@ class _ListLinks extends StatelessWidget {
   }
 }
 
+class _SampleDataButton extends ConsumerWidget {
+  const _SampleDataButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => AppButton(
+    label: context.l10n.debugAddSamples,
+    variant: AppButtonVariant.secondary,
+    isLoading: ref.watch(sampleDataViewModelProvider),
+    onPressed: () =>
+        ref.read(sampleDataViewModelProvider.notifier).addSampleInvoices(),
+  );
+}
+
 class _DebugLinks extends StatelessWidget {
   const _DebugLinks();
 
@@ -112,6 +126,7 @@ class _DebugLinks extends StatelessWidget {
           variant: AppButtonVariant.secondary,
           onPressed: () => context.pushNamed(RouteNames.widgetGallery),
         ),
+        const _SampleDataButton(),
       ],
     );
   }
