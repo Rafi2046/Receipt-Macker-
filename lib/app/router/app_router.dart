@@ -7,6 +7,7 @@ import '../../features/clients/presentation/views/client_editor_view.dart';
 import '../../features/clients/presentation/views/client_list_view.dart';
 import '../../features/dashboard/presentation/views/home_view.dart';
 import '../../features/dashboard/presentation/views/more_view.dart';
+import '../../features/debug/presentation/views/design_directions_view.dart';
 import '../../features/debug/presentation/views/theme_preview_view.dart';
 import '../../features/debug/presentation/views/widget_gallery_view.dart';
 import '../../features/items/presentation/views/item_editor_view.dart';
@@ -128,5 +129,10 @@ final List<GoRoute> _debugRoutes = [
     name: RouteNames.widgetGallery,
     path: RouteNames.widgetGalleryPath,
     builder: (_, _) => const WidgetGalleryView(),
+  ),
+  GoRoute(
+    name: RouteNames.designDirections,
+    path: RouteNames.designDirectionsPath,
+    builder: (_, _) => const DesignDirectionsView(),
   ),
 ];

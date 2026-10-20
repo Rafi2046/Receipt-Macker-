@@ -49,6 +49,12 @@ class MoreView extends ConsumerWidget {
             const SizedBox(height: AppSpacing.sm),
             HomeLinkTile(
               icon: AppIcons.widgets,
+              label: l10n.designDirectionsTitle,
+              onTap: () => context.pushNamed(RouteNames.designDirections),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            HomeLinkTile(
+              icon: AppIcons.widgets,
               label: l10n.galleryTitle,
               onTap: () => context.pushNamed(RouteNames.widgetGallery),
             ),
