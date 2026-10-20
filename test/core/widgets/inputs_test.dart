@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:receipt_maker/core/widgets/inputs/amount_field.dart';
 import 'package:receipt_maker/core/widgets/inputs/app_search_field.dart';
+import 'package:receipt_maker/core/widgets/inputs/app_text_field.dart';
 import 'package:receipt_maker/core/widgets/inputs/date_field.dart';
 import 'package:receipt_maker/core/widgets/inputs/decimal_field.dart';
 import 'package:receipt_maker/core/widgets/inputs/dropdown_field.dart';
@@ -175,4 +176,58 @@ void main() {
       expect(find.text('7.5'), findsOneWidget);
     });
   });
+
+  testWidgets('a new error line scrolls above the save bar', (tester) async {
+    final host = GlobalKey<_ErrorHostState>();
+    await tester.pumpApp(_ErrorHost(key: host), surface: const Size(400, 400));
+    final before = host.currentState!.offset;
+
+    host.currentState!.showError();
+    await tester.pumpAndSettle();
+
+    final error = tester.getRect(find.text('Required'));
+    final save = tester.getRect(find.text('Save'));
+    expect(error.bottom, lessThanOrEqualTo(save.top));
+    expect(host.currentState!.offset, greaterThan(before));
+  });
+}
+
+class _ErrorHost extends StatefulWidget {
+  const _ErrorHost({super.key});
+
+  @override
+  State<_ErrorHost> createState() => _ErrorHostState();
+}
+
+class _ErrorHostState extends State<_ErrorHost> {
+  final ScrollController _controller = ScrollController();
+  String? _error;
+
+  double get offset => _controller.offset;
+
+  void showError() => setState(() => _error = 'Required');
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(
+            controller: _controller,
+            children: [
+              const SizedBox(height: 280),
+              AppTextField(label: 'Note', errorText: _error),
+            ],
+          ),
+        ),
+        const SizedBox(height: 64, child: Center(child: Text('Save'))),
+      ],
+    );
+  }
 }

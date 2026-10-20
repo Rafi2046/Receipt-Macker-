@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'reveal_on_error.dart';
+
 /// Labelled text input. Owns its controller unless one is passed in;
 /// [initialValue] is used only for the first build.
 /// Validation lives in the ViewModel; pass the result as [errorText].
@@ -66,27 +68,30 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   Widget build(BuildContext context) {
     final icon = widget.prefixIcon;
-    return TextField(
-      controller: _controller,
-      onChanged: widget.onChanged,
-      keyboardType: widget.keyboardType,
-      textInputAction: widget.textInputAction,
-      textCapitalization: widget.textCapitalization,
-      inputFormatters: widget.inputFormatters,
-      maxLines: widget.maxLines,
-      enabled: widget.enabled,
-      autofillHints: widget.autofillHints,
-      decoration: InputDecoration(
-        labelText: widget.label,
-        // Multi-line fields keep the label at the top, not centered.
-        alignLabelWithHint: widget.maxLines > 1,
-        hintText: widget.hint,
-        errorText: widget.errorText,
-        errorMaxLines: 3,
-        prefixIcon: icon == null ? null : Icon(icon),
-        prefixText: widget.prefixText,
-        suffixText: widget.suffixText,
-        suffixIcon: widget.suffixIcon,
+    return RevealOnError(
+      errorText: widget.errorText,
+      child: TextField(
+        controller: _controller,
+        onChanged: widget.onChanged,
+        keyboardType: widget.keyboardType,
+        textInputAction: widget.textInputAction,
+        textCapitalization: widget.textCapitalization,
+        inputFormatters: widget.inputFormatters,
+        maxLines: widget.maxLines,
+        enabled: widget.enabled,
+        autofillHints: widget.autofillHints,
+        decoration: InputDecoration(
+          labelText: widget.label,
+          // Multi-line fields keep the label at the top, not centered.
+          alignLabelWithHint: widget.maxLines > 1,
+          hintText: widget.hint,
+          errorText: widget.errorText,
+          errorMaxLines: 3,
+          prefixIcon: icon == null ? null : Icon(icon),
+          prefixText: widget.prefixText,
+          suffixText: widget.suffixText,
+          suffixIcon: widget.suffixIcon,
+        ),
       ),
     );
   }
