@@ -71,6 +71,8 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    # Temporary: logo concepts for the debug preview, removed after the pick.
+    - assets/branding/preview/
 
   # Bundled so the app works offline. Licenses: assets/fonts/OFL-*.txt.
   # NotoSans is subset to Latin ranges (see assets/fonts/README.md).

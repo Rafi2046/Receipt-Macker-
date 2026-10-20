@@ -6,6 +6,8 @@ import '../../features/business_profile/presentation/views/business_profile_view
 import '../../features/clients/presentation/views/client_editor_view.dart';
 import '../../features/clients/presentation/views/client_list_view.dart';
 import '../../features/dashboard/presentation/views/home_view.dart';
+import '../../features/debug/presentation/views/logo_concepts_view.dart';
+import '../../features/debug/presentation/views/logo_splash_preview_view.dart';
 import '../../features/debug/presentation/views/theme_preview_view.dart';
 import '../../features/debug/presentation/views/widget_gallery_view.dart';
 import '../../features/items/presentation/views/item_editor_view.dart';
@@ -105,5 +107,21 @@ final List<GoRoute> _debugRoutes = [
     name: RouteNames.widgetGallery,
     path: RouteNames.widgetGalleryPath,
     builder: (_, _) => const WidgetGalleryView(),
+  ),
+  GoRoute(
+    name: RouteNames.logoConcepts,
+    path: RouteNames.logoConceptsPath,
+    builder: (_, _) => const LogoConceptsView(),
+  ),
+  GoRoute(
+    name: RouteNames.logoSplash,
+    path: RouteNames.logoSplashPath,
+    builder: (_, state) {
+      final query = state.uri.queryParameters;
+      return LogoSplashPreviewView(
+        concept: int.tryParse(query[RouteNames.conceptParam] ?? '') ?? 0,
+        dark: query[RouteNames.darkParam] == 'true',
+      );
+    },
   ),
 ];

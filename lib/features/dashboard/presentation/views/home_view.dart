@@ -107,6 +107,11 @@ class _DebugLinks extends StatelessWidget {
           variant: AppButtonVariant.secondary,
           onPressed: () => context.pushNamed(RouteNames.widgetGallery),
         ),
+        AppButton(
+          label: l10n.logoConceptsTitle,
+          variant: AppButtonVariant.secondary,
+          onPressed: () => context.pushNamed(RouteNames.logoConcepts),
+        ),
       ],
     );
   }

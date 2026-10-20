@@ -352,5 +352,35 @@
         "type": "String"
       }
     }
+  },
+  "logoConceptsTitle": "Logo concepts",
+  "logoConceptName": "Concept {letter}",
+  "logoLightWallpaper": "Light wallpaper",
+  "logoDarkWallpaper": "Dark wallpaper",
+  "logoColorWallpaper": "Colorful wallpaper",
+  "logoSmallSizes": "Small sizes (48, 32, 24, 16)",
+  "logoSplash": "Splash screen",
+  "logoSplashLight": "{name}, light",
+  "logoSplashDark": "{name}, dark",
+  "@logoConceptName": {
+    "placeholders": {
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "@logoSplashLight": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@logoSplashDark": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

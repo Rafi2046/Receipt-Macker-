@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108">
+  <!-- QuickBill concept C: a folded sheet moving fast (speed lines) with a check mark. -->
+  <rect width="108" height="108" fill="#006A4E"/>
+  <path d="M47 30h18l8 8v38a2 2 0 0 1-2 2H47a2 2 0 0 1-2-2V32a2 2 0 0 1 2-2z" fill="#FFFFFF"/>
+  <path d="M65 30v6a2 2 0 0 0 2 2h6z" fill="#B7D9CC"/>
+  <rect x="31" y="43" width="10" height="4" rx="2" fill="#E0A100"/>
+  <rect x="27" y="52" width="14" height="4" rx="2" fill="#E0A100"/>
+  <rect x="33" y="61" width="8" height="4" rx="2" fill="#E0A100"/>
+  <path d="M51 56l5.5 5.5L67 49" fill="none" stroke="#006A4E" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

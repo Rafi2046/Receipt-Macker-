@@ -23,4 +23,10 @@ abstract final class AppSizes {
   /// Widest an extended floating button's label may get, as a share of
   /// the screen width.
   static const double fabLabelMaxWidthFactor = 0.6;
+
+  /// Launcher icon size on a typical phone home screen.
+  static const double launcherIcon = 56;
+
+  /// Android 12+ splash: the icon is shown in a circle this wide.
+  static const double splashIcon = 160;
 }

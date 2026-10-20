@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108">
+  <!-- QuickBill concept B: a document with a folded corner; a Q whose tail is a check mark. Light background so it never reads as a green circle with letters. -->
+  <rect width="108" height="108" fill="#F3F8F5"/>
+  <path d="M38 28h24l10 10v40a2 2 0 0 1-2 2H38a2 2 0 0 1-2-2V30a2 2 0 0 1 2-2z" fill="#006A4E"/>
+  <path d="M62 28v8a2 2 0 0 0 2 2h8z" fill="#4CC9A0"/>
+  <circle cx="51" cy="54" r="9.5" fill="none" stroke="#FFFFFF" stroke-width="5"/>
+  <path d="M51 60l5.5 5.5L66 54" fill="none" stroke="#E0A100" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
