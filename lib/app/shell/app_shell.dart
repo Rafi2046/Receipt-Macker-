@@ -26,7 +26,9 @@ class AppShell extends StatelessWidget {
     final l10n = context.l10n;
     final show = showsTabBar(path);
     return Scaffold(
-      body: shell,
+      // Pages show their own snackbars. Without this messenger the shell
+      // scaffold would draw them over a Save bar.
+      body: ScaffoldMessenger(child: shell),
       bottomNavigationBar: show
           ? NavigationBar(
               selectedIndex: shell.currentIndex,

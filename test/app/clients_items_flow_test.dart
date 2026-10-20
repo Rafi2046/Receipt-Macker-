@@ -91,6 +91,7 @@ void main() {
 
   testWidgets('item: add with price and tax, shown in Bangla', (tester) async {
     await openHome(tester, language: 'bn');
+    await tap(tester, find.text('আরও'));
     await tap(tester, find.text('পণ্য ও সেবা'));
     await tap(tester, find.text('প্রথম পণ্য বা সেবা যোগ করুন'));
 
@@ -128,9 +129,8 @@ void main() {
     expect(tester.takeException(), isNull);
     Navigator.of(tester.element(find.byType(Scrollable).first)).pop();
     await settle(tester);
-    Navigator.of(tester.element(find.text('ক্লায়েন্ট').first)).pop();
-    await settle(tester);
 
+    await tap(tester, find.text('আরও'));
     await tap(tester, find.text('পণ্য ও সেবা'));
     await tap(tester, find.text('প্রথম পণ্য বা সেবা যোগ করুন'));
     await tap(tester, find.text('সংরক্ষণ করুন'));
