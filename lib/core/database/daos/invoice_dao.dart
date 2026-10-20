@@ -21,6 +21,7 @@ class InvoiceDao extends DatabaseAccessor<AppDatabase> with _$InvoiceDaoMixin {
       ..orderBy([
         (t) => OrderingTerm.desc(t.issueDate),
         (t) => OrderingTerm.desc(t.createdAt),
+        (t) => OrderingTerm.desc(t.number),
       ]);
     if (query.isNotEmpty) {
       const esc = SearchPattern.escapeChar;
