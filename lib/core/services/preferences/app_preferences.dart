@@ -1,0 +1,18 @@
+/// Small flags and choices kept outside the database (section 2: prefs for
+/// small flags only). Business data never goes here.
+abstract interface class AppPreferences {
+  bool get onboardingComplete;
+  Future<void> setOnboardingComplete({required bool value});
+
+  /// `en` or `bn`; null until first run picks one.
+  String? get languageCode;
+  Future<void> setLanguageCode(String code);
+
+  /// `system`, `light` or `dark`; null means system.
+  String? get themeName;
+  Future<void> setThemeName(String name);
+
+  /// ISO 4217 code; null means the app default.
+  String? get defaultCurrency;
+  Future<void> setDefaultCurrency(String code);
+}

@@ -5,6 +5,9 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../constants/app_constants.dart';
+import 'app_database.steps.dart';
+import 'daos/business_profile_dao.dart';
+import 'tables/business_profiles_table.dart';
 
 part 'app_database.g.dart';
 
@@ -12,7 +15,7 @@ part 'app_database.g.dart';
 ///
 /// Every schema change: bump [schemaVersion], add a step in [migration],
 /// add a migration test.
-@DriftDatabase()
+@DriftDatabase(tables: [BusinessProfilesTable], daos: [BusinessProfileDao])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
@@ -28,11 +31,16 @@ class AppDatabase extends _$AppDatabase {
   );
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) => m.createAll(),
+    onUpgrade: stepByStep(
+      from1To2: (m, schema) async {
+        await m.createTable(schema.businessProfiles);
+      },
+    ),
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     },
