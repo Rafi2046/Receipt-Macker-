@@ -36,6 +36,10 @@ abstract class Invoice with _$Invoice {
 
     /// Shipping or another extra charge, added after tax.
     @Default(0) int shippingMinor,
+
+    /// Sum of recorded payments, in minor units. The calculator turns this
+    /// into the balance. A duplicate starts at zero.
+    @Default(0) int paidMinor,
     @Default('') String notes,
     @Default('') String terms,
     @Default('') String paymentInstructions,

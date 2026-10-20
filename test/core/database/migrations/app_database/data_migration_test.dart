@@ -54,4 +54,29 @@ void main() {
     expect(await db.select(db.invoicesTable).get(), isEmpty);
     await db.close();
   });
+
+  test('v4 to v5 keeps the invoice and starts paid at zero', () async {
+    final schema = await verifier.schemaAt(4);
+    schema.rawDatabase
+      ..execute(
+        'INSERT INTO business_profiles (id, name, created_at, updated_at) '
+        "VALUES ('p', 'Shop', 1760000000, 1760000000)",
+      )
+      ..execute(
+        'INSERT INTO invoices (id, profile_id, number, currency_code, '
+        'issue_date, due_date, stage, total_minor, created_at, updated_at) '
+        "VALUES ('inv', 'p', 'INV-0001', 'BDT', 20261020, 20261027, "
+        "'sent', 50000, 1760000000, 1760000000)",
+      );
+    final db = AppDatabase(schema.newConnection());
+    await verifier.migrateAndValidate(db, 5);
+
+    final invoice = await db.invoiceDao.findById('inv');
+    expect(invoice?.number, 'INV-0001');
+    expect(invoice?.totalMinor, 50000);
+    expect(invoice?.paidMinor, 0);
+    expect(await db.select(db.paymentsTable).get(), isEmpty);
+    expect(await db.select(db.receiptNumberingTable).get(), isEmpty);
+    await db.close();
+  });
 }

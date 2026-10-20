@@ -176,6 +176,7 @@
   "itemTaxLabel": "ট্যাক্স {rate}",
   "validationPositive": "শূন্যের বেশি হতে হবে",
   "validationAmountTooLarge": "পরিমাণটি অনেক বড়",
+  "validationAboveBalance": "বকেয়ার চেয়ে বেশি হতে পারবে না",
   "validationDiscountTooLarge": "ছাড় মোট টাকার বেশি হতে পারে না",
   "validationDueBeforeIssue": "শেষ তারিখ ইস্যুর তারিখের আগে হতে পারে না",
   "validationNoLines": "অন্তত একটি পণ্য বা সেবা যোগ করুন",

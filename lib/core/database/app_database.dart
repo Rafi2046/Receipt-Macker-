@@ -10,12 +10,15 @@ import 'daos/business_profile_dao.dart';
 import 'daos/client_dao.dart';
 import 'daos/invoice_dao.dart';
 import 'daos/item_dao.dart';
+import 'daos/payment_dao.dart';
 import 'tables/business_profiles_table.dart';
 import 'tables/clients_table.dart';
 import 'tables/invoice_lines_table.dart';
 import 'tables/invoice_numbering_table.dart';
 import 'tables/invoices_table.dart';
 import 'tables/items_table.dart';
+import 'tables/payments_table.dart';
+import 'tables/receipt_numbering_table.dart';
 
 part 'app_database.g.dart';
 
@@ -31,8 +34,10 @@ part 'app_database.g.dart';
     InvoicesTable,
     InvoiceLinesTable,
     InvoiceNumberingTable,
+    PaymentsTable,
+    ReceiptNumberingTable,
   ],
-  daos: [BusinessProfileDao, ClientDao, ItemDao, InvoiceDao],
+  daos: [BusinessProfileDao, ClientDao, ItemDao, InvoiceDao, PaymentDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
@@ -49,7 +54,7 @@ class AppDatabase extends _$AppDatabase {
   );
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -66,6 +71,11 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(schema.invoices);
         await m.createTable(schema.invoiceLines);
         await m.createTable(schema.invoiceNumbering);
+      },
+      from4To5: (m, schema) async {
+        await m.addColumn(schema.invoices, schema.invoices.paidMinor);
+        await m.createTable(schema.payments);
+        await m.createTable(schema.receiptNumbering);
       },
     ),
     beforeOpen: (details) async {

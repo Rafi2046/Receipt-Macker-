@@ -93,4 +93,10 @@ class InvoiceDao extends DatabaseAccessor<AppDatabase> with _$InvoiceDaoMixin {
 
   Future<void> upsertNumbering(InvoiceNumberingRow row) =>
       into(invoiceNumberingTable).insertOnConflictUpdate(row);
+
+  /// Stores the recomputed sum of payments. The invoice watch emits again.
+  Future<void> setPaidMinor(String id, int paidMinor) =>
+      (update(invoicesTable)..where((t) => t.id.equals(id))).write(
+        InvoicesTableCompanion(paidMinor: Value(paidMinor)),
+      );
 }

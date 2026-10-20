@@ -13,6 +13,9 @@ enum ValidationError {
   /// Above the largest supported amount.
   amountTooLarge,
 
+  /// More than the invoice's remaining balance.
+  amountAboveBalance,
+
   /// A flat discount bigger than what it applies to.
   discountTooLarge,
   dueBeforeIssue,

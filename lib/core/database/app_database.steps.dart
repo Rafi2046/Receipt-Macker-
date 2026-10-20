@@ -789,10 +789,327 @@ i1.GeneratedColumn<int> _column_42(String aliasedName) =>
       type: i1.DriftSqlType.int,
       $customConstraints: 'NOT NULL',
     );
+
+final class Schema5 extends i0.VersionedSchema {
+  Schema5({required super.database}) : super(version: 5);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    businessProfiles,
+    clients,
+    items,
+    invoices,
+    invoiceLines,
+    invoiceNumbering,
+    payments,
+    receiptNumbering,
+  ];
+  late final Shape0 businessProfiles = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'business_profiles',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_4,
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_12,
+        _column_13,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape1 clients = Shape1(
+    source: i0.VersionedTable(
+      entityName: 'clients',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_3,
+        _column_4,
+        _column_2,
+        _column_14,
+        _column_12,
+        _column_13,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape2 items = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'items',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_15,
+        _column_16,
+        _column_17,
+        _column_18,
+        _column_19,
+        _column_12,
+        _column_13,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape6 invoices = Shape6(
+    source: i0.VersionedTable(
+      entityName: 'invoices',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)', 'UNIQUE(profile_id, number)'],
+      columns: [
+        _column_0,
+        _column_20,
+        _column_21,
+        _column_22,
+        _column_23,
+        _column_24,
+        _column_25,
+        _column_26,
+        _column_18,
+        _column_27,
+        _column_28,
+        _column_29,
+        _column_30,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_34,
+        _column_35,
+        _column_43,
+        _column_14,
+        _column_36,
+        _column_7,
+        _column_12,
+        _column_13,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape4 invoiceLines = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'invoice_lines',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_37,
+        _column_38,
+        _column_39,
+        _column_1,
+        _column_15,
+        _column_40,
+        _column_16,
+        _column_17,
+        _column_30,
+        _column_31,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape5 invoiceNumbering = Shape5(
+    source: i0.VersionedTable(
+      entityName: 'invoice_numbering',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(profile_id)'],
+      columns: [_column_20, _column_41, _column_42],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape7 payments = Shape7(
+    source: i0.VersionedTable(
+      entityName: 'payments',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'UNIQUE(profile_id, receipt_number)',
+      ],
+      columns: [
+        _column_0,
+        _column_20,
+        _column_37,
+        _column_44,
+        _column_45,
+        _column_46,
+        _column_47,
+        _column_48,
+        _column_12,
+        _column_13,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape5 receiptNumbering = Shape5(
+    source: i0.VersionedTable(
+      entityName: 'receipt_numbering',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(profile_id)'],
+      columns: [_column_20, _column_41, _column_42],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+}
+
+class Shape6 extends i0.VersionedTable {
+  Shape6({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get profileId =>
+      columnsByName['profile_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get number =>
+      columnsByName['number']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get clientId =>
+      columnsByName['client_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get billToName =>
+      columnsByName['bill_to_name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get billToPhone =>
+      columnsByName['bill_to_phone']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get billToEmail =>
+      columnsByName['bill_to_email']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get billToAddress =>
+      columnsByName['bill_to_address']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get currencyCode =>
+      columnsByName['currency_code']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get issueDate =>
+      columnsByName['issue_date']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get dueDate =>
+      columnsByName['due_date']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get stage =>
+      columnsByName['stage']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get discountType =>
+      columnsByName['discount_type']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get discountValue =>
+      columnsByName['discount_value']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get taxRateBasisPoints =>
+      columnsByName['tax_rate_basis_points']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get taxInclusive =>
+      columnsByName['tax_inclusive']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get shippingMinor =>
+      columnsByName['shipping_minor']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get totalMinor =>
+      columnsByName['total_minor']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get paidMinor =>
+      columnsByName['paid_minor']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get notes =>
+      columnsByName['notes']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get terms =>
+      columnsByName['terms']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get paymentInstructions =>
+      columnsByName['payment_instructions']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAt =>
+      columnsByName['updated_at']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_43(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'paid_minor',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL DEFAULT 0',
+      defaultValue: const i1.CustomExpression('0'),
+    );
+
+class Shape7 extends i0.VersionedTable {
+  Shape7({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get profileId =>
+      columnsByName['profile_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get invoiceId =>
+      columnsByName['invoice_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get amountMinor =>
+      columnsByName['amount_minor']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get paidOn =>
+      columnsByName['paid_on']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get method =>
+      columnsByName['method']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get note =>
+      columnsByName['note']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get receiptNumber =>
+      columnsByName['receipt_number']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAt =>
+      columnsByName['updated_at']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_44(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'amount_minor',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_45(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'paid_on',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_46(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'method',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_47(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'note',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL DEFAULT \'\'',
+      defaultValue: const i1.CustomExpression('\'\''),
+    );
+i1.GeneratedColumn<String> _column_48(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'receipt_number',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
+  required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -811,6 +1128,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from3To4(migrator, schema);
         return 4;
+      case 4:
+        final schema = Schema5(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from4To5(migrator, schema);
+        return 5;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -821,10 +1143,12 @@ i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
+  required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
 }) => i0.VersionedSchema.stepByStepHelper(
   step: migrationSteps(
     from1To2: from1To2,
     from2To3: from2To3,
     from3To4: from3To4,
+    from4To5: from4To5,
   ),
 );

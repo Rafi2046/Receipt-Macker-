@@ -33,6 +33,7 @@ extension InvoiceRowMapper on InvoiceRow {
     taxRateBasisPoints: taxRateBasisPoints,
     taxInclusive: taxInclusive,
     shippingMinor: shippingMinor,
+    paidMinor: paidMinor,
     notes: notes,
     terms: terms,
     paymentInstructions: paymentInstructions,
@@ -48,6 +49,7 @@ extension InvoiceRowMapper on InvoiceRow {
     dueDate: CalendarDate.fromKey(dueDate),
     stage: _stage(stage),
     totalMinor: totalMinor,
+    paidMinor: paidMinor,
     clientName: billToName,
   );
 }
@@ -88,6 +90,7 @@ extension InvoiceToRows on Invoice {
       taxInclusive: taxInclusive,
       shippingMinor: shippingMinor,
       totalMinor: totalMinor,
+      paidMinor: paidMinor,
       notes: notes.trim(),
       terms: terms.trim(),
       paymentInstructions: paymentInstructions.trim(),

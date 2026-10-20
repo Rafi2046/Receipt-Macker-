@@ -59,8 +59,10 @@ class InvoiceRepositoryImpl implements InvoiceRepository {
       if (await _dao.numberTaken(profileId, number, exceptId: invoice.id)) {
         throw const ValidationFailure(numberField);
       }
-      final total = InvoiceCalculator.calculate(invoice).total;
-      final row = invoice.toRow(profileId: profileId, totalMinor: total);
+      final paid = (await _dao.findById(invoice.id))?.paidMinor ?? 0;
+      final stored = invoice.copyWith(paidMinor: paid);
+      final total = InvoiceCalculator.calculate(stored).total;
+      final row = stored.toRow(profileId: profileId, totalMinor: total);
       await _dao.upsertWithLines(row, invoice.toLineRows());
       final numbering = await _numbering(profileId);
       final next = InvoiceNumberGenerator.nextAfterSaving(

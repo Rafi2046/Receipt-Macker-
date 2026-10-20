@@ -38,6 +38,10 @@ class InvoicesTable extends Table {
   BoolColumn get taxInclusive => boolean().withDefault(const Constant(false))();
   IntColumn get shippingMinor => integer().withDefault(const Constant(0))();
   IntColumn get totalMinor => integer()();
+
+  /// Sum of this invoice's payments, stored so lists stay fast. Recomputed
+  /// whenever a payment changes.
+  IntColumn get paidMinor => integer().withDefault(const Constant(0))();
   TextColumn get notes => text().withDefault(const Constant(''))();
   TextColumn get terms => text().withDefault(const Constant(''))();
   TextColumn get paymentInstructions =>

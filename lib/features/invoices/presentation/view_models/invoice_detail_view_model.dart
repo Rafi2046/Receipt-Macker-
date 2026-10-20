@@ -19,7 +19,10 @@ class InvoiceDetailViewModel extends _$InvoiceDetailViewModel {
     final today = ref.watch(clockProvider).today();
     return ref.watch(invoiceRepositoryProvider).watch(invoiceId).map((invoice) {
       if (invoice == null) throw const NotFoundFailure();
-      final totals = InvoiceCalculator.calculate(invoice);
+      final totals = InvoiceCalculator.calculate(
+        invoice,
+        paidMinor: invoice.paidMinor,
+      );
       return InvoiceDetailState(
         invoice: invoice,
         totals: totals,

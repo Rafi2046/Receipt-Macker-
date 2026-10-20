@@ -12,7 +12,7 @@ void main() {
     final version = await db.customSelect('PRAGMA user_version').getSingle();
     final fk = await db.customSelect('PRAGMA foreign_keys').getSingle();
 
-    expect(db.schemaVersion, 4);
+    expect(db.schemaVersion, 5);
     expect(version.read<int>('user_version'), db.schemaVersion);
     expect(fk.read<int>('foreign_keys'), 1);
   });

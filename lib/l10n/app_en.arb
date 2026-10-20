@@ -227,6 +227,7 @@
   },
   "validationPositive": "Must be more than zero",
   "validationAmountTooLarge": "This amount is too large",
+  "validationAboveBalance": "Can't be more than the balance due",
   "validationDiscountTooLarge": "The discount can't be more than the amount",
   "validationDueBeforeIssue": "The due date can't be before the issue date",
   "validationNoLines": "Add at least one item",

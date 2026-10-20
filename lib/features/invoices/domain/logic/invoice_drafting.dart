@@ -85,6 +85,7 @@ extension InvoiceDrafting on Invoice {
     issueDate: today,
     dueDate: today.addDays(issueDate.daysUntil(dueDate)),
     lines: [for (final l in lines) l.copyWith(id: newLineId())],
+    paidMinor: 0,
     createdAt: now,
     updatedAt: now,
   );
