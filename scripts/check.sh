@@ -10,7 +10,7 @@ step "Codegen"
 
 step "Format"
 find lib test -name '*.dart' \
-  ! -name '*.g.dart' ! -name '*.freezed.dart' ! -path 'lib/l10n/gen/*' -print0 \
+  ! -name '*.g.dart' ! -name '*.freezed.dart' ! -path 'lib/l10n/gen/*' ! -path '*/migrations/*/generated/*' ! -name '*.steps.dart' -print0 \
   | xargs -0 dart format --output=none --set-exit-if-changed
 
 step "Analyze"

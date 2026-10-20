@@ -15,6 +15,8 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - lib/l10n/gen/**
+    - lib/core/database/app_database.steps.dart
+    - test/core/database/migrations/**/generated/**
 
 linter:
   rules:
