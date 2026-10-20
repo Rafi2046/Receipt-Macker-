@@ -115,6 +115,13 @@ abstract final class AppTheme {
         ),
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(color: c.primary),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: c.surface,
+        indicatorColor: c.primary.withValues(alpha: 0.16),
+        labelTextStyle: WidgetStatePropertyAll(textTheme.labelMedium),
+        height: AppSizes.navBarHeight,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      ),
     );
   }
 }

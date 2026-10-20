@@ -2,6 +2,8 @@
 abstract final class RouteNames {
   static const String home = 'home';
   static const String homePath = '/';
+  static const String more = 'more';
+  static const String morePath = '/more';
   static const String onboarding = 'onboarding';
   static const String onboardingPath = '/onboarding';
   static const String businessProfile = 'businessProfile';

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>QuickBill M7 mockups</title>
+<style>
+  :root {
+    --green: #006a4e;
+    --on-green: #fff;
+    --bg: #f3f5f7;
+    --surface: #fff;
+    --border: #d9dee3;
+    --text: #14181c;
+    --muted: #56606b;
+    --success: #15803d;
+    --warning: #b45309;
+    --danger: #b91c1c;
+    --info: #1d4ed8;
+    --neutral: #475569;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 32px;
+    background: #e7ebef;
+    color: var(--text);
+    font-family: "Noto Sans", "Noto Sans Bengali", system-ui, sans-serif;
+  }
+  h1 { font-size: 18px; margin: 0 0 8px; }
+  p.note { margin: 0 0 24px; color: var(--muted); max-width: 720px; }
+  .row { display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-start; }
+  .phone {
+    width: 360px;
+    background: var(--bg);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(20, 24, 28, 0.16);
+    position: relative;
+    padding-bottom: 84px;
+  }
+  .label { font-size: 13px; font-weight: 650; margin: 0 0 8px; }
+  .bar {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    background: var(--surface);
+    font-size: 20px;
+    font-weight: 650;
+  }
+  .pad { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .stat {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 10px;
+  }
+  .stat span { display: block; color: var(--muted); font-size: 11px; }
+  .amt {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    font-size: 15px;
+    margin-top: 4px;
+    letter-spacing: -0.02em;
+  }
+  .banner {
+    background: #fde8e8;
+    color: var(--danger);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-weight: 650;
+    font-size: 14px;
+  }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .action, .row-item, .tile, .menu, .set {
+    background: var(--surface);
+    border-radius: 12px;
+  }
+  .action {
+    padding: 14px 12px;
+    font-weight: 650;
+    font-size: 14px;
+    border: 1px solid var(--border);
+  }
+  .section { font-size: 13px; font-weight: 700; color: var(--muted); }
+  .tile, .menu, .set { padding: 12px 14px; }
+  .tile { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+  .who { font-weight: 650; }
+  .meta { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .right { text-align: right; }
+  .chip {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .paid { background: #e5f6eb; color: var(--success); }
+  .part { background: #fef3e2; color: var(--warning); }
+  .over { background: #fde8e8; color: var(--danger); }
+  .sent { background: #e7efff; color: var(--info); }
+  .draft { background: #eef1f4; color: var(--neutral); }
+  .due { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .search {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: var(--muted);
+  }
+  .chips { display: flex; gap: 8px; overflow: hidden; }
+  .chipbtn {
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 13px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .chipbtn.on { background: var(--green); color: white; border-color: var(--green); }
+  .fab {
+    position: absolute;
+    right: 16px;
+    bottom: 96px;
+    background: var(--green);
+    color: white;
+    border-radius: 16px;
+    padding: 14px 18px;
+    font-weight: 700;
+    box-shadow: 0 6px 16px rgba(0, 106, 78, 0.28);
+  }
+  nav {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 80px;
+    background: var(--surface);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: center;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+  nav b { display: block; color: var(--green); font-size: 12px; }
+  nav .on { color: var(--green); font-weight: 700; }
+  .check { display: flex; gap: 10px; align-items: center; }
+  .box {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 2px solid var(--green); flex: none;
+  }
+  .box.done { background: var(--green); }
+  .totals { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .call {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .call div {
+    text-align: center;
+    padding: 12px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-weight: 700;
+  }
+  .menu { display: flex; justify-content: space-between; font-weight: 600; }
+  .pro { border: 1px solid #e0a100; }
+</style>
+</head>
+<body>
+<h1>QuickBill M7 — mockups, light, English</h1>
+<p class="note">Bottle green is the only action color. Status is always a color plus a word. Amounts use tabular figures. These are drawings, not the app.</p>
+<div class="row">
+
+<section>
+<p class="label">Home</p>
+<div class="phone" id="home">
+  <div class="bar">QuickBill</div>
+  <div class="pad">
+    <div class="stats">
+      <div class="stat"><span>Invoiced</span><div class="amt">৳48,000</div></div>
+      <div class="stat"><span>Received</span><div class="amt">৳21,500</div></div>
+      <div class="stat"><span>Outstanding</span><div class="amt">৳26,500</div></div>
+    </div>
+    <div class="banner">3 invoices overdue · ৳12,500</div>
+    <div class="section">Quick actions</div>
+    <div class="grid">
+      <div class="action">New invoice</div>
+      <div class="action">Add client</div>
+      <div class="action">Add item</div>
+      <div class="action">Record payment</div>
+    </div>
+    <div class="section">Recent invoices</div>
+    <div class="tile"><div><div class="who">Karim Store</div><div class="meta">INV-0004 · 18 Oct</div></div><div class="right"><div class="amt">৳4,500</div><span class="chip over">Overdue</span><div class="due">Overdue 5 days</div></div></div>
+    <div class="tile"><div><div class="who">Rahman Traders</div><div class="meta">INV-0003 · 19 Oct</div></div><div class="right"><div class="amt">৳8,000</div><span class="chip part">Partially paid</span><div class="due">Due in 3 days</div></div></div>
+    <div class="tile"><div><div class="who">Nusrat Begum</div><div class="meta">INV-0002 · 12 Oct</div></div><div class="right"><div class="amt">৳2,200</div><span class="chip paid">Paid</span></div></div>
+  </div>
+  <div class="fab">New invoice</div>
+  <nav><div class="on">Home<b>⌂</b></div><div>Invoices</div><div>Clients</div><div>More</div></nav>
+</div>
+</section>
+
+<section>
+<p class="label">Home, new user</p>
+<div class="phone" id="setup">
+  <div class="bar">QuickBill</div>
+  <div class="pad">
+    <div class="tile"><div><div class="who">Set up QuickBill</div><div class="meta">Three steps, then you can send your first invoice.</div></div></div>
+    <div class="tile check"><div class="box done"></div><div><div class="who">Business profile</div><div class="meta">Done</div></div></div>
+    <div class="tile check"><div class="box"></div><div><div class="who">Add a client</div><div class="meta">Who you bill</div></div></div>
+    <div class="tile check"><div class="box"></div><div><div class="who">Create your first invoice</div><div class="meta">Takes about a minute</div></div></div>
+  </div>
+  <nav><div class="on">Home</div><div>Invoices</div><div>Clients</div><div>More</div></nav>
+</div>
+</section>
+
+<section>
+<p class="label">Invoices</p>
+<div class="phone" id="invoices">
+  <div class="bar">Invoices</div>
+  <div class="pad">
+    <div class="search">Search client or number</div>
+    <div class="chips">
+      <div class="chipbtn on">All</div>
+      <div class="chipbtn">Unpaid</div>
+      <div class="chipbtn">Overdue</div>
+      <div class="chipbtn">Paid</div>
+      <div class="chipbtn">Draft</div>
+    </div>
+    <div class="tile"><div><div class="who">Karim Store</div><div class="meta">INV-0004 · 18 Oct</div></div><div class="right"><div class="amt">৳4,500</div><span class="chip over">Overdue</span><div class="due">Overdue 5 days</div></div></div>
+    <div class="tile"><div><div class="who">Rahman Traders</div><div class="meta">INV-0003 · 19 Oct</div></div><div class="right"><div class="amt">৳8,000</div><span class="chip part">Partially paid</span><div class="due">Due in 3 days</div></div></div>
+    <div class="tile"><div><div class="who">Draft, no client</div><div class="meta">INV-0005 · 20 Oct</div></div><div class="right"><div class="amt">৳1,000</div><span class="chip draft">Draft</span></div></div>
+    <div class="tile"><div><div class="who">Nusrat Begum</div><div class="meta">INV-0001 · 2 Oct</div></div><div class="right"><div class="amt">৳6,750</div><span class="chip sent">Sent</span><div class="due">Due in 12 days</div></div></div>
+  </div>
+  <div class="fab">New invoice</div>
+  <nav><div>Home</div><div class="on">Invoices</div><div>Clients</div><div>More</div></nav>
+</div>
+</section>
+
+<section>
+<p class="label">Client</p>
+<div class="phone" id="client">
+  <div class="bar">Karim Store</div>
+  <div class="pad">
+    <div class="totals">
+      <div class="stat"><span>Billed</span><div class="amt">৳18,500</div></div>
+      <div class="stat"><span>Paid</span><div class="amt">৳6,000</div></div>
+      <div class="stat"><span>Outstanding</span><div class="amt">৳12,500</div></div>
+    </div>
+    <div class="call"><div>Call</div><div>WhatsApp</div></div>
+    <div class="section">Invoices</div>
+    <div class="tile"><div><div class="who">INV-0004</div><div class="meta">18 Oct</div></div><div class="right"><div class="amt">৳4,500</div><span class="chip over">Overdue</span></div></div>
+    <div class="tile"><div><div class="who">INV-0001</div><div class="meta">2 Oct</div></div><div class="right"><div class="amt">৳6,000</div><span class="chip paid">Paid</span></div></div>
+  </div>
+  <nav><div>Home</div><div>Invoices</div><div class="on">Clients</div><div>More</div></nav>
+</div>
+</section>
+
+<section>
+<p class="label">More</p>
+<div class="phone" id="more">
+  <div class="bar">More</div>
+  <div class="pad">
+    <div class="menu">Business profile</div>
+    <div class="menu">Products &amp; services</div>
+    <div class="menu">Payments &amp; receipts</div>
+    <div class="menu">Invoice templates</div>
+    <div class="menu">Settings</div>
+    <div class="menu">Backup &amp; restore</div>
+    <div class="menu pro">QuickBill Pro</div>
+    <div class="menu">Help &amp; legal</div>
+  </div>
+  <nav><div>Home</div><div>Invoices</div><div>Clients</div><div class="on">More</div></nav>
+</div>
+</section>
+
+<section>
+<p class="label">Settings</p>
+<div class="phone" id="settings">
+  <div class="bar">Settings</div>
+  <div class="pad">
+    <div class="set"><div class="who">Language</div><div class="meta">English</div></div>
+    <div class="set"><div class="who">Theme</div><div class="meta">System</div></div>
+    <div class="set"><div class="who">Currency</div><div class="meta">BDT (৳)</div></div>
+    <div class="set"><div class="who">Number format</div><div class="meta">1,234.50</div></div>
+    <div class="set"><div class="who">Default tax</div><div class="meta">0%</div></div>
+    <div class="set"><div class="who">Default due</div><div class="meta">7 days</div></div>
+    <div class="set"><div class="who">Invoice numbers</div><div class="meta">INV- · next 0006</div></div>
+  </div>
+  <nav><div>Home</div><div>Invoices</div><div>Clients</div><div class="on">More</div></nav>
+</div>
+</section>
+
+<section>
+<p class="label">Backup</p>
+<div class="phone" id="backup">
+  <div class="bar">Backup &amp; restore</div>
+  <div class="pad">
+    <div class="tile"><div><div class="who">Save a backup</div><div class="meta">One file with your invoices, clients, items and logo. Share it to Drive or keep it on this phone.</div></div></div>
+    <div class="action" style="text-align:center;background:#006a4e;color:white;border:none;">Create backup</div>
+    <div class="tile"><div><div class="who">Restore</div><div class="meta">Replaces everything on this phone. You will be asked to confirm.</div></div></div>
+    <div class="action" style="text-align:center;">Choose a backup file</div>
+  </div>
+  <nav><div>Home</div><div>Invoices</div><div>Clients</div><div class="on">More</div></nav>
+</div>
+</section>
+
+</div>
+</body>
+</html>

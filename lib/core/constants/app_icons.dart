@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 /// Icon choices used across the app, so each concept has one icon.
 abstract final class AppIcons {
   static const IconData dashboard = Icons.space_dashboard_outlined;
+  static const IconData more = Icons.more_horiz;
   static const IconData invoice = Icons.receipt_long_outlined;
   static const IconData receipt = Icons.receipt_outlined;
   static const IconData client = Icons.person_outline;

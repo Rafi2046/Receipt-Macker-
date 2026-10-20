@@ -2,6 +2,7 @@
 abstract final class AppSizes {
   static const double iconSm = 16, iconMd = 24, iconLg = 32, iconXl = 48;
   static const double buttonHeight = 48;
+  static const double navBarHeight = 80;
   static const double minTapTarget = 48;
   static const double avatarSm = 32, avatarMd = 40, avatarLg = 56;
   static const double logoMd = 64;

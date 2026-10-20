@@ -149,6 +149,8 @@
   "discardChangesTitle": "Discard changes?",
   "discardChangesMessage": "Your changes won't be saved.",
   "homeEditProfile": "Edit business profile",
+  "navHome": "Home",
+  "navMore": "More",
   "homeComingSoonTitle": "PDF and sharing come next",
   "homeComingSoonBody": "Invoices are ready. PDF preview, sharing and printing arrive in the next update.",
   "debugTools": "Developer tools",

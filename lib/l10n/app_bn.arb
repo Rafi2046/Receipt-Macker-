@@ -127,6 +127,8 @@
   "discardChangesTitle": "পরিবর্তন বাদ দেবেন?",
   "discardChangesMessage": "আপনার পরিবর্তনগুলো সংরক্ষিত হবে না।",
   "homeEditProfile": "বিজনেস প্রোফাইল সম্পাদনা",
+  "navHome": "হোম",
+  "navMore": "আরও",
   "homeComingSoonTitle": "এরপর আসছে PDF ও শেয়ার",
   "homeComingSoonBody": "ইনভয়েস তৈরি। PDF প্রিভিউ, শেয়ার ও প্রিন্ট আসছে পরের আপডেটে।",
   "debugTools": "ডেভেলপার টুলস",

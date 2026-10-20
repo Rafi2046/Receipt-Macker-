@@ -6,12 +6,14 @@ import '../../features/business_profile/presentation/views/business_profile_view
 import '../../features/clients/presentation/views/client_editor_view.dart';
 import '../../features/clients/presentation/views/client_list_view.dart';
 import '../../features/dashboard/presentation/views/home_view.dart';
+import '../../features/dashboard/presentation/views/more_view.dart';
 import '../../features/debug/presentation/views/theme_preview_view.dart';
 import '../../features/debug/presentation/views/widget_gallery_view.dart';
 import '../../features/items/presentation/views/item_editor_view.dart';
 import '../../features/items/presentation/views/item_list_view.dart';
 import '../../features/onboarding/presentation/views/onboarding_view.dart';
 import '../../features/onboarding/providers.dart';
+import '../shell/app_shell.dart';
 import 'invoice_routes.dart';
 import 'route_names.dart';
 
@@ -35,10 +37,31 @@ GoRouter appRouter(Ref ref) {
       return null;
     },
     routes: [
-      GoRoute(
-        name: RouteNames.home,
-        path: RouteNames.homePath,
-        builder: (_, _) => const HomeView(),
+      StatefulShellRoute.indexedStack(
+        builder: (_, state, shell) =>
+            AppShell(shell: shell, path: state.uri.path),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                name: RouteNames.home,
+                path: RouteNames.homePath,
+                builder: (_, _) => const HomeView(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(routes: [invoiceRoutes]),
+          StatefulShellBranch(routes: [_clientRoutes]),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                name: RouteNames.more,
+                path: RouteNames.morePath,
+                builder: (_, _) => const MoreView(),
+              ),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         name: RouteNames.onboarding,
@@ -50,8 +73,6 @@ GoRouter appRouter(Ref ref) {
         path: RouteNames.businessProfilePath,
         builder: (_, _) => const BusinessProfileView(),
       ),
-      invoiceRoutes,
-      _clientRoutes,
       _itemRoutes,
       if (kDebugMode) ..._debugRoutes,
     ],
