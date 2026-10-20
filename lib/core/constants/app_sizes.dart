@@ -7,8 +7,13 @@ abstract final class AppSizes {
   static const double progressSm = 20;
   static const double progressStroke = 2.5;
   static const double emptyStateMaxWidth = 360;
+  static const double imagePreviewHeight = 96;
+  static const double signaturePadHeight = 220;
+  static const double signatureStroke = 2.5;
+  static const double languageCardHeight = 72;
   static const double swatch = 56;
   static const double swatchWidth = 96;
   static const double borderWidth = 1;
+  static const double selectedBorderWidth = 2;
   static const double maxContentWidth = 640;
 }

@@ -72,6 +72,8 @@ class _AppTextFieldState extends State<AppTextField> {
       autofillHints: widget.autofillHints,
       decoration: InputDecoration(
         labelText: widget.label,
+        // Multi-line fields keep the label at the top, not centered.
+        alignLabelWithHint: widget.maxLines > 1,
         hintText: widget.hint,
         errorText: widget.errorText,
         errorMaxLines: 3,

@@ -29,4 +29,13 @@ abstract final class AppIcons {
   static const IconData info = Icons.info_outline;
   static const IconData warning = Icons.warning_amber_outlined;
   static const IconData widgets = Icons.widgets_outlined;
+  static const IconData business = Icons.storefront_outlined;
+  static const IconData phone = Icons.phone_outlined;
+  static const IconData email = Icons.email_outlined;
+  static const IconData website = Icons.language;
+  static const IconData image = Icons.add_photo_alternate_outlined;
+  static const IconData signature = Icons.draw_outlined;
+  static const IconData back = Icons.arrow_back;
+  static const IconData forward = Icons.arrow_forward;
+  static const IconData check = Icons.check;
 }

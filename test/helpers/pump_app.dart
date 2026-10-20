@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:receipt_maker/app/theme/app_theme.dart';
 import 'package:receipt_maker/l10n/gen/app_localizations.dart';
@@ -14,6 +15,7 @@ extension PumpApp on WidgetTester {
     double textScale = 1,
     Size? surface,
     bool settle = true,
+    List<Override> overrides = const [],
   }) async {
     if (surface != null) {
       view.physicalSize = surface * view.devicePixelRatio;
@@ -21,6 +23,7 @@ extension PumpApp on WidgetTester {
     }
     await pumpWidget(
       ProviderScope(
+        overrides: overrides,
         child: MaterialApp(
           theme: AppTheme.light(),
           darkTheme: AppTheme.dark(),
