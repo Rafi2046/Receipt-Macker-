@@ -113,11 +113,14 @@ class _Row extends StatelessWidget {
       children: [
         Expanded(child: Text(label, style: style)),
         Flexible(
-          child: AmountText(
-            minor: minor,
-            currencyCode: currency,
-            size: strong ? AmountTextSize.lg : AmountTextSize.md,
+          child: Align(
             alignment: AlignmentDirectional.centerEnd,
+            child: AmountText(
+              minor: minor,
+              currencyCode: currency,
+              size: strong ? AmountTextSize.lg : AmountTextSize.md,
+              alignment: AlignmentDirectional.centerEnd,
+            ),
           ),
         ),
       ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../app/theme/app_colors.dart';
 import '../../constants/app_icons.dart';
 
 /// Labelled single-choice picker. [options] pairs each value with its label.
@@ -26,6 +27,10 @@ class DropdownField<T> extends StatelessWidget {
       key: ValueKey(value),
       initialValue: value,
       isExpanded: true,
+      // Same size as text fields (the default is a title style).
+      style: context.textStyles.bodyLarge?.copyWith(
+        color: context.appColors.textPrimary,
+      ),
       icon: const Icon(AppIcons.dropdown),
       decoration: InputDecoration(labelText: label, errorText: errorText),
       items: [

@@ -97,4 +97,10 @@ void main() {
     expect(AppFormatters('en').calendarDate(d), 'Oct 20, 2026');
     expect(AppFormatters('bn').calendarDate(d), contains('২০'));
   });
+
+  test('a negative amount puts the sign before the symbol', () {
+    expect(AppFormatters('en').currency(-82000, 'BDT'), '-৳820.00');
+    expect(AppFormatters('bn').currency(-82000, 'BDT'), '-৳৮২০.০০');
+    expect(AppFormatters('en').currency(-1500, 'JPY'), '-¥1,500');
+  });
 }

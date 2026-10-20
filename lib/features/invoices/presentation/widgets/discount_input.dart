@@ -59,7 +59,7 @@ class DiscountInput extends StatelessWidget {
           DiscountType.percent => PercentField(
             key: const ValueKey(DiscountType.percent),
             label: label,
-            initialBasisPoints: _initial(current),
+            basisPoints: _initial(current),
             errorText: errorText,
             onChanged: (v) =>
                 onChanged(Discount(type: DiscountType.percent, value: v ?? 0)),

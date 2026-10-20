@@ -145,7 +145,7 @@ class _QuantityAndUnit extends StatelessWidget {
           child: DecimalField(
             label: l10n.fieldQuantity,
             decimalDigits: AppFormatters.quantityDecimalDigits,
-            initialScaled: line.quantityMilli,
+            value: line.quantityMilli,
             errorText: error,
             onChanged: (v) => vm.setLineQuantity(line.id, v),
           ),
@@ -186,10 +186,13 @@ class _LineTotal extends StatelessWidget {
               ),
             ),
             Flexible(
-              child: AmountText(
-                minor: totals.net,
-                currencyCode: currency,
+              child: Align(
                 alignment: AlignmentDirectional.centerEnd,
+                child: AmountText(
+                  minor: totals.net,
+                  currencyCode: currency,
+                  alignment: AlignmentDirectional.centerEnd,
+                ),
               ),
             ),
           ],

@@ -42,7 +42,7 @@ class InvoiceAdjustmentsSection extends StatelessWidget {
         PercentField(
           label: l10n.fieldTaxRate,
           hint: l10n.fieldDefaultTaxHint,
-          initialBasisPoints: draft.taxRateBasisPoints,
+          basisPoints: draft.taxRateBasisPoints,
           errorText: error(InvoiceField.tax),
           onChanged: vm.setTaxRate,
         ),

@@ -37,9 +37,12 @@ class AppFormatters {
   }
 
   /// Amount with currency symbol, e.g. `৳1,234.50` or `¥1,500`.
+  /// A negative amount puts the sign first: `-৳820.00`.
   String currency(int minor, String currencyCode) {
     final digits = currencyDecimalDigits(currencyCode);
-    return '${currencySymbol(currencyCode)}${minorUnits(minor, decimalDigits: digits)}';
+    final amount = minorUnits(minor.abs(), decimalDigits: digits);
+    final sign = minor < 0 ? _integer.symbols.MINUS_SIGN : '';
+    return '$sign${currencySymbol(currencyCode)}$amount';
   }
 
   /// Fixed-point [scaled] value with up to [decimalDigits] decimals and no

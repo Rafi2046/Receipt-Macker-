@@ -5,12 +5,13 @@ import '../../utils/formatters.dart';
 import 'decimal_field.dart';
 
 /// Percentage input (tax, discount). Reports basis points (1500 = 15%),
-/// null when empty; up to two decimals. Range checks live in the ViewModel.
+/// null when empty; up to two decimals. Follows [basisPoints] when it is
+/// changed from outside. Range checks live in the ViewModel.
 class PercentField extends StatelessWidget {
   const PercentField({
     required this.label,
     required this.onChanged,
-    this.initialBasisPoints,
+    this.basisPoints,
     this.hint,
     this.errorText,
     super.key,
@@ -18,7 +19,7 @@ class PercentField extends StatelessWidget {
 
   final String label;
   final ValueChanged<int?> onChanged;
-  final int? initialBasisPoints;
+  final int? basisPoints;
   final String? hint;
   final String? errorText;
 
@@ -26,7 +27,7 @@ class PercentField extends StatelessWidget {
   Widget build(BuildContext context) => DecimalField(
     label: label,
     decimalDigits: AppFormatters.percentDecimalDigits,
-    initialScaled: initialBasisPoints,
+    value: basisPoints,
     hint: hint,
     suffixText: context.l10n.percentSymbol,
     errorText: errorText,

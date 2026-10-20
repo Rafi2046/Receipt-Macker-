@@ -82,7 +82,7 @@ class ItemFormFields extends StatelessWidget {
         PercentField(
           label: l10n.fieldDefaultTax,
           hint: l10n.fieldDefaultTaxHint,
-          initialBasisPoints: draft.defaultTaxBasisPoints,
+          basisPoints: draft.defaultTaxBasisPoints,
           errorText: error(ItemField.defaultTax),
           onChanged: vm.setDefaultTax,
         ),

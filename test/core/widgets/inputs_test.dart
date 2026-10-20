@@ -4,6 +4,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:receipt_maker/core/widgets/inputs/amount_field.dart';
 import 'package:receipt_maker/core/widgets/inputs/app_search_field.dart';
 import 'package:receipt_maker/core/widgets/inputs/date_field.dart';
+import 'package:receipt_maker/core/widgets/inputs/decimal_field.dart';
 import 'package:receipt_maker/core/widgets/inputs/dropdown_field.dart';
 import 'package:receipt_maker/core/widgets/inputs/percent_field.dart';
 
@@ -113,11 +114,7 @@ void main() {
     ) async {
       final values = <int?>[];
       await tester.pumpApp(
-        PercentField(
-          label: 'Tax',
-          initialBasisPoints: 1500,
-          onChanged: values.add,
-        ),
+        PercentField(label: 'Tax', basisPoints: 1500, onChanged: values.add),
       );
       expect(find.text('15'), findsOneWidget);
       expect(find.text('%'), findsOneWidget);
@@ -145,6 +142,37 @@ void main() {
       await tester.pump();
       expect(queries, ['rah', '']);
       expect(find.text('rah'), findsNothing);
+    });
+  });
+
+  group('DecimalField', () {
+    testWidgets('follows a value changed from outside, not while typing', (
+      tester,
+    ) async {
+      final value = ValueNotifier<int?>(null);
+      addTearDown(value.dispose);
+      await tester.pumpApp(
+        ValueListenableBuilder<int?>(
+          valueListenable: value,
+          builder: (_, v, _) => DecimalField(
+            label: 'Tax',
+            decimalDigits: 2,
+            value: v,
+            onChanged: (n) => value.value = n,
+          ),
+        ),
+      );
+      value.value = 1500;
+      await tester.pump();
+      expect(find.text('15'), findsOneWidget, reason: 'set from outside');
+
+      await tester.enterText(find.byType(TextField), '0.');
+      await tester.pump();
+      expect(find.text('0.'), findsOneWidget, reason: 'typing is kept');
+      await tester.enterText(find.byType(TextField), '7.5');
+      await tester.pump();
+      expect(value.value, 750);
+      expect(find.text('7.5'), findsOneWidget);
     });
   });
 }
