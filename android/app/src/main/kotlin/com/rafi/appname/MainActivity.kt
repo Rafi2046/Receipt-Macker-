@@ -1,4 +1,4 @@
-package com.example.receipt_macker
+package com.rafi.appname
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -46,3 +46,12 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Generated code (regenerate with scripts/gen.sh)
+*.g.dart
+*.freezed.dart
+/lib/l10n/gen/
+
+# PDF spike build outputs
+/spikes/**/build/
+/spikes/**/.dart_tool/

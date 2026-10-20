@@ -1,4 +1,4 @@
-# receipt_macker
+# receipt_maker
 
 A new Flutter project.
 
