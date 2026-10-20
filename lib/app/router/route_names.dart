@@ -2,4 +2,6 @@
 abstract final class RouteNames {
   static const String themePreview = 'themePreview';
   static const String themePreviewPath = '/';
+  static const String widgetGallery = 'widgetGallery';
+  static const String widgetGalleryPath = '/debug/widgets';
 }

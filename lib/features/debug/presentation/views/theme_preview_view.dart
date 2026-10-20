@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../app/router/route_names.dart';
 
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
+import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../settings/presentation/view_models/app_settings_view_model.dart';
 import '../widgets/color_swatch_grid.dart';
 import '../widgets/numbers_sample.dart';
@@ -53,10 +57,11 @@ class ThemePreviewView extends ConsumerWidget {
                 title: l10n.numbersSectionTitle,
                 child: const NumbersSample(),
               ),
-              FilledButton.icon(
-                onPressed: () {},
-                icon: const Icon(AppIcons.add),
-                label: Text(l10n.sampleButton),
+              AppButton(
+                label: l10n.galleryOpen,
+                icon: AppIcons.widgets,
+                expand: true,
+                onPressed: () => context.pushNamed(RouteNames.widgetGallery),
               ),
             ],
           ),
