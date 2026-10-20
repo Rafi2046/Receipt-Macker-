@@ -236,14 +236,5 @@
   "invoiceMarkedSent": "পাঠানো হিসেবে চিহ্নিত হয়েছে",
   "invoiceMarkedDraft": "ড্রাফটে ফেরত নেওয়া হয়েছে",
   "invoiceIssuedOn": "ইস্যু {date}",
-  "invoiceDueOn": "শেষ তারিখ {date}",
-  "logoConceptsTitle": "লোগো কনসেপ্ট",
-  "logoConceptName": "কনসেপ্ট {letter}",
-  "logoLightWallpaper": "হালকা ওয়ালপেপার",
-  "logoDarkWallpaper": "গাঢ় ওয়ালপেপার",
-  "logoColorWallpaper": "রঙিন ওয়ালপেপার",
-  "logoSmallSizes": "ছোট আকার (৪৮, ৩২, ২৪, ১৬)",
-  "logoSplash": "স্প্ল্যাশ স্ক্রিন",
-  "logoSplashLight": "{name}, হালকা",
-  "logoSplashDark": "{name}, গাঢ়"
+  "invoiceDueOn": "শেষ তারিখ {date}"
 }

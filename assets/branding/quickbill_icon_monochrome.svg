@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108">
+  <!-- Android 13+ themed icon: one color, the system tints it. The bolt and the line are cut out of the receipt. -->
+  <path fill="#000000" fill-rule="evenodd" d="M36 30a2 2 0 0 1 2-2h32a2 2 0 0 1 2 2v48l-3-3-3 3-3-3-3 3-3-3-3 3-3-3-3 3-3-3-3 3-3-3-3 3z
+    M42.5 34a1.5 1.5 0 0 0 0 3h11a1.5 1.5 0 0 0 0-3z
+    M58.5 40 45.5 58h8l-3 13L63.5 52h-8z"/>
+</svg>

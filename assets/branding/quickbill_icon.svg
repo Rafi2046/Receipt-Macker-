@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108">
+  <!-- QuickBill app icon (concept A, chosen by the owner). Android adaptive grid: 108 units;
+       launchers show the middle 72 and mask it; all artwork stays inside the 66-unit safe circle. -->
+  <rect width="108" height="108" fill="#006A4E"/>
+  <path d="M36 30a2 2 0 0 1 2-2h32a2 2 0 0 1 2 2v48l-3-3-3 3-3-3-3 3-3-3-3 3-3-3-3 3-3-3-3 3-3-3-3 3z" fill="#FFFFFF"/>
+  <rect x="41" y="34" width="14" height="3" rx="1.5" fill="#B7D9CC"/>
+  <path d="M58.5 40 45.5 58h8l-3 13L63.5 52h-8z" fill="#E0A100"/>
+</svg>

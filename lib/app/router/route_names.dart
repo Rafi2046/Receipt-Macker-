@@ -31,12 +31,4 @@ abstract final class RouteNames {
   static const String themePreviewPath = '/debug/theme';
   static const String widgetGallery = 'widgetGallery';
   static const String widgetGalleryPath = '/debug/widgets';
-  static const String logoConcepts = 'logoConcepts';
-  static const String logoConceptsPath = '/debug/logos';
-  static const String logoSplash = 'logoSplash';
-  static const String logoSplashPath = '/debug/logos/splash';
-
-  /// Query parameters of the splash preview.
-  static const String conceptParam = 'concept';
-  static const String darkParam = 'dark';
 }

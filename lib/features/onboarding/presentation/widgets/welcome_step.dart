@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
-import '../../../../core/constants/app_icons.dart';
+import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
@@ -26,10 +26,11 @@ class WelcomeStep extends ConsumerWidget {
       children: [
         Align(
           alignment: AlignmentDirectional.centerStart,
-          child: Icon(
-            AppIcons.invoice,
-            size: AppSizes.iconXl,
-            color: context.appColors.primary,
+          child: Image.asset(
+            AppImages.logo,
+            width: AppSizes.logoMd,
+            height: AppSizes.logoMd,
+            semanticLabel: l10n.appTitle,
           ),
         ),
         const SizedBox(height: AppSpacing.lg),

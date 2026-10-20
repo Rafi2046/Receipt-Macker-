@@ -15,7 +15,7 @@
 | Developer / publisher | IRR Dev Labs |
 | Support email | irrdevlabs.support@gmail.com |
 | Brand colors | Bottle green & gold (decided M0). Light: primary `#006A4E`, secondary `#E0A100`. Dark: primary `#4CC9A0`, secondary `#F5C542`. Source of truth: `app/theme/app_colors.dart` |
-| Logo / app icon | Claude proposes 3 concepts; source SVGs in `assets/branding/` |
+| Logo / app icon | Concept A, receipt with a lightning bolt (owner pick). Source SVGs in `assets/branding/`; regenerate icons and splash with `scripts/branding.sh` |
 | Languages | English + Bangla (from day one) |
 | Default currency | BDT (৳), user can change; every currency supported |
 
@@ -81,6 +81,7 @@ Use these unless the owner approves a change. Use the latest stable versions tha
 | Analytics / crashes | `firebase_core`, `firebase_analytics`, `firebase_crashlytics` |
 | Prefs (small flags only) | `shared_preferences` |
 | Testing | `flutter_test`, `mocktail` |
+| App icon / splash (dev only) | `flutter_launcher_icons`, `flutter_native_splash`, run by `scripts/branding.sh` |
 
 Never add another package without asking the owner first, with a one-line reason.
 
