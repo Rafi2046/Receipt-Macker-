@@ -71,6 +71,11 @@ class _ListLinks extends StatelessWidget {
         children: [
           SectionHeader(title: l10n.homeListsSection),
           HomeLinkTile(
+            icon: AppIcons.invoice,
+            label: l10n.invoicesTitle,
+            onTap: () => context.pushNamed(RouteNames.invoices),
+          ),
+          HomeLinkTile(
             icon: AppIcons.client,
             label: l10n.clientsTitle,
             onTap: () => context.pushNamed(RouteNames.clients),

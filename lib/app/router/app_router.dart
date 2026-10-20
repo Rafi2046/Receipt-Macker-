@@ -12,6 +12,7 @@ import '../../features/items/presentation/views/item_editor_view.dart';
 import '../../features/items/presentation/views/item_list_view.dart';
 import '../../features/onboarding/presentation/views/onboarding_view.dart';
 import '../../features/onboarding/providers.dart';
+import 'invoice_routes.dart';
 import 'route_names.dart';
 
 part 'app_router.g.dart';
@@ -49,6 +50,7 @@ GoRouter appRouter(Ref ref) {
         path: RouteNames.businessProfilePath,
         builder: (_, _) => const BusinessProfileView(),
       ),
+      invoiceRoutes,
       _clientRoutes,
       _itemRoutes,
       if (kDebugMode) ..._debugRoutes,

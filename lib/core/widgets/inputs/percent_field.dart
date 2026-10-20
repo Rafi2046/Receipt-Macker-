@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../utils/extensions/l10n_extension.dart';
 import '../../utils/formatters.dart';
-import '../../utils/money_input_parser.dart';
-import 'amount_input_formatter.dart';
-import 'app_text_field.dart';
+import 'decimal_field.dart';
 
 /// Percentage input (tax, discount). Reports basis points (1500 = 15%),
 /// null when empty; up to two decimals. Range checks live in the ViewModel.
@@ -24,23 +22,14 @@ class PercentField extends StatelessWidget {
   final String? hint;
   final String? errorText;
 
-  static const int _decimals = AppFormatters.percentDecimalDigits;
-
   @override
-  Widget build(BuildContext context) {
-    final initial = initialBasisPoints;
-    return AppTextField(
-      label: label,
-      hint: hint,
-      initialValue: initial == null
-          ? null
-          : MoneyInputParser.formatCompact(initial, decimalDigits: _decimals),
-      errorText: errorText,
-      suffixText: context.l10n.percentSymbol,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      inputFormatters: [AmountInputFormatter(decimalDigits: _decimals)],
-      onChanged: (text) =>
-          onChanged(MoneyInputParser.parse(text, decimalDigits: _decimals)),
-    );
-  }
+  Widget build(BuildContext context) => DecimalField(
+    label: label,
+    decimalDigits: AppFormatters.percentDecimalDigits,
+    initialScaled: initialBasisPoints,
+    hint: hint,
+    suffixText: context.l10n.percentSymbol,
+    errorText: errorText,
+    onChanged: onChanged,
+  );
 }

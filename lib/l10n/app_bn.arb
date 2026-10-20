@@ -236,5 +236,6 @@
   "invoiceMarkedSent": "পাঠানো হিসেবে চিহ্নিত হয়েছে",
   "invoiceMarkedDraft": "ড্রাফটে ফেরত নেওয়া হয়েছে",
   "invoiceIssuedOn": "ইস্যু {date}",
-  "invoiceDueOn": "শেষ তারিখ {date}"
+  "invoiceDueOn": "শেষ তারিখ {date}",
+  "lineTotal": "লাইনের মোট"
 }

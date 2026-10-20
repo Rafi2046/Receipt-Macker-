@@ -26,6 +26,18 @@ abstract final class RouteNames {
   static const String itemEdit = 'itemEdit';
   static const String itemEditPath = _editPath;
 
+  static const String invoices = 'invoices';
+  static const String invoicesPath = '/invoices';
+  static const String invoiceNew = 'invoiceNew';
+  static const String invoiceNewPath = _newPath;
+  static const String invoiceDetail = 'invoiceDetail';
+  static const String invoiceDetailPath = ':$idParam';
+  static const String invoiceEdit = 'invoiceEdit';
+  static const String invoiceEditPath = 'edit';
+
+  /// Query parameter of [invoiceNew]: the invoice to copy.
+  static const String copyOfParam = 'copyOf';
+
   // Debug builds only.
   static const String themePreview = 'themePreview';
   static const String themePreviewPath = '/debug/theme';
