@@ -1,43 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:receipt_maker/app/app.dart';
 import 'package:receipt_maker/features/business_profile/data/mappers/business_profile_mapper.dart';
 import 'package:receipt_maker/features/business_profile/domain/models/business_profile.dart';
 
+import '../helpers/app_harness.dart';
 import '../helpers/fake_app_preferences.dart';
 import '../helpers/test_env.dart';
-
-/// pumpAndSettle that fails after 3s instead of hanging for 10 minutes.
-Future<void> settle(WidgetTester tester) => tester.pumpAndSettle(
-  const Duration(milliseconds: 100),
-  EnginePhase.sendSemanticsUpdate,
-  const Duration(seconds: 3),
-);
 
 void main() {
   setUpAll(initializeDateFormatting);
 
   late TestEnv env;
 
-  Future<void> pumpApp(WidgetTester tester) async {
-    tester.view.physicalSize =
-        const Size(400, 860) * tester.view.devicePixelRatio;
-    addTearDown(tester.view.resetPhysicalSize);
-    await tester.pumpWidget(
-      ProviderScope(overrides: env.overrides, child: const App()),
-    );
-    await settle(tester);
-  }
+  Future<void> pumpApp(WidgetTester tester) => tester.pumpFullApp(env);
 
-  Future<void> tearDownApp(WidgetTester tester) async {
-    // Let provider disposal finish in the fake zone before closing the DB
-    // for real, or the close waits on work that never runs.
-    await tester.pumpWidget(const SizedBox());
-    await settle(tester);
-    await tester.runAsync(env.dispose);
-  }
+  Future<void> tearDownApp(WidgetTester tester) => tester.tearDownFullApp(env);
 
   testWidgets('first run: onboarding in Bangla ends on home', (tester) async {
     env = TestEnv();

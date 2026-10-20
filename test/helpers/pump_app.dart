@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:receipt_maker/app/provider_retry.dart';
 import 'package:receipt_maker/app/theme/app_theme.dart';
 import 'package:receipt_maker/l10n/gen/app_localizations.dart';
 
@@ -24,6 +25,7 @@ extension PumpApp on WidgetTester {
     await pumpWidget(
       ProviderScope(
         overrides: overrides,
+        retry: appProviderRetry,
         child: MaterialApp(
           theme: AppTheme.light(),
           darkTheme: AppTheme.dark(),

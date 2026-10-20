@@ -6,6 +6,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:receipt_maker/app/provider_retry.dart';
 import 'package:receipt_maker/core/database/app_database.dart';
 import 'package:receipt_maker/core/database/app_database_provider.dart';
 import 'package:receipt_maker/core/services/image_picker_service.dart';
@@ -46,7 +47,8 @@ class TestEnv {
     imagePickerServiceProvider.overrideWithValue(picker),
   ];
 
-  ProviderContainer container() => ProviderContainer(overrides: overrides);
+  ProviderContainer container() =>
+      ProviderContainer(overrides: overrides, retry: appProviderRetry);
 
   /// Relative paths of every stored image file.
   List<String> storedImages() {

@@ -6,6 +6,7 @@ import '../core/services/preferences/shared_app_preferences.dart';
 import '../core/services/service_providers.dart';
 import '../features/settings/domain/models/app_language.dart';
 import 'app.dart';
+import 'provider_retry.dart';
 
 /// Startup work before the first frame. Firebase and ads are added in M8/M9.
 Future<void> bootstrap() async {
@@ -23,6 +24,7 @@ Future<void> bootstrap() async {
   runApp(
     ProviderScope(
       overrides: [appPreferencesProvider.overrideWithValue(prefs)],
+      retry: appProviderRetry,
       child: const App(),
     ),
   );
