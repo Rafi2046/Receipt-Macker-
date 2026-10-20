@@ -76,6 +76,7 @@ class OnboardingView extends ConsumerWidget {
             ),
           ],
         ),
+        bottomBarAboveKeyboard: true,
         bottomBar: form == null
             ? null
             : OnboardingNavBar(

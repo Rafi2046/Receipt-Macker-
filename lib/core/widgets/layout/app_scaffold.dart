@@ -6,6 +6,9 @@ import '../../constants/app_spacing.dart';
 /// Screen frame: app bar, safe area, centered content capped at
 /// [AppSizes.maxContentWidth] for tablets, optional FAB and bottom bar
 /// (the ad banner slot on list screens).
+///
+/// Form screens set [bottomBarAboveKeyboard] so their Save / Continue
+/// button stays reachable while typing.
 class AppScaffold extends StatelessWidget {
   const AppScaffold({
     required this.body,
@@ -14,6 +17,7 @@ class AppScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.bottomBar,
     this.padded = false,
+    this.bottomBarAboveKeyboard = false,
     super.key,
   });
 
@@ -23,10 +27,13 @@ class AppScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
   final Widget? bottomBar;
   final bool padded;
+  final bool bottomBarAboveKeyboard;
 
   @override
   Widget build(BuildContext context) {
     final heading = title;
+    final bar = bottomBar;
+    final keyboard = MediaQuery.viewInsetsOf(context).bottom;
     return Scaffold(
       appBar: heading == null
           ? null
@@ -49,7 +56,12 @@ class AppScaffold extends StatelessWidget {
         ),
       ),
       floatingActionButton: floatingActionButton,
-      bottomNavigationBar: bottomBar,
+      bottomNavigationBar: bar != null && bottomBarAboveKeyboard
+          ? Padding(
+              padding: EdgeInsets.only(bottom: keyboard),
+              child: bar,
+            )
+          : bar,
     );
   }
 }
