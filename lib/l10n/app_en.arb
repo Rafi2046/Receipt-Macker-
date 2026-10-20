@@ -414,5 +414,24 @@
       }
     }
   },
-  "debugAddSamples": "Add sample invoices"
+  "debugAddSamples": "Add sample invoices",
+  "recordPayment": "Record payment",
+  "editPayment": "Edit payment",
+  "paymentSaved": "Payment saved",
+  "paymentDeleted": "Payment deleted",
+  "paymentDeleteTitle": "Delete this payment?",
+  "paymentDeleteMessage": "The balance due will go up. This receipt number won't be reused.",
+  "fieldPaymentAmount": "Amount",
+  "fieldPaymentDate": "Date paid",
+  "fieldPaymentMethod": "Method",
+  "fieldPaymentNote": "Note",
+  "sectionPayments": "Payments",
+  "paymentsEmpty": "No payments yet",
+  "methodCash": "Cash",
+  "methodBkash": "bKash",
+  "methodNagad": "Nagad",
+  "methodRocket": "Rocket",
+  "methodBankTransfer": "Bank transfer",
+  "methodCard": "Card",
+  "methodOther": "Other"
 }

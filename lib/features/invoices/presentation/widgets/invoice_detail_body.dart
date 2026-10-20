@@ -8,6 +8,7 @@ import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/layout/app_card.dart';
 import '../../../../core/widgets/layout/app_divider.dart';
 import '../../../../core/widgets/layout/section_header.dart';
+import '../../../payments/presentation/widgets/invoice_payments_section.dart';
 import '../view_models/invoice_detail_state.dart';
 import 'bill_to_card.dart';
 import 'invoice_detail_header.dart';
@@ -69,6 +70,7 @@ class InvoiceDetailBody extends StatelessWidget {
           taxRateBasisPoints: invoice.taxRateBasisPoints,
           taxInclusive: invoice.taxInclusive,
         ),
+        InvoicePaymentsSection(state: state),
         for (final (label, text) in notes) ...[
           _Header(title: label),
           Text(text, style: context.textStyles.bodyMedium),

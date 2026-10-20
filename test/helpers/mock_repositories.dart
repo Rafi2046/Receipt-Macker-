@@ -8,12 +8,17 @@ import 'package:receipt_maker/features/invoices/domain/models/line_item.dart';
 import 'package:receipt_maker/features/invoices/domain/repositories/invoice_repository.dart';
 import 'package:receipt_maker/features/items/domain/models/item.dart';
 import 'package:receipt_maker/features/items/domain/repositories/item_repository.dart';
+import 'package:receipt_maker/features/payments/domain/models/payment.dart';
+import 'package:receipt_maker/features/payments/domain/models/payment_method.dart';
+import 'package:receipt_maker/features/payments/domain/repositories/payment_repository.dart';
 
 class MockClientRepository extends Mock implements ClientRepository {}
 
 class MockItemRepository extends Mock implements ItemRepository {}
 
 class MockInvoiceRepository extends Mock implements InvoiceRepository {}
+
+class MockPaymentRepository extends Mock implements PaymentRepository {}
 
 class MockBusinessProfileRepository extends Mock
     implements BusinessProfileRepository {}
@@ -59,4 +64,15 @@ void registerRepositoryFallbacks() {
   registerFallbackValue(testClient());
   registerFallbackValue(testItem());
   registerFallbackValue(testInvoice());
+  registerFallbackValue(testPayment());
 }
+
+Payment testPayment({String id = 'pay1', int amount = 10000}) => Payment(
+  id: id,
+  invoiceId: 'inv1',
+  amountMinor: amount,
+  paidOn: CalendarDate(2026, 10, 20),
+  method: PaymentMethod.cash,
+  createdAt: testTime,
+  updatedAt: testTime,
+);
