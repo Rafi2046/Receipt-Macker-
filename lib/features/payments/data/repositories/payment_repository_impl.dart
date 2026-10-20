@@ -26,6 +26,13 @@ class PaymentRepositoryImpl implements PaymentRepository {
       .map((rows) => [for (final r in rows) r.toDomain()]);
 
   @override
+  Future<Result<Payment>> find(String id) => Result.guard(() async {
+    final row = await _payments.findById(id);
+    if (row == null) throw const NotFoundFailure();
+    return row.toDomain();
+  }, onError: _dbFailure);
+
+  @override
   Future<Result<Payment>> save(Payment payment) => Result.guard(
     () => _db.transaction(() async {
       final invoice = await _invoices.findById(payment.invoiceId);

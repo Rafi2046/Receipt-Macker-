@@ -36,6 +36,9 @@ abstract final class RouteNames {
   static const String invoiceEditPath = 'edit';
   static const String invoicePdf = 'invoicePdf';
   static const String invoicePdfPath = 'pdf';
+  static const String paymentIdParam = 'paymentId';
+  static const String paymentReceipt = 'paymentReceipt';
+  static const String paymentReceiptPath = 'payments/:$paymentIdParam';
 
   /// Query parameter of [invoiceNew]: the invoice to copy.
   static const String copyOfParam = 'copyOf';

@@ -433,5 +433,28 @@
   "methodRocket": "Rocket",
   "methodBankTransfer": "Bank transfer",
   "methodCard": "Card",
-  "methodOther": "Other"
+  "methodOther": "Other",
+  "openReceipt": "Receipt",
+  "pdfReceiptTitle": "Receipt",
+  "pdfReceivedFrom": "Received from",
+  "pdfAmountReceived": "Amount received",
+  "pdfPaymentFor": "Payment for {number}",
+  "@pdfPaymentFor": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "shareReceiptSubject": "Receipt {number} from {business}",
+  "@shareReceiptSubject": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "business": {
+        "type": "String"
+      }
+    }
+  }
 }

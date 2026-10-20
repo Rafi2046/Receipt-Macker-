@@ -4,6 +4,7 @@ import '../../features/invoices/presentation/views/invoice_detail_view.dart';
 import '../../features/invoices/presentation/views/invoice_editor_view.dart';
 import '../../features/invoices/presentation/views/invoice_list_view.dart';
 import '../../features/invoices/presentation/views/invoice_pdf_view.dart';
+import '../../features/receipts/presentation/views/receipt_pdf_view.dart';
 import 'route_names.dart';
 
 /// `/invoices` (list), `/invoices/new?copyOf=` (editor, optionally a copy),
@@ -41,6 +42,13 @@ final GoRoute invoiceRoutes = GoRoute(
           path: RouteNames.invoicePdfPath,
           builder: (_, state) => InvoicePdfView(
             invoiceId: state.pathParameters[RouteNames.idParam] ?? '',
+          ),
+        ),
+        GoRoute(
+          name: RouteNames.paymentReceipt,
+          path: RouteNames.paymentReceiptPath,
+          builder: (_, state) => ReceiptPdfView(
+            paymentId: state.pathParameters[RouteNames.paymentIdParam] ?? '',
           ),
         ),
       ],

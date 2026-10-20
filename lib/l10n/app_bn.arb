@@ -283,5 +283,28 @@
   "methodRocket": "রকেট",
   "methodBankTransfer": "ব্যাংক ট্রান্সফার",
   "methodCard": "কার্ড",
-  "methodOther": "অন্যান্য"
+  "methodOther": "অন্যান্য",
+  "openReceipt": "রসিদ",
+  "pdfReceiptTitle": "রসিদ",
+  "pdfReceivedFrom": "যাঁর কাছ থেকে",
+  "pdfAmountReceived": "গৃহীত অর্থ",
+  "pdfPaymentFor": "{number}-এর পেমেন্ট",
+  "@pdfPaymentFor": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "shareReceiptSubject": "{business} থেকে রসিদ {number}",
+  "@shareReceiptSubject": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "business": {
+        "type": "String"
+      }
+    }
+  }
 }

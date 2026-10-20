@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
@@ -52,6 +54,13 @@ class InvoicePaymentsSection extends ConsumerWidget {
             currencyCode: state.invoice.currencyCode,
             onEdit: (id) => _open(context, ref, paymentId: id),
             onDelete: (payment) => _delete(context, ref, payment),
+            onReceipt: (id) => context.pushNamed(
+              RouteNames.paymentReceipt,
+              pathParameters: {
+                RouteNames.idParam: invoiceId,
+                RouteNames.paymentIdParam: id,
+              },
+            ),
           ),
           loading: () => const LoadingView(),
           error: (e, _) => ErrorView.fromError(
@@ -130,12 +139,14 @@ class _List extends StatelessWidget {
     required this.currencyCode,
     required this.onEdit,
     required this.onDelete,
+    required this.onReceipt,
   });
 
   final List<Payment> payments;
   final String currencyCode;
   final ValueChanged<String> onEdit;
   final ValueChanged<Payment> onDelete;
+  final ValueChanged<String> onReceipt;
 
   @override
   Widget build(BuildContext context) {
@@ -157,6 +168,7 @@ class _List extends StatelessWidget {
               currencyCode: currencyCode,
               onEdit: () => onEdit(payment.id),
               onDelete: () => onDelete(payment),
+              onReceipt: () => onReceipt(payment.id),
             ),
         ],
       ),
@@ -170,12 +182,14 @@ class _PaymentTile extends StatelessWidget {
     required this.currencyCode,
     required this.onEdit,
     required this.onDelete,
+    required this.onReceipt,
   });
 
   final Payment payment;
   final String currencyCode;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final VoidCallback onReceipt;
 
   @override
   Widget build(BuildContext context) {
@@ -200,6 +214,11 @@ class _PaymentTile extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        AppIconButton(
+          icon: AppIcons.receipt,
+          semanticLabel: l10n.openReceipt,
+          onPressed: onReceipt,
         ),
         AppIconButton(
           icon: AppIcons.edit,
