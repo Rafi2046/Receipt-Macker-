@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:receipt_maker/core/utils/calendar_date.dart';
 import 'package:receipt_maker/core/utils/formatters.dart';
 
 void main() {
@@ -82,5 +83,18 @@ void main() {
       expect(f.percent(750), '৭.৫%');
       expect(f.percent(10000), '১০০%');
     });
+  });
+
+  test('quantity drops trailing zeros and localizes digits', () {
+    expect(AppFormatters('en').quantity(1000), '1');
+    expect(AppFormatters('en').quantity(2500), '2.5');
+    expect(AppFormatters('en').quantity(1234567), '1,234.567');
+    expect(AppFormatters('bn').quantity(2500), '২.৫');
+  });
+
+  test('calendar dates format without time-zone shifts', () {
+    final d = CalendarDate(2026, 10, 20);
+    expect(AppFormatters('en').calendarDate(d), 'Oct 20, 2026');
+    expect(AppFormatters('bn').calendarDate(d), contains('২০'));
   });
 }

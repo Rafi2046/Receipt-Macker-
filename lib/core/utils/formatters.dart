@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 
+import 'calendar_date.dart';
 import 'money_input_parser.dart';
 
 /// Locale-aware number and date formatting.
@@ -41,21 +42,32 @@ class AppFormatters {
     return '${currencySymbol(currencyCode)}${minorUnits(minor, decimalDigits: digits)}';
   }
 
-  /// Percentage from basis points without trailing zeros, e.g. 1500 gives
-  /// `15%` and 750 gives `7.5%` (`৭.৫%` in Bangla).
-  String percent(int basisPoints) {
-    final fixed = minorUnits(basisPoints, decimalDigits: percentDecimalDigits);
-    final symbols = _integer.symbols;
-    final text = MoneyInputParser.trimFraction(
+  /// Fixed-point [scaled] value with up to [decimalDigits] decimals and no
+  /// trailing zeros, e.g. 1500 with 3 digits gives `1.5` (`১.৫` in Bangla).
+  String compactDecimal(int scaled, {required int decimalDigits}) {
+    final fixed = minorUnits(scaled, decimalDigits: decimalDigits);
+    return MoneyInputParser.trimFraction(
       fixed,
       _zeroDigit,
-      symbols.DECIMAL_SEP,
+      _integer.symbols.DECIMAL_SEP,
     );
-    return '$text${symbols.PERCENT}';
   }
+
+  /// Percentage from basis points without trailing zeros, e.g. 1500 gives
+  /// `15%` and 750 gives `7.5%` (`৭.৫%` in Bangla).
+  String percent(int basisPoints) =>
+      '${compactDecimal(basisPoints, decimalDigits: percentDecimalDigits)}'
+      '${_integer.symbols.PERCENT}';
+
+  /// Quantity from thousandths, e.g. 2500 gives `2.5`.
+  String quantity(int quantityMilli) =>
+      compactDecimal(quantityMilli, decimalDigits: quantityDecimalDigits);
 
   /// Basis points carry two decimals of a percent.
   static const int percentDecimalDigits = 2;
+
+  /// Quantities are stored in thousandths.
+  static const int quantityDecimalDigits = 3;
 
   /// ISO 4217 minor-unit digits: 2 for BDT/USD, 0 for JPY.
   static int currencyDecimalDigits(String currencyCode) =>
@@ -64,6 +76,10 @@ class AppFormatters {
   /// Short symbol (`৳`, `\$`, `¥`); falls back to the ISO code.
   static String currencySymbol(String currencyCode) =>
       NumberFormat.simpleCurrency(name: currencyCode).currencySymbol;
+
+  /// Medium date for a calendar day (issue or due date), e.g. `Oct 20, 2026`.
+  String calendarDate(CalendarDate value) =>
+      DateFormat.yMMMd(languageCode).format(value.toLocalDateTime());
 
   /// Medium date in local time, e.g. `Oct 20, 2026` / `২০ অক্টো, ২০২৬`.
   String date(DateTime value) =>

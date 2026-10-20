@@ -6,4 +6,18 @@ enum ValidationError {
   invalidPhone,
   invalidUrl,
   percentTooHigh,
+
+  /// Must be more than zero (e.g. a quantity).
+  mustBePositive,
+
+  /// Above the largest supported amount.
+  amountTooLarge,
+
+  /// A flat discount bigger than what it applies to.
+  discountTooLarge,
+  dueBeforeIssue,
+  noLines,
+
+  /// Another invoice already uses this number.
+  numberTaken,
 }

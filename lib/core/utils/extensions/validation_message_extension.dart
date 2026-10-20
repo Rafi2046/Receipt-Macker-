@@ -11,5 +11,11 @@ extension ValidationMessageX on AppLocalizations {
     ValidationError.invalidPhone => validationPhone,
     ValidationError.invalidUrl => validationUrl,
     ValidationError.percentTooHigh => validationPercent,
+    ValidationError.mustBePositive => validationPositive,
+    ValidationError.amountTooLarge => validationAmountTooLarge,
+    ValidationError.discountTooLarge => validationDiscountTooLarge,
+    ValidationError.dueBeforeIssue => validationDueBeforeIssue,
+    ValidationError.noLines => validationNoLines,
+    ValidationError.numberTaken => validationNumberTaken,
   };
 }

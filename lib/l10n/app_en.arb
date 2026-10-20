@@ -149,8 +149,8 @@
   "discardChangesTitle": "Discard changes?",
   "discardChangesMessage": "Your changes won't be saved.",
   "homeEditProfile": "Edit business profile",
-  "homeComingSoonTitle": "Invoices are coming next",
-  "homeComingSoonBody": "Your business profile is ready. Invoices arrive in the next update.",
+  "homeComingSoonTitle": "PDF and sharing come next",
+  "homeComingSoonBody": "Invoices are ready. PDF preview, sharing and printing arrive in the next update.",
   "debugTools": "Developer tools",
   "percentSymbol": "%",
   "clearSearch": "Clear search",
@@ -222,6 +222,134 @@
       "rate": {
         "type": "String",
         "example": "15%"
+      }
+    }
+  },
+  "validationPositive": "Must be more than zero",
+  "validationAmountTooLarge": "This amount is too large",
+  "validationDiscountTooLarge": "The discount can't be more than the amount",
+  "validationDueBeforeIssue": "The due date can't be before the issue date",
+  "validationNoLines": "Add at least one item",
+  "validationNumberTaken": "Another invoice already uses this number",
+  "validationFixErrors": "Some fields need attention",
+  "invoicesTitle": "Invoices",
+  "invoiceNewTitle": "New invoice",
+  "invoiceEditTitle": "Edit invoice",
+  "invoicesEmptyTitle": "No invoices yet",
+  "invoicesEmptyBody": "Create an invoice in under a minute: pick a client, add items, save.",
+  "invoicesEmptyAction": "Create your first invoice",
+  "invoicesSearchHint": "Search by number or client",
+  "noClient": "No client",
+  "fieldInvoiceNumber": "Invoice number",
+  "fieldIssueDate": "Issue date",
+  "fieldDueTerm": "Payment due",
+  "fieldDueDate": "Due date",
+  "dueOnReceipt": "On receipt",
+  "dueInDays": "In {days} days",
+  "@dueInDays": {
+    "placeholders": {
+      "days": {
+        "type": "String",
+        "example": "7"
+      }
+    }
+  },
+  "dueCustom": "Pick a date",
+  "sectionBillTo": "Bill to",
+  "chooseClient": "Choose a client",
+  "chooseClientHint": "Optional. Leave empty for a walk-in customer.",
+  "chooseItem": "Add an item",
+  "addOneOffLine": "One-off line",
+  "lineEditTitle": "Line item",
+  "fieldQuantity": "Quantity",
+  "fieldDiscount": "Discount",
+  "discountNone": "None",
+  "discountFlat": "Amount",
+  "removeFromInvoice": "Remove from invoice",
+  "done": "Done",
+  "lineQuantityPrice": "{quantity} × {price}",
+  "@lineQuantityPrice": {
+    "placeholders": {
+      "quantity": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "lineCurrencyNote": "This item is priced in {itemCurrency}. Enter its price in {invoiceCurrency}.",
+  "@lineCurrencyNote": {
+    "placeholders": {
+      "itemCurrency": {
+        "type": "String"
+      },
+      "invoiceCurrency": {
+        "type": "String"
+      }
+    }
+  },
+  "sectionAdjustments": "Discount, tax & shipping",
+  "fieldTaxRate": "Tax rate",
+  "taxInclusiveLabel": "Prices include tax",
+  "fieldShipping": "Shipping or extra charge",
+  "sectionNotesTerms": "Notes & terms",
+  "fieldTerms": "Terms",
+  "totalSubtotal": "Subtotal",
+  "totalDiscount": "Discount",
+  "totalTax": "Tax {rate}",
+  "@totalTax": {
+    "placeholders": {
+      "rate": {
+        "type": "String",
+        "example": "15%"
+      }
+    }
+  },
+  "totalTaxIncluded": "Includes tax {rate}",
+  "@totalTaxIncluded": {
+    "placeholders": {
+      "rate": {
+        "type": "String",
+        "example": "15%"
+      }
+    }
+  },
+  "totalShipping": "Shipping",
+  "totalTotal": "Total",
+  "totalPaid": "Paid",
+  "totalBalance": "Balance due",
+  "invoiceSaved": "Invoice saved",
+  "invoiceDeleted": "Invoice deleted",
+  "invoiceDeleteTitle": "Delete this invoice?",
+  "invoiceDeleteMessage": "{number} will be deleted. Its number won't be given to a new invoice.",
+  "@invoiceDeleteMessage": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "edit": "Edit",
+  "moreActions": "More actions",
+  "invoiceDuplicate": "Duplicate",
+  "invoiceMarkSent": "Mark as sent",
+  "invoiceMarkDraft": "Move back to draft",
+  "invoiceMarkedSent": "Marked as sent",
+  "invoiceMarkedDraft": "Moved back to draft",
+  "invoiceIssuedOn": "Issued {date}",
+  "@invoiceIssuedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "invoiceDueOn": "Due {date}",
+  "@invoiceDueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
       }
     }
   }
