@@ -10,12 +10,12 @@
 
 | Key | Value |
 |---|---|
-| App name | `[APP_NAME]` |
-| Package id | `com.rafi.[appname]` (permanent once published) |
+| App name | QuickBill (home screen). Play Store title: "QuickBill: Invoice & Receipt" |
+| Package id | `com.rafi.quickbill` (permanent once published) |
 | Developer / publisher | IRR Dev Labs |
 | Support email | irrdevlabs.support@gmail.com |
 | Brand colors | Bottle green & gold (decided M0). Light: primary `#006A4E`, secondary `#E0A100`. Dark: primary `#4CC9A0`, secondary `#F5C542`. Source of truth: `app/theme/app_colors.dart` |
-| Logo / app icon | `[path or "Claude proposes"]` |
+| Logo / app icon | Claude proposes 3 concepts; source SVGs in `assets/branding/` |
 | Languages | English + Bangla (from day one) |
 | Default currency | BDT (৳), user can change; every currency supported |
 
@@ -356,7 +356,7 @@ Status colors are semantic and identical across the app: Draft = neutral, Sent =
 ## 9. Monetization rules
 
 ### 9.1 Pro subscription
-- Products: `[appname]_pro_monthly`, `[appname]_pro_yearly` (Google Play subscriptions, free-trial offer configured in Play Console). Ids are final once created; confirm with the owner.
+- Products: `quickbill_pro_monthly`, `quickbill_pro_yearly` (proposed) (Google Play subscriptions, free-trial offer configured in Play Console). Ids are final once created; confirm with the owner.
 - Paywall: shows real store prices and trial terms ("X days free, then <price>/<period>, cancel anytime in Google Play"), Restore purchases, Terms and Privacy links. Works in light and dark mode.
 - After purchase: a "Welcome to Pro" screen listing what was unlocked and a "Manage subscription" link.
 - Pro status is cached locally and re-checked with Google Play on app start (works offline after first check).
@@ -367,7 +367,7 @@ Status colors are semantic and identical across the app: Draft = neutral, Sent =
 | Invoices / receipts | Unlimited | Unlimited |
 | PDF templates | 1 | All |
 | Logo on invoice | Yes | Yes |
-| Small "Made with [APP_NAME]" footer on PDF | `[DECISION: yes/no]` | Removed |
+| Small "Made with QuickBill" footer on PDF | `[DECISION: yes/no]` | Removed |
 | Clients / items | Up to `[N]` | Unlimited |
 | Backup & restore | Manual | Manual + reminders |
 | Ads | Yes | None |

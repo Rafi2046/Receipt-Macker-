@@ -1,6 +1,6 @@
 {
   "@@locale": "bn",
-  "appTitle": "[APP_NAME]",
+  "appTitle": "QuickBill",
   "errorGeneric": "কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।",
   "retry": "আবার চেষ্টা করুন",
   "statusDraft": "খসড়া",

@@ -1,8 +1,10 @@
 /// App-wide limits, defaults, ids and URLs.
 abstract final class AppConstants {
-  // TODO(owner): replace placeholders before M8 (package id drives Firebase, AdMob, Play Billing).
-  static const String appName = '[APP_NAME]';
-  static const String packageId = 'com.rafi.appname';
+  static const String appName = 'QuickBill';
+
+  /// Google Play listing title.
+  static const String storeTitle = 'QuickBill: Invoice & Receipt';
+  static const String packageId = 'com.rafi.quickbill';
   static const String publisher = 'IRR Dev Labs';
   static const String supportEmail = 'irrdevlabs.support@gmail.com';
 

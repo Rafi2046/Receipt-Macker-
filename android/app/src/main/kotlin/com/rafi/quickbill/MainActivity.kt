@@ -1,4 +1,4 @@
-package com.rafi.appname
+package com.rafi.quickbill
 
 import io.flutter.embedding.android.FlutterActivity
 
