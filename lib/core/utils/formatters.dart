@@ -33,6 +33,20 @@ class AppFormatters {
     return '$sign$whole${_integer.symbols.DECIMAL_SEP}$fraction';
   }
 
+  /// Amount with currency symbol, e.g. `৳1,234.50` or `¥1,500`.
+  String currency(int minor, String currencyCode) {
+    final digits = currencyDecimalDigits(currencyCode);
+    return '${currencySymbol(currencyCode)}${minorUnits(minor, decimalDigits: digits)}';
+  }
+
+  /// ISO 4217 minor-unit digits: 2 for BDT/USD, 0 for JPY.
+  static int currencyDecimalDigits(String currencyCode) =>
+      NumberFormat.currency(name: currencyCode).decimalDigits ?? 2;
+
+  /// Short symbol (`৳`, `\$`, `¥`); falls back to the ISO code.
+  static String currencySymbol(String currencyCode) =>
+      NumberFormat.simpleCurrency(name: currencyCode).currencySymbol;
+
   /// Medium date in local time, e.g. `Oct 20, 2026` / `২০ অক্টো, ২০২৬`.
   String date(DateTime value) =>
       DateFormat.yMMMd(languageCode).format(value.toLocal());

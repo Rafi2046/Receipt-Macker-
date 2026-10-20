@@ -50,4 +50,19 @@ void main() {
       expect(f.date(DateTime(2026, 10, 20)), isNot(contains('2026')));
     });
   });
+
+  group('currency', () {
+    test('symbols and decimal digits', () {
+      expect(AppFormatters.currencySymbol('BDT'), '৳');
+      expect(AppFormatters.currencySymbol('USD'), r'$');
+      expect(AppFormatters.currencyDecimalDigits('BDT'), 2);
+      expect(AppFormatters.currencyDecimalDigits('JPY'), 0);
+    });
+
+    test('formats per language', () {
+      expect(AppFormatters('en').currency(123450, 'BDT'), '৳1,234.50');
+      expect(AppFormatters('bn').currency(12345600, 'BDT'), '৳১,২৩,৪৫৬.০০');
+      expect(AppFormatters('en').currency(1500, 'JPY'), '¥1,500');
+    });
+  });
 }
