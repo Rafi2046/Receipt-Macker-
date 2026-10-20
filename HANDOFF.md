@@ -9,7 +9,7 @@
 > stands, owner decisions made along the way, how we test on the phone, and
 > lessons learned.
 >
-> Written 2026-10-20, at the end of milestone M5.
+> Written 2026-10-21, at the end of milestone M6.
 
 ---
 
@@ -42,14 +42,14 @@
      fixes, and anything not done;
    - a short summary message: what was built, what was tested on the phone,
      default decisions, bugs found and fixed, what is left / needs the owner.
-5. **Never push to `main`** without the owner's OK. Nothing has been pushed so
-   far. Branches are stacked (see section 4).
+5. **Never push to `main`** without the owner's OK. `main` already has M0–M5.
+   `m6-payments` is pushed as a backup and is not merged (see section 4).
 6. Never add packages, change architecture or rename public ids without
    approval (packages listed in CLAUDE.md §2 are pre-approved).
 7. Never mark something as tested if it was not run. Say clearly what could
    not be tested and why.
-8. Commit trailer used in this project:
-   `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`
+8. Commits are authored only by Rafi2046. Do not add a `Co-Authored-By`
+   trailer. The owner asked for that after the early milestones.
 9. **Privacy on the owner's phone:** never publish screenshots that show the
    owner's photos, contacts (e.g. the share sheet), wallpaper or other apps.
    Crop or skip them. Delete any test files you put on the phone (Downloads,
@@ -61,10 +61,10 @@
 - Flutter 3.47.6, Dart 3.13.5. macOS, shell is **zsh** (word splitting differs;
   put multi-arg scripts in bash files). macOS has no `timeout` command; use
   `flutter test --timeout 60s`.
-- **Disk space is very low** (about 3.7 GB free). Builds need space. If space
-  runs out, `spikes/pdf_spike/build` can be cleared with `flutter clean`
-  inside `spikes/pdf_spike` (throwaway spike). Do not download emulator images
-  without the owner freeing space first.
+- **Disk:** the Mac filled up during M6 (the debug build died with "No space
+  left on device"). The owner then removed old Gradle caches. About 11 GB was
+  free at the end of M6. Do not download emulator images without asking.
+  Safe cleanup commands are in the M6 summary if it fills up again.
 - **Phone:** Samsung A52 (SM-A525F, Android 14), serial `R58R92JYFCN`.
   Use `export ANDROID_SERIAL=R58R92JYFCN`. USB debugging is on.
 - No emulators/AVDs exist.
@@ -87,12 +87,13 @@ gitignored; run `scripts/gen.sh` after checkout.
 
 ## 4. Git state
 
-Branches are stacked; each milestone branch was cut from the previous one.
-Nothing is merged or pushed. Ask the owner how they want to merge to `main`.
+M0–M5 are on `origin/main` (`bc6b62b`). `m6-payments` was cut from that
+commit. It is pushed for backup and is **not** merged. Wait for the owner
+before merging it into `main`.
 
 ```
-main (origin) ← m0-setup ← m1-widgets ← m2-business-profile ← m3-clients-items
-             ← m4-invoices ← m5-pdf   (current: m5-pdf, clean working tree)
+origin/main = bc6b62b (M0–M5)
+m6-payments (current) = main + M6 commits
 ```
 
 ## 5. Milestone status
@@ -106,13 +107,14 @@ main (origin) ← m0-setup ← m1-widgets ← m2-business-profile ← m3-clients
 | Branding | Name, package id, logo, icons, splash | Done | https://claude.ai/artifact/T4dLFi79oCUozTug8U6YZC |
 | M4 | Invoice editor + calculator | Done | https://claude.ai/artifact/BT2gip4YpFH2vDDrec5jEq |
 | M5 | PDF templates, preview, share, print | Done (one check open, see §8) | https://claude.ai/artifact/TYaVegdPbNG3S4CZVfJ6Fg |
-| **M6** | **Payments + receipts + statuses** | **Next** | |
-| M7 | Dashboard + settings + backup/restore | | |
+| M6 | Payments + receipts + statuses | Done on `m6-payments`. Phone-tested on the A52. | `docs/reviews/M6.md` |
+| **M7** | **Dashboard + settings + backup/restore** | **Next. Design shown, not approved for code.** | |
 | M8 | Monetization (ads, Pro, paywall) | | |
 | M9 | Analytics, privacy, polish | | |
 | M10 | Release prep | | |
 
-`scripts/check.sh` passes with **256 tests** at the end of M5.
+`scripts/check.sh` passes at the end of M6. The count is in the latest
+`./scripts/check.sh` output (274 after the Save-bar test).
 
 ## 6. Owner decisions so far (keep these)
 
@@ -150,8 +152,17 @@ main (origin) ← m0-setup ← m1-widgets ← m2-business-profile ← m3-clients
   higher numbers move the sequence forward. Prefix/next number editable in
   Settings (M7).
 - Status: Draft until "Mark as sent"; overdue = the day after the due date
-  (phone's time zone) with a balance; Paid / Partially paid come from payments
-  (logic exists in `InvoiceStatusResolver`, needs M6 data).
+  (phone's time zone) with a balance. A payment does not change Draft or Sent.
+  Overdue wins over Partially paid when the due day has passed and money is
+  still owed.
+- Payments (M6): methods are cash, bKash, Nagad, Rocket, bank transfer, card,
+  other. The form starts on cash. A payment cannot exceed the balance (on
+  edit, the cap is the balance plus that payment). `invoices.paid_minor` is
+  the sum, recomputed in the same transaction. Receipt numbers are `RCPT-0001`,
+  assigned on save, never reused. The receipt PDF reuses the three invoice
+  templates: one summary row, amount received, balance after that payment.
+  Language starts as the app language. In Bangla, cash is "নগদ" and the Nagad
+  wallet is "নগদ (মোবাইল)".
 - PDF: 3 designs (Classic, Modern, Minimal), all free for now; last design
   remembered; PDF language starts as the app's, switchable EN/BN; A4 (Letter
   supported in code, needs a setting); after sharing a draft the app *asks*
@@ -186,8 +197,8 @@ main (origin) ← m0-setup ← m1-widgets ← m2-business-profile ← m3-clients
   `yyyymmdd` int) so they never shift by a day. Timestamps are UTC.
 - **Clock:** `clockProvider` (`lib/core/services/clock.dart`); override in
   tests to fix "today".
-- **Database:** Drift, schema **v4** (business_profiles, clients, items,
-  invoices, invoice_lines, invoice_numbering). Every schema change: bump
+- **Database:** Drift, schema **v5** (v4 tables plus `payments`,
+  `receipt_numbering`, and `invoices.paid_minor`). Every schema change: bump
   `schemaVersion`, add a `fromNToM` step in `app_database.dart`, run
   `scripts/gen.sh` (make-migrations), add a data migration test in
   `test/core/database/migrations/app_database/data_migration_test.dart`.
@@ -199,12 +210,14 @@ main (origin) ← m0-setup ← m1-widgets ← m2-business-profile ← m3-clients
   model, `PdfHtml` helpers (everything user-typed is escaped) and the three
   templates. `features/invoices/data/mappers/invoice_pdf_mapper.dart` turns an
   invoice into a `PdfDocument`; `InvoicePdfRepositoryImpl` renders to
-  `cache/pdf/<number>.pdf`. Preview widgets in `core/widgets/pdf/` are meant
-  to be reused by receipts in M6.
+  `cache/pdf/<number>.pdf`. Receipts reuse those preview widgets and write
+  `cache/pdf/<receipt number>.pdf`.
 - **Shared form frame:** `EditorScaffold` (Save bar above the keyboard,
   Delete action, "Discard changes?" guard). `SearchableList` for list screens.
 - **Inputs:** `AmountField` (minor units), `DecimalField` (scaled ints,
   follows outside value changes without disturbing typing), `PercentField`.
+  `RevealOnError` scrolls a field into view when its error line appears, so
+  the line is not left under the Save bar while the keyboard is open.
 - **Debug-only tools** on the home screen (kDebugMode): theme preview (also
   used to switch app language EN/BN quickly), widget gallery, "Add sample
   invoices" (40-line English invoice + Bangla invoice with conjuncts).
@@ -212,55 +225,42 @@ main (origin) ← m0-setup ← m1-widgets ← m2-business-profile ← m3-clients
 ## 8. Open items carried forward
 
 - **PDF bridge retest on oldest (API 24, Android 7) and newest Android** —
-  required by CLAUDE.md §2.1, not done because the Mac lacks disk space for
-  emulators. Only tested on Android 14 (A52). The system print dialog fallback
-  works. Ask the owner to free ~8 GB or test on old/new phones.
-- Known minor: if you tap Save while typing in a field that then shows an
-  error, the error line can sit under the Save bar until the keyboard closes.
-- Two files are above ~200 lines (under the 300 hard limit):
-  `invoice_editor_view_model.dart` (243), `line_item_sheet.dart` (238).
-- `HomeView` is temporary until the M7 dashboard (bottom navigation comes then).
-- The home "PDF and sharing come next" card text is outdated after M5; update
-  it (or replace with the dashboard in M7).
+  required by CLAUDE.md §2.1. Only tested on Android 14 (A52). No emulator
+  images on this Mac. The system print dialog is the fallback.
+- Three files are above ~200 lines and under the 300 hard limit:
+  `invoice_editor_view_model.dart` (243), `line_item_sheet.dart` (238),
+  `invoice_payments_section.dart` (236).
+- `HomeView` is still the temporary screen. The "PDF and sharing come next"
+  card is outdated. Both go away in M7.
+- Share, print, and save are on the receipt screen. The phone pass did not
+  open the share sheet (it shows the owner's contacts). The PDF was pulled
+  from app cache instead.
 
-## 9. NEXT: M6 — Payments + receipts + statuses
+## 9. NEXT: M7 — Dashboard, settings, backup
 
-"Done when: partial payments, overdue, receipt PDF" (CLAUDE.md §14).
+The owner asked for a plan and mockups before any M7 code. Those drawings
+are in `docs/plans/m7-mockups.html`. Do not start building until they
+approve. Proposed shape:
 
-Suggested plan (confirm defaults with the owner in the summary):
+- Material 3 `NavigationBar`, four always-labelled tabs: Home, Invoices,
+  Clients, More. Extended "New invoice" button on Home and Invoices.
+- Home: this month invoiced / received / outstanding; overdue banner that
+  opens the filtered list; quick actions; five recent invoices. A new user
+  sees a setup checklist (profile, client, first invoice) instead.
+- Invoices: search and chips All, Unpaid, Overdue, Paid, Draft. Unpaid means
+  a balance is still owed. Tiles show client, number, date, amount, a status
+  chip with color and a word, and "Due in 3 days" / "Overdue 5 days".
+- Client detail: billed, paid, outstanding, their invoices, Call and WhatsApp.
+- More: Business profile, Products & services, Payments & receipts, Invoice
+  templates, Settings, Backup & restore, QuickBill Pro (placeholder until M8),
+  Help & legal.
+- Settings writes the preferences the app already stores. Backup is one file
+  (data plus images); restore confirms before it replaces the phone.
+- Two packages are not in the app yet and need a yes before coding:
+  `url_launcher` (Call / WhatsApp) and `archive` (the zip).
 
-1. **Data:** `payments` table (id, invoice_id FK cascade, amount_minor,
-   paid_on CalendarDate, method, note, created/updated UTC) and receipt
-   numbering (e.g. `RCPT-0001`, never reused, its own numbering row like
-   `invoice_numbering`). Schema v5 + migration + data migration test.
-   Consider storing `paid_minor` on invoices (like `total_minor`) for fast
-   lists, recomputed on every payment change.
-2. **Domain:** `Payment` model, `PaymentMethod` enum (cash, bKash, Nagad,
-   Rocket, bank transfer, card, other — confirm list), validator (amount > 0,
-   not more than the balance unless the owner wants overpayments), repository
-   interface. `InvoiceCalculator.calculate(invoice, paidMinor:)` and
-   `InvoiceStatusResolver` already handle paid / partial / overdue.
-3. **UI:** "Record payment" on the invoice detail (sheet with amount
-   prefilled with the balance, date, method, note); payments list on the
-   detail with edit/delete; invoice list and detail statuses show Paid /
-   Partially paid; totals show Paid and Balance due (`TotalsSummary` already
-   supports it).
-4. **Receipts:** a receipt PDF per payment, reusing `core/services/pdf`
-   (`PdfDocument` has `stamp` and `afterTotal`), the preview widgets and the
-   share/print/save services. Receipt title, receipt number, "received from",
-   amount in figures, payment method, invoice reference, balance after this
-   payment. EN/BN strings, Bangla digits.
-5. **Tests:** calculator/status with payments, repository (cascade, numbering),
-   ViewModels with mocks, full-app flow (record partial → Partially paid,
-   record rest → Paid, overdue with a fixed clock), receipt PDF mapper EN/BN.
-6. **Phone:** record payments, check statuses, make/share a receipt PDF,
-   Bangla/dark/2x, pull PDFs and render them on the Mac (see §10).
-
-After M6: M7 (dashboard with this month's totals, settings screen incl.
-default tax, due days, invoice prefix/next number, currency list, backup &
-restore round trip), M8 (AdMob with caps, Pro subscription, paywall, welcome
-screen, restore), M9 (Firebase Analytics/Crashlytics events only, privacy
-policy, accessibility pass), M10 (signing, store listing, Data safety).
+After M7: M8 (ads, Pro, paywall), M9 (analytics, privacy, polish), M10
+(release prep).
 
 ## 10. Testing on the phone (how we did it)
 
@@ -306,7 +306,10 @@ Lessons:
   for the review page.
 - Test data currently on the phone (QuickBill app): business "Rahman Traders"
   with a sample logo and signature, client Karim Store, items Logo design and
-  Consulting, invoices INV-0001 (sent), INV-0003 (40 lines), INV-0004 (Bangla).
+  Consulting, invoices INV-0003 (40 lines, draft), INV-0004 (Bangla, draft),
+  INV-0001 (now **Paid**: ৳2,000 cash as RCPT-0001 and ৳6,637 cash as
+  RCPT-0002 on 21 Oct 2026). The empty-number edit was discarded, so
+  INV-0001's number is unchanged.
   An old dev app `com.rafi.appname` (pre-rename) and `com.rafi.pdf_spike` are
   also installed; leave them unless the owner says otherwise.
 
@@ -314,9 +317,9 @@ Lessons:
 
 ```bash
 cd /Users/rafi/StudioProjects/receipt_macker
-git status && git log --oneline -5       # expect branch m5-pdf, clean
-./scripts/gen.sh && ./scripts/check.sh   # expect "All checks passed", 256 tests
+git status && git log --oneline -5       # expect branch m6-payments
+./scripts/gen.sh && ./scripts/check.sh   # expect "All checks passed"
 ```
 
-Then read `CLAUDE.md`, confirm with the owner, and start M6 on a new branch
-`m6-payments` cut from `m5-pdf`.
+Then read `CLAUDE.md` and section 9. M7 code waits for the owner's OK on
+the mockups. Do not merge `m6-payments` into `main` until they say so.
