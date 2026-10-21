@@ -35,13 +35,21 @@ class AppNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tabs = Row(
-      children: [
-        for (var i = 0; i < _icons.length; i++) ...[
-          if (i > 0) const SizedBox(width: AppSpacing.xs),
-          _tab(i),
-        ],
-      ],
+    // The selected pill takes every pixel the circles leave, so the dock
+    // has no empty gap on any screen width.
+    final tabs = LayoutBuilder(
+      builder: (context, constraints) {
+        const circles = AppSizes.minTapTarget + AppSpacing.xs;
+        final pill = constraints.maxWidth - circles * (_icons.length - 1);
+        return Row(
+          children: [
+            for (var i = 0; i < _icons.length; i++) ...[
+              if (i > 0) const SizedBox(width: AppSpacing.xs),
+              _tab(i, pill),
+            ],
+          ],
+        );
+      },
     );
     final children = <Widget>[
       Expanded(child: tabs),
@@ -65,18 +73,14 @@ class AppNavBar extends StatelessWidget {
     );
   }
 
-  Widget _tab(int i) {
-    final tab = NavBarTab(
-      icon: _icons[i].$1,
-      selectedIcon: _icons[i].$2,
-      label: labels[i],
-      selected: index == i,
-      onTap: () => onSelected(i),
-    );
-    // Only the selected pill may shrink (its label ellipsizes) on a
-    // narrow phone; the circles keep their size.
-    return index == i ? Flexible(child: tab) : tab;
-  }
+  Widget _tab(int i, double pillWidth) => NavBarTab(
+    icon: _icons[i].$1,
+    selectedIcon: _icons[i].$2,
+    label: labels[i],
+    selected: index == i,
+    width: index == i ? pillWidth : AppSizes.minTapTarget,
+    onTap: () => onSelected(i),
+  );
 }
 
 class _Dock extends StatelessWidget {

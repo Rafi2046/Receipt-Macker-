@@ -51,4 +51,24 @@ void main() {
     );
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('the pill fills the dock and switches without overflow', (
+    tester,
+  ) async {
+    await tester.pumpApp(bar(), surface: const Size(411, 800));
+    final create = tester.getRect(find.byTooltip('New invoice'));
+    final more = tester.getRect(find.byTooltip('More'));
+    // No empty stretch between the last tab and the create button.
+    expect(create.left - more.right, lessThan(12));
+
+    await tester.pumpApp(
+      bar(index: 3),
+      surface: const Size(411, 800),
+      settle: false,
+    );
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 30));
+      expect(tester.takeException(), isNull);
+    }
+  });
 }
