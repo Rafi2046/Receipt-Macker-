@@ -10,7 +10,8 @@ import 'nav_bar_tab.dart';
 
 /// Floating pill dock, centered and as wide as its items: four tab
 /// circles, the selected one stretched into a labelled pill, and a create
-/// button for a new invoice at the end.
+/// button for a new invoice at the end. Its width never changes with the
+/// selection.
 class AppNavBar extends StatelessWidget {
   const AppNavBar({
     required this.index,
@@ -36,13 +37,6 @@ class AppNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final children = <Widget>[
-      for (var i = 0; i < _icons.length; i++) ...[
-        _tab(i),
-        const SizedBox(width: AppSpacing.xs),
-      ],
-      NavBarCreateButton(tooltip: createLabel, onPressed: onCreate),
-    ];
     return SafeArea(
       top: false,
       child: Padding(
@@ -54,28 +48,43 @@ class AppNavBar extends StatelessWidget {
         ),
         child: MediaQuery.withClampedTextScaling(
           maxScaleFactor: 1.3,
-          // The dock hugs its items, like the pill hugs its label.
-          child: Center(
-            child: _Dock(
-              child: Row(mainAxisSize: MainAxisSize.min, children: children),
-            ),
-          ),
+          child: LayoutBuilder(builder: _buildDock),
         ),
       ),
     );
   }
 
-  Widget _tab(int i) {
-    final tab = NavBarTab(
-      icon: _icons[i].$1,
-      selectedIcon: _icons[i].$2,
-      label: labels[i],
-      selected: index == i,
-      onTap: () => onSelected(i),
+  /// Every pill is as wide as the longest label (capped to the screen),
+  /// so the dock keeps one width and only the selection moves.
+  Widget _buildDock(BuildContext context, BoxConstraints constraints) {
+    const slot = AppSizes.minTapTarget + AppSpacing.xs;
+    const rim = AppSpacing.xs * 2 + AppSizes.borderWidth * 2;
+    final room = constraints.maxWidth - rim - slot * _icons.length;
+    final pill = NavBarTab.pillWidthFor(
+      context,
+      labels,
+    ).clamp(AppSizes.minTapTarget, room);
+    return Center(
+      child: _Dock(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (var i = 0; i < _icons.length; i++) ...[
+              NavBarTab(
+                icon: _icons[i].$1,
+                selectedIcon: _icons[i].$2,
+                label: labels[i],
+                selected: index == i,
+                width: pill,
+                onTap: () => onSelected(i),
+              ),
+              const SizedBox(width: AppSpacing.xs),
+            ],
+            NavBarCreateButton(tooltip: createLabel, onPressed: onCreate),
+          ],
+        ),
+      ),
     );
-    // Only the selected pill may shrink (its label ellipsizes) on a
-    // narrow phone; the circles keep their size.
-    return index == i ? Flexible(child: tab) : tab;
   }
 }
 

@@ -75,4 +75,26 @@ void main() {
       expect(tester.takeException(), isNull);
     }
   });
+
+  testWidgets('the dock keeps its width and place when the tab changes', (
+    tester,
+  ) async {
+    Future<Rect> dockAt(int index) async {
+      await tester.pumpApp(bar(index: index), surface: const Size(411, 800));
+      return tester.getRect(
+        find
+            .descendant(
+              of: find.byType(AppNavBar),
+              matching: find.byType(Container),
+            )
+            .first,
+      );
+    }
+
+    final home = await dockAt(0);
+    final clients = await dockAt(2);
+    final more = await dockAt(3);
+    expect(clients, home);
+    expect(more, home);
+  });
 }
