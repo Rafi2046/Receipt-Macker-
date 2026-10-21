@@ -6,15 +6,13 @@ import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 
 /// One destination in [AppNavBar]. Unselected it is an icon in a circle;
-/// selected it grows to [width] as a pill with a filled brand circle and
-/// its label.
+/// selected it grows into a pill with a filled brand circle and its label.
 class NavBarTab extends StatelessWidget {
   const NavBarTab({
     required this.icon,
     required this.selectedIcon,
     required this.label,
     required this.selected,
-    required this.width,
     required this.onTap,
     super.key,
   });
@@ -23,7 +21,6 @@ class NavBarTab extends StatelessWidget {
   final IconData selectedIcon;
   final String label;
   final bool selected;
-  final double width;
   final VoidCallback onTap;
 
   @override
@@ -42,27 +39,21 @@ class NavBarTab extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: onTap,
-            child: AnimatedContainer(
+            // AnimatedSize clips, so the label never overflows while the
+            // pill grows.
+            child: AnimatedSize(
               duration: AppDurations.medium,
               curve: Curves.easeOutCubic,
-              width: width,
-              // Lay out at the final width and clip while the pill grows,
-              // so the label never overflows mid-animation.
-              child: ClipRect(
-                child: OverflowBox(
-                  alignment: AlignmentDirectional.centerStart,
-                  minWidth: width,
-                  maxWidth: width,
-                  child: Row(
-                    children: [
-                      _IconCircle(
-                        icon: selected ? selectedIcon : icon,
-                        selected: selected,
-                      ),
-                      if (selected) Expanded(child: _Label(label: label)),
-                    ],
+              alignment: AlignmentDirectional.centerStart,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _IconCircle(
+                    icon: selected ? selectedIcon : icon,
+                    selected: selected,
                   ),
-                ),
+                  if (selected) Flexible(child: _Label(label: label)),
+                ],
               ),
             ),
           ),
@@ -108,12 +99,11 @@ class _Label extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsetsDirectional.only(
-        start: AppSpacing.sm,
-        end: AppSpacing.md,
+        start: AppSpacing.md,
+        end: AppSpacing.xl,
       ),
       child: Text(
         label,
-        textAlign: TextAlign.center,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         softWrap: false,

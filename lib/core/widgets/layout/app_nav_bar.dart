@@ -8,8 +8,9 @@ import '../../constants/app_spacing.dart';
 import 'nav_bar_create_button.dart';
 import 'nav_bar_tab.dart';
 
-/// Floating pill dock: four tab circles, the selected one stretched into
-/// a labelled pill, and a create button for a new invoice at the end.
+/// Floating pill dock, centered and as wide as its items: four tab
+/// circles, the selected one stretched into a labelled pill, and a create
+/// button for a new invoice at the end.
 class AppNavBar extends StatelessWidget {
   const AppNavBar({
     required this.index,
@@ -35,25 +36,11 @@ class AppNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // The selected pill takes every pixel the circles leave, so the dock
-    // has no empty gap on any screen width.
-    final tabs = LayoutBuilder(
-      builder: (context, constraints) {
-        const circles = AppSizes.minTapTarget + AppSpacing.xs;
-        final pill = constraints.maxWidth - circles * (_icons.length - 1);
-        return Row(
-          children: [
-            for (var i = 0; i < _icons.length; i++) ...[
-              if (i > 0) const SizedBox(width: AppSpacing.xs),
-              _tab(i, pill),
-            ],
-          ],
-        );
-      },
-    );
     final children = <Widget>[
-      Expanded(child: tabs),
-      const SizedBox(width: AppSpacing.xs),
+      for (var i = 0; i < _icons.length; i++) ...[
+        _tab(i),
+        const SizedBox(width: AppSpacing.xs),
+      ],
       NavBarCreateButton(tooltip: createLabel, onPressed: onCreate),
     ];
     return SafeArea(
@@ -67,20 +54,29 @@ class AppNavBar extends StatelessWidget {
         ),
         child: MediaQuery.withClampedTextScaling(
           maxScaleFactor: 1.3,
-          child: _Dock(child: Row(children: children)),
+          // The dock hugs its items, like the pill hugs its label.
+          child: Center(
+            child: _Dock(
+              child: Row(mainAxisSize: MainAxisSize.min, children: children),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _tab(int i, double pillWidth) => NavBarTab(
-    icon: _icons[i].$1,
-    selectedIcon: _icons[i].$2,
-    label: labels[i],
-    selected: index == i,
-    width: index == i ? pillWidth : AppSizes.minTapTarget,
-    onTap: () => onSelected(i),
-  );
+  Widget _tab(int i) {
+    final tab = NavBarTab(
+      icon: _icons[i].$1,
+      selectedIcon: _icons[i].$2,
+      label: labels[i],
+      selected: index == i,
+      onTap: () => onSelected(i),
+    );
+    // Only the selected pill may shrink (its label ellipsizes) on a
+    // narrow phone; the circles keep their size.
+    return index == i ? Flexible(child: tab) : tab;
+  }
 }
 
 class _Dock extends StatelessWidget {

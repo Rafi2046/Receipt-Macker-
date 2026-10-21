@@ -52,14 +52,18 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('the pill fills the dock and switches without overflow', (
+  testWidgets('the dock hugs its items and switches without overflow', (
     tester,
   ) async {
     await tester.pumpApp(bar(), surface: const Size(411, 800));
     final create = tester.getRect(find.byTooltip('New invoice'));
     final more = tester.getRect(find.byTooltip('More'));
-    // No empty stretch between the last tab and the create button.
+    final home = tester.getRect(find.text('Home'));
+    // No empty stretch before the create button, and the pill hugs its
+    // label instead of filling the screen.
     expect(create.left - more.right, lessThan(12));
+    final invoices = tester.getRect(find.byTooltip('Invoices'));
+    expect(invoices.left - home.right, lessThan(40));
 
     await tester.pumpApp(
       bar(index: 3),
