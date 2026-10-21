@@ -6,7 +6,4 @@ abstract final class AppOpacity {
 
   /// Soft drop shadow under floating bars.
   static const double shadow = 0.08;
-
-  /// Colored glow under the create button.
-  static const double glow = 0.32;
 }

@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../constants/app_icons.dart';
 import '../../constants/app_opacity.dart';
-import '../../constants/app_radius.dart';
 import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 import 'nav_bar_create_button.dart';
 import 'nav_bar_tab.dart';
 
-/// Floating dock: four tabs with a sliding pill indicator and a create
-/// button for a new invoice in the middle.
+/// Floating pill dock: four tab circles, the selected one stretched into
+/// a labelled pill, and a create button for a new invoice at the end.
 class AppNavBar extends StatelessWidget {
   const AppNavBar({
     required this.index,
@@ -34,65 +33,75 @@ class AppNavBar extends StatelessWidget {
     (AppIcons.more, AppIcons.moreFilled),
   ];
 
-  Widget _tab(int i) => NavBarTab(
-    icon: _icons[i].$1,
-    selectedIcon: _icons[i].$2,
-    label: labels[i],
-    selected: index == i,
-    onTap: () => onSelected(i),
-  );
-
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final height = MediaQuery.textScalerOf(context)
-        .clamp(maxScaleFactor: 1.4)
-        .scale(AppSizes.navBarHeight);
+    final tabs = Row(
+      children: [
+        for (var i = 0; i < _icons.length; i++) ...[
+          if (i > 0) const SizedBox(width: AppSpacing.xs),
+          _tab(i),
+        ],
+      ],
+    );
+    final children = <Widget>[
+      Expanded(child: tabs),
+      const SizedBox(width: AppSpacing.xs),
+      NavBarCreateButton(tooltip: createLabel, onPressed: onCreate),
+    ];
     return SafeArea(
       top: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
-          AppSpacing.lg,
+          AppSpacing.md,
           AppSpacing.xs,
-          AppSpacing.lg,
+          AppSpacing.md,
           AppSpacing.md,
         ),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: colors.surface,
-            borderRadius: AppRadius.dock,
-            border: Border.all(color: colors.border),
-            boxShadow: [
-              BoxShadow(
-                color: colors.textPrimary.withValues(alpha: AppOpacity.shadow),
-                blurRadius: AppSpacing.xxxl,
-                offset: const Offset(0, AppSpacing.md),
-              ),
-            ],
-          ),
-          child: Material(
-            type: MaterialType.transparency,
-            child: SizedBox(
-              height: height,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                child: Row(
-                  children: [
-                    _tab(0),
-                    _tab(1),
-                    NavBarCreateButton(
-                      tooltip: createLabel,
-                      onPressed: onCreate,
-                    ),
-                    _tab(2),
-                    _tab(3),
-                  ],
-                ),
-              ),
-            ),
-          ),
+        child: MediaQuery.withClampedTextScaling(
+          maxScaleFactor: 1.3,
+          child: _Dock(child: Row(children: children)),
         ),
       ),
+    );
+  }
+
+  Widget _tab(int i) {
+    final tab = NavBarTab(
+      icon: _icons[i].$1,
+      selectedIcon: _icons[i].$2,
+      label: labels[i],
+      selected: index == i,
+      onTap: () => onSelected(i),
+    );
+    // Only the selected pill may shrink (its label ellipsizes) on a
+    // narrow phone; the circles keep their size.
+    return index == i ? Flexible(child: tab) : tab;
+  }
+}
+
+class _Dock extends StatelessWidget {
+  const _Dock({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Container(
+      height: AppSizes.navDockHeight,
+      padding: const EdgeInsets.all(AppSpacing.xs),
+      decoration: ShapeDecoration(
+        color: colors.surface,
+        shape: StadiumBorder(side: BorderSide(color: colors.border)),
+        shadows: [
+          BoxShadow(
+            color: colors.textPrimary.withValues(alpha: AppOpacity.shadow),
+            blurRadius: AppSpacing.xxl,
+            offset: const Offset(0, AppSpacing.sm),
+          ),
+        ],
+      ),
+      child: child,
     );
   }
 }

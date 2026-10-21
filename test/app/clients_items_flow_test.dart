@@ -45,7 +45,7 @@ void main() {
 
   testWidgets('client: add, find, edit, delete', (tester) async {
     await openHome(tester);
-    await tap(tester, find.text('Clients'));
+    await tap(tester, find.byTooltip('Clients'));
     expect(find.text('No clients yet'), findsOneWidget);
 
     await tap(tester, find.text('Add your first client'));
@@ -91,7 +91,7 @@ void main() {
 
   testWidgets('item: add with price and tax, shown in Bangla', (tester) async {
     await openHome(tester, language: 'bn');
-    await tap(tester, find.text('আরও'));
+    await tap(tester, find.byTooltip('আরও'));
     await tap(tester, find.text('পণ্য ও সেবা'));
     await tap(tester, find.text('প্রথম পণ্য বা সেবা যোগ করুন'));
 
@@ -121,7 +121,7 @@ void main() {
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     await openHome(tester, language: 'bn');
 
-    await tap(tester, find.text('ক্লায়েন্ট'));
+    await tap(tester, find.byTooltip('ক্লায়েন্ট'));
     await tap(tester, find.text('প্রথম ক্লায়েন্ট যোগ করুন'));
     await tap(tester, find.text('সংরক্ষণ করুন'));
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -2000));
@@ -130,7 +130,7 @@ void main() {
     Navigator.of(tester.element(find.byType(Scrollable).first)).pop();
     await settle(tester);
 
-    await tap(tester, find.text('আরও'));
+    await tap(tester, find.byTooltip('আরও'));
     await tap(tester, find.text('পণ্য ও সেবা'));
     await tap(tester, find.text('প্রথম পণ্য বা সেবা যোগ করুন'));
     await tap(tester, find.text('সংরক্ষণ করুন'));

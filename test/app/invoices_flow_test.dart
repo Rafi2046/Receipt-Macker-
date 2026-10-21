@@ -73,7 +73,7 @@ void main() {
     tester,
   ) async {
     await openHome(tester);
-    await tap(tester, find.text('Invoices'));
+    await tap(tester, find.byTooltip('Invoices'));
     expect(find.text('No invoices yet'), findsOneWidget);
 
     await tap(tester, find.text('Create your first invoice'));
@@ -116,7 +116,7 @@ void main() {
 
   testWidgets('leaving a new invoice with changes asks first', (tester) async {
     await openHome(tester);
-    await tap(tester, find.text('Invoices'));
+    await tap(tester, find.byTooltip('Invoices'));
     await tap(tester, find.text('Create your first invoice'));
     await tap(tester, find.widgetWithText(OutlinedButton, 'Add an item'));
     await tap(tester, find.text('Logo design'));
@@ -130,7 +130,7 @@ void main() {
     tester.platformDispatcher.textScaleFactorTestValue = 2;
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     await openHome(tester, language: 'bn');
-    await tap(tester, find.text('ইনভয়েস'));
+    await tap(tester, find.byTooltip('ইনভয়েস'));
     await tap(tester, find.text('প্রথম ইনভয়েস তৈরি করুন'));
     await tap(tester, find.text('বিল প্রাপক').first);
     await tap(

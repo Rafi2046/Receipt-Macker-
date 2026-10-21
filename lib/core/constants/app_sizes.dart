@@ -2,9 +2,10 @@
 abstract final class AppSizes {
   static const double iconSm = 16, iconMd = 24, iconLg = 32, iconXl = 48;
   static const double buttonHeight = 48;
-  static const double navBarHeight = 72;
-  static const double navIndicatorWidth = 56;
-  static const double navCreateButton = 52;
+  static const double navBarHeight = 80;
+
+  /// Floating tab dock: 48dp circles inside a 4dp rim.
+  static const double navDockHeight = 56;
   static const double topBarHeight = 56;
   static const double topBarButton = 40;
   static const double minTapTarget = 48;
