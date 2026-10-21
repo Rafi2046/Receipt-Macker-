@@ -57,6 +57,7 @@ class _InvoiceList extends ConsumerWidget {
         actionLabel: l10n.invoicesEmptyAction,
         onAction: () => context.pushNamed(RouteNames.invoiceNew),
       ),
+      cards: true,
       itemCount: state.entries.length,
       itemBuilder: (context, i) {
         final entry = state.entries[i];

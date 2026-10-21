@@ -19,6 +19,7 @@ class SearchableList extends StatelessWidget {
     required this.empty,
     required this.itemCount,
     required this.itemBuilder,
+    this.cards = false,
     super.key,
   });
 
@@ -31,6 +32,10 @@ class SearchableList extends StatelessWidget {
   final Widget empty;
   final int itemCount;
   final IndexedWidgetBuilder itemBuilder;
+
+  /// Rows are cards: inset to the page margin with gaps between them
+  /// instead of full-width rows with dividers.
+  final bool cards;
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +61,20 @@ class SearchableList extends StatelessWidget {
               : ListView.separated(
                   keyboardDismissBehavior:
                       ScrollViewKeyboardDismissBehavior.onDrag,
-                  padding: const EdgeInsets.only(bottom: AppSizes.fabClearance),
+                  padding: EdgeInsets.fromLTRB(
+                    cards ? AppSpacing.pagePadding : 0,
+                    cards ? AppSpacing.xs : 0,
+                    cards ? AppSpacing.pagePadding : 0,
+                    AppSizes.fabClearance,
+                  ),
                   itemCount: itemCount,
                   itemBuilder: itemBuilder,
-                  separatorBuilder: (_, _) => const AppDivider(
-                    spacing: AppSpacing.xxs,
-                    indent: AppSpacing.pagePadding,
-                  ),
+                  separatorBuilder: (_, _) => cards
+                      ? const SizedBox(height: AppSpacing.sm)
+                      : const AppDivider(
+                          spacing: AppSpacing.xxs,
+                          indent: AppSpacing.pagePadding,
+                        ),
                 ),
         ),
       ],

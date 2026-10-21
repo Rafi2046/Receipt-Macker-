@@ -109,8 +109,10 @@ void main() {
     await menu(tester, 'Delete');
     await tap(tester, find.widgetWithText(FilledButton, 'Delete'));
     expect(find.text('Invoice deleted'), findsOneWidget);
-    expect(find.text('INV-0002'), findsOneWidget);
-    expect(find.text('INV-0001'), findsNothing);
+    // The list shows the number inside the "number • due date" line.
+    Finder listed(String n) => find.textContaining(n, findRichText: true);
+    expect(listed('INV-0002'), findsOneWidget);
+    expect(listed('INV-0001'), findsNothing);
     await tester.tearDownFullApp(env);
   });
 

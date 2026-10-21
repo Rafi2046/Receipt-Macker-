@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../app/theme/app_colors.dart';
 import '../../constants/app_icons.dart';
+import '../../constants/app_radius.dart';
+import '../../constants/app_spacing.dart';
 import '../../utils/extensions/l10n_extension.dart';
 import '../buttons/app_icon_button.dart';
 
-/// Search box for list screens, with a clear button once text is entered.
+/// Pill-shaped search box for list screens, with a clear button once text
+/// is entered.
 class AppSearchField extends StatefulWidget {
   const AppSearchField({
     required this.hint,
@@ -39,6 +43,11 @@ class _AppSearchFieldState extends State<AppSearchField> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final pill = OutlineInputBorder(
+      borderRadius: AppRadius.chip,
+      borderSide: BorderSide(color: colors.border),
+    );
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: _controller,
       builder: (context, value, _) => TextField(
@@ -47,7 +56,17 @@ class _AppSearchFieldState extends State<AppSearchField> {
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           hintText: widget.hint,
-          prefixIcon: const Icon(AppIcons.search),
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
+          border: pill,
+          enabledBorder: pill,
+          focusedBorder: pill.copyWith(
+            borderSide: BorderSide(color: colors.primary),
+          ),
+          prefixIcon: Icon(AppIcons.search, color: colors.textSecondary),
           suffixIcon: value.text.isEmpty
               ? null
               : AppIconButton(
