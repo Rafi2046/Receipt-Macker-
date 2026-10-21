@@ -70,9 +70,11 @@ class ClientPickerSheet extends ConsumerWidget {
             actionLabel: l10n.clientsEmptyAction,
             onAction: createNew,
           ),
+          cards: true,
           itemCount: state.clients.length,
           itemBuilder: (context, i) => ClientListTile(
             client: state.clients[i],
+            showChevron: false,
             onTap: () => Navigator.of(context).pop(state.clients[i]),
           ),
         ),

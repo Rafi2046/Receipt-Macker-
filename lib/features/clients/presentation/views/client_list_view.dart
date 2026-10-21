@@ -69,6 +69,7 @@ class _ClientList extends ConsumerWidget {
         actionLabel: l10n.clientsEmptyAction,
         onAction: () => _openNewClient(context, ref),
       ),
+      cards: true,
       itemCount: state.clients.length,
       itemBuilder: (context, i) {
         final client = state.clients[i];

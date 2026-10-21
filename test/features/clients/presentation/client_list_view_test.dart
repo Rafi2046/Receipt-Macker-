@@ -97,4 +97,24 @@ void main() {
     await pump(tester, language: 'bn', textScale: 2);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('a card lines contacts up under the name', (tester) async {
+    stub(
+      (_) => Stream.value([
+        testClient(name: 'Karim')
+            .copyWith(phone: '01712345678', email: 'karim@example.com'),
+      ]),
+    );
+    await pump(tester);
+    final name = tester.getRect(find.text('Karim'));
+    final phone = tester.getRect(find.byIcon(Icons.phone_outlined));
+    final email = tester.getRect(find.byIcon(Icons.email_outlined));
+    final card = tester.getRect(find.byType(Card));
+    final chevron = tester.getRect(find.byIcon(Icons.chevron_right));
+    expect(phone.left, name.left);
+    expect(email.left, name.left);
+    expect(phone.top, greaterThan(name.bottom));
+    expect(email.top, greaterThan(phone.bottom));
+    expect(chevron.center.dy, closeTo(card.center.dy, 1));
+  });
 }
