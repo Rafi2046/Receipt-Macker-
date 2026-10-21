@@ -42,7 +42,7 @@ abstract final class AppIcons {
   static const IconData website = Icons.language;
   static const IconData image = Icons.add_photo_alternate_outlined;
   static const IconData signature = Icons.draw_outlined;
-  static const IconData back = Icons.arrow_back;
+  static const IconData back = Icons.arrow_back_ios_new_rounded;
   static const IconData forward = Icons.arrow_forward;
   static const IconData check = Icons.check;
   static const IconData pdf = Icons.picture_as_pdf_outlined;

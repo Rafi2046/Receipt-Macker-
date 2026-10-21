@@ -16,6 +16,14 @@ abstract final class AppTextStyles {
     fontWeight: FontWeight.w700,
     height: _tight,
   );
+
+  /// Large page title on tab roots.
+  static const TextStyle headlineSm = TextStyle(
+    fontSize: 26,
+    fontWeight: FontWeight.w800,
+    letterSpacing: -0.5,
+    height: _tight,
+  );
   static const TextStyle titleLg = TextStyle(
     fontSize: 22,
     fontWeight: FontWeight.w700,
@@ -82,6 +90,7 @@ abstract final class AppTextStyles {
 
   static TextTheme textTheme() => const TextTheme(
     displaySmall: displaySm,
+    headlineSmall: headlineSm,
     titleLarge: titleLg,
     titleMedium: titleMd,
     titleSmall: titleSm,
