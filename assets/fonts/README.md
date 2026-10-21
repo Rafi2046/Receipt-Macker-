@@ -6,6 +6,8 @@ Both families are SIL Open Font License 1.1 (free for commercial use, embedding 
 |---|---|---|
 | `NotoSansBengali-*.ttf` | notofonts/bengali `NotoSansBengali-v3.011`, hinted | unmodified |
 | `NotoSans-*.ttf` | notofonts/latin-greek-cyrillic `NotoSans-v2.015`, hinted | subset to Latin (U+0000-024F, U+0300-036F, U+1E00-1EFF, punctuation, currency symbols, arrows), all OpenType features kept |
+| `Manrope-*.ttf` | Fontsource Manrope 5.2.8, OFL | Latin subset. UI mock only, paired with Noto Sans Bengali |
+| `PlusJakartaSans-*.ttf` | Fontsource Plus Jakarta Sans 5.2.8, OFL | Latin subset. UI mock only, paired with Noto Sans Bengali |
 
 Subset command (fontTools):
 

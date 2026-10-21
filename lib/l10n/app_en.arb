@@ -460,6 +460,65 @@
       }
     }
   },
+  "studioVsLastMonth": "vs last month",
+  "studioReview": "Review",
+  "studioRecentInvoices": "Recent invoices",
+  "studioSeeAll": "See all",
+  "studioDueInDays": "Due in {count} days",
+  "@studioDueInDays": {
+    "placeholders": {
+      "count": {"type": "String"}
+    }
+  },
+  "studioOverdueDays": "Overdue {count} days",
+  "@studioOverdueDays": {
+    "placeholders": {
+      "count": {"type": "String"}
+    }
+  },
+  "studioDueToday": "Due today",
+  "studioFilterAll": "All",
+  "studioFilterUnpaid": "Unpaid",
+  "studioSearchInvoices": "Search invoices",
+  "studioSearchClients": "Search clients",
+  "studioMarkPaid": "Mark paid",
+  "studioShare": "Share",
+  "studioChangeClient": "Change",
+  "studioAddItem": "Add item",
+  "studioSavePreview": "Save & preview",
+  "studioPreviewPdf": "Preview PDF",
+  "studioWhatsApp": "WhatsApp",
+  "studioPaymentHistory": "Payment history",
+  "studioPaymentsReceipts": "Payments & receipts",
+  "studioInvoiceDesign": "Invoice design",
+  "studioBackup": "Backup & restore",
+  "studioProTitle": "QuickBill Pro",
+  "studioProBody": "Extra templates, your colors, and no ads.",
+  "studioHelpLegal": "Help & legal",
+  "studioFontTitle": "Latin font",
+  "studioFontBody": "Bangla stays in Noto Sans Bengali. Tap a sample to use it here.",
+  "studioFontManrope": "Manrope",
+  "studioFontJakarta": "Plus Jakarta Sans",
+  "studioAddClient": "Add client",
+  "studioNotesSample": "Thank you. Please pay by the due date.",
+  "studioPaidOf": "{paid} of {total}",
+  "@studioPaidOf": {
+    "placeholders": {
+      "paid": {"type": "String"},
+      "total": {"type": "String"}
+    }
+  },
+  "studioBalanceDue": "Balance due",
+  "studioSettings": "Settings",
+  "studioNotifications": "Notifications",
+  "studioGroupBusiness": "Business",
+  "studioGroupApp": "App",
+  "studioUnitPiece": "piece",
+  "studioUnitHour": "hour",
+  "studioUnitJob": "job",
+  "studioItemLogo": "Logo design",
+  "studioItemConsulting": "Consulting",
+  "studioItemDelivery": "Delivery setup",
   "shareReceiptSubject": "Receipt {number} from {business}",
   "@shareReceiptSubject": {
     "placeholders": {

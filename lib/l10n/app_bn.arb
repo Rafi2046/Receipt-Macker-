@@ -310,6 +310,65 @@
       }
     }
   },
+  "studioVsLastMonth": "গত মাসের চেয়ে",
+  "studioReview": "দেখুন",
+  "studioRecentInvoices": "সাম্প্রতিক ইনভয়েস",
+  "studioSeeAll": "সব দেখুন",
+  "studioDueInDays": "{count} দিনের মধ্যে",
+  "@studioDueInDays": {
+    "placeholders": {
+      "count": {"type": "String"}
+    }
+  },
+  "studioOverdueDays": "{count} দিন মেয়াদোত্তীর্ণ",
+  "@studioOverdueDays": {
+    "placeholders": {
+      "count": {"type": "String"}
+    }
+  },
+  "studioDueToday": "আজ শেষ তারিখ",
+  "studioFilterAll": "সব",
+  "studioFilterUnpaid": "বকেয়া",
+  "studioSearchInvoices": "ইনভয়েস খুঁজুন",
+  "studioSearchClients": "ক্লায়েন্ট খুঁজুন",
+  "studioMarkPaid": "পরিশোধিত",
+  "studioShare": "শেয়ার",
+  "studioChangeClient": "বদলান",
+  "studioAddItem": "আইটেম যোগ করুন",
+  "studioSavePreview": "সংরক্ষণ ও প্রিভিউ",
+  "studioPreviewPdf": "পিডিএফ প্রিভিউ",
+  "studioWhatsApp": "হোয়াটসঅ্যাপ",
+  "studioPaymentHistory": "পেমেন্টের ইতিহাস",
+  "studioPaymentsReceipts": "পেমেন্ট ও রসিদ",
+  "studioInvoiceDesign": "ইনভয়েস ডিজাইন",
+  "studioBackup": "ব্যাকআপ ও পুনরুদ্ধার",
+  "studioProTitle": "QuickBill Pro",
+  "studioProBody": "আরও টেমপ্লেট, নিজের রং, কোনো বিজ্ঞাপন নয়।",
+  "studioHelpLegal": "সহায়তা ও আইন",
+  "studioFontTitle": "ল্যাটিন ফন্ট",
+  "studioFontBody": "বাংলা থাকবে নোটো স্যান্স বাংলায়। একটি নমুনায় ট্যাপ করলে এই স্ক্রিনে সেটি চলবে।",
+  "studioFontManrope": "Manrope",
+  "studioFontJakarta": "Plus Jakarta Sans",
+  "studioAddClient": "ক্লায়েন্ট যোগ",
+  "studioNotesSample": "ধন্যবাদ। অনুগ্রহ করে শেষ তারিখের মধ্যে পরিশোধ করুন।",
+  "studioPaidOf": "{total} এর মধ্যে {paid}",
+  "@studioPaidOf": {
+    "placeholders": {
+      "paid": {"type": "String"},
+      "total": {"type": "String"}
+    }
+  },
+  "studioBalanceDue": "বকেয়া",
+  "studioSettings": "সেটিংস",
+  "studioNotifications": "নোটিফিকেশন",
+  "studioGroupBusiness": "ব্যবসা",
+  "studioGroupApp": "অ্যাপ",
+  "studioUnitPiece": "পিস",
+  "studioUnitHour": "ঘণ্টা",
+  "studioUnitJob": "কাজ",
+  "studioItemLogo": "লোগো ডিজাইন",
+  "studioItemConsulting": "পরামর্শ",
+  "studioItemDelivery": "ডেলিভারি সেটআপ",
   "shareReceiptSubject": "{business} থেকে রসিদ {number}",
   "@shareReceiptSubject": {
     "placeholders": {
