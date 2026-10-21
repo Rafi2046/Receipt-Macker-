@@ -24,6 +24,10 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.onDanger,
     required this.info,
     required this.neutral,
+    required this.heroStart,
+    required this.heroEnd,
+    required this.onHero,
+    required this.onHeroMuted,
   });
 
   factory AppColors.light() => const AppColors(
@@ -43,31 +47,40 @@ class AppColors extends ThemeExtension<AppColors> {
     onDanger: Color(0xFFFFFFFF),
     info: Color(0xFF1D4ED8),
     neutral: Color(0xFF475569),
+    heroStart: Color(0xFF0B5E48),
+    heroEnd: Color(0xFF004233),
+    onHero: Color(0xFFFFFFFF),
+    onHeroMuted: Color(0xD6FFFFFF),
   );
 
   factory AppColors.dark() => const AppColors(
-    primary: Color(0xFF4CC9A0),
-    onPrimary: Color(0xFF002116),
+    primary: Color(0xFF3DDC97),
+    onPrimary: Color(0xFF06281C),
     secondary: Color(0xFFF5C542),
     onSecondary: Color(0xFF241A00),
-    background: Color(0xFF111316),
-    surface: Color(0xFF1A1D21),
-    surfaceAlt: Color(0xFF24282D),
-    border: Color(0xFF33383E),
-    textPrimary: Color(0xFFECEFF2),
-    textSecondary: Color(0xFFA3ACB6),
+    background: Color(0xFF0E1114),
+    surface: Color(0xFF1A1F24),
+    surfaceAlt: Color(0xFF24292E),
+    border: Color(0xFF2C343C),
+    textPrimary: Color(0xFFF2F5F7),
+    textSecondary: Color(0xFF9AA3AB),
     success: Color(0xFF4ADE80),
     warning: Color(0xFFFBBF24),
     danger: Color(0xFFF87171),
     onDanger: Color(0xFF2A0707),
     info: Color(0xFF60A5FA),
     neutral: Color(0xFF94A3B8),
+    heroStart: Color(0xFF146B52),
+    heroEnd: Color(0xFF0B3B2E),
+    onHero: Color(0xFFF4FFF9),
+    onHeroMuted: Color(0xCCE7FFF4),
   );
 
   final Color primary, onPrimary, secondary, onSecondary;
   final Color background, surface, surfaceAlt, border;
   final Color textPrimary, textSecondary;
   final Color success, warning, danger, onDanger, info, neutral;
+  final Color heroStart, heroEnd, onHero, onHeroMuted;
 
   @override
   AppColors copyWith({
@@ -87,6 +100,10 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? onDanger,
     Color? info,
     Color? neutral,
+    Color? heroStart,
+    Color? heroEnd,
+    Color? onHero,
+    Color? onHeroMuted,
   }) => AppColors(
     primary: primary ?? this.primary,
     onPrimary: onPrimary ?? this.onPrimary,
@@ -104,6 +121,10 @@ class AppColors extends ThemeExtension<AppColors> {
     onDanger: onDanger ?? this.onDanger,
     info: info ?? this.info,
     neutral: neutral ?? this.neutral,
+    heroStart: heroStart ?? this.heroStart,
+    heroEnd: heroEnd ?? this.heroEnd,
+    onHero: onHero ?? this.onHero,
+    onHeroMuted: onHeroMuted ?? this.onHeroMuted,
   );
 
   @override
@@ -127,6 +148,10 @@ class AppColors extends ThemeExtension<AppColors> {
       onDanger: mix(onDanger, other.onDanger),
       info: mix(info, other.info),
       neutral: mix(neutral, other.neutral),
+      heroStart: mix(heroStart, other.heroStart),
+      heroEnd: mix(heroEnd, other.heroEnd),
+      onHero: mix(onHero, other.onHero),
+      onHeroMuted: mix(onHeroMuted, other.onHeroMuted),
     );
   }
 }

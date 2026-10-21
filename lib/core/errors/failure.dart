@@ -32,3 +32,8 @@ final class NotFoundFailure extends Failure {
 final class UnexpectedFailure extends Failure {
   const UnexpectedFailure({super.cause, super.stackTrace});
 }
+
+/// A free limit was hit. The view opens the paywall.
+final class ProRequiredFailure extends Failure {
+  const ProRequiredFailure();
+}

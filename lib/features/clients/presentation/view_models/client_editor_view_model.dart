@@ -1,6 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/errors/failure.dart';
 import '../../../../core/errors/result.dart';
+import '../../../../core/services/purchases/free_plan.dart';
+import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/utils/id_generator.dart';
 import '../../domain/logic/client_field_access.dart';
 import '../../domain/logic/client_validator.dart';
@@ -8,6 +11,7 @@ import '../../domain/models/client.dart';
 import '../../domain/models/client_field.dart';
 import '../../providers.dart';
 import 'client_editor_state.dart';
+import 'client_list_view_model.dart';
 
 part 'client_editor_view_model.g.dart';
 
@@ -62,6 +66,10 @@ class ClientEditorViewModel extends _$ClientEditorViewModel {
     if (form == null || form.isBusy) return null;
     _set((f) => f.copyWith(showErrors: true));
     if (form.errors.isNotEmpty) return null;
+    if (form.isNew && !await _withinFreeLimit()) {
+      _set((f) => f.copyWith(failure: const ProRequiredFailure()));
+      return null;
+    }
     _set((f) => f.copyWith(isSaving: true));
     final result = await ref
         .read(clientRepositoryProvider)
@@ -81,6 +89,14 @@ class ClientEditorViewModel extends _$ClientEditorViewModel {
         _set((f) => f.copyWith(isSaving: false, failure: failure));
         return null;
     }
+  }
+
+  Future<bool> _withinFreeLimit() async {
+    final shown = ref.read(clientListViewModelProvider).asData?.value;
+    final count = shown != null && !shown.isSearching
+        ? shown.clients.length
+        : (await ref.read(clientRepositoryProvider).watchAll().first).length;
+    return FreePlan.canAdd(isPro: ref.read(proStatusProvider), count: count);
   }
 
   /// Deletes the stored client. Returns true on success.

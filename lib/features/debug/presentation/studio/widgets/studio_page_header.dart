@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_sizes.dart';
+import '../../../../../core/utils/extensions/l10n_extension.dart';
 import '../studio_icons.dart';
 import '../studio_scope.dart';
 
@@ -23,6 +24,7 @@ class StudioPageHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
+            tooltip: context.l10n.back,
             onPressed: onBack,
             iconSize: AppSizes.iconMd,
             icon: Icon(StudioIcons.back, color: palette.ink),

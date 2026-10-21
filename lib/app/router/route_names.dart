@@ -8,6 +8,14 @@ abstract final class RouteNames {
   static const String onboardingPath = '/onboarding';
   static const String businessProfile = 'businessProfile';
   static const String businessProfilePath = '/business-profile';
+  static const String paywall = 'paywall';
+  static const String paywallPath = '/paywall';
+  static const String proWelcome = 'proWelcome';
+  static const String proWelcomePath = '/pro-welcome';
+  static const String privacy = 'privacy';
+  static const String privacyPath = '/privacy';
+  static const String terms = 'terms';
+  static const String termsPath = '/terms';
 
   /// Path parameter holding a record id, e.g. `/clients/:id`.
   static const String idParam = 'id';

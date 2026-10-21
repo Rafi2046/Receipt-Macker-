@@ -32,7 +32,9 @@ abstract final class AppTheme {
     );
     final label = textTheme.labelLarge;
     const buttonSize = Size(AppSizes.minTapTarget, AppSizes.buttonHeight);
-    const buttonShape = RoundedRectangleBorder(borderRadius: AppRadius.input);
+    const buttonShape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(AppRadius.lg)),
+    );
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,

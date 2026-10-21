@@ -48,6 +48,8 @@ void main() {
     when(() => repo.save(any()))
         .thenAnswer((i) async => Ok(i.positionalArguments.first as Item));
     when(() => repo.delete(any())).thenAnswer((_) async => const Ok(null));
+    when(() => repo.watchAll(query: any(named: 'query')))
+        .thenAnswer((_) => Stream.value(const []));
   });
   tearDown(() => container.dispose());
 

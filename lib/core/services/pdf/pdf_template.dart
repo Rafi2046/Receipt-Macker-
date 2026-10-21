@@ -8,6 +8,9 @@ enum PdfTemplate {
 
   final String id;
 
+  /// Classic is free. Modern and Minimal are Pro.
+  bool get requiresPro => this != PdfTemplate.classic;
+
   static PdfTemplate fromId(String? id) =>
       values.firstWhere((t) => t.id == id, orElse: () => classic);
 }

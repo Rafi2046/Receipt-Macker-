@@ -164,7 +164,20 @@
   "statReceived": "Received",
   "statOutstanding": "Outstanding",
   "overdueBannerPreview": "3 invoices overdue · ৳12,500",
+  "greetingMorning": "Good morning",
+  "greetingAfternoon": "Good afternoon",
   "greetingEvening": "Good evening",
+  "homeThisMonth": "This month",
+  "homeStatInvoiced": "Invoiced",
+  "homeRecent": "Recent",
+  "homeSeeAll": "See all",
+  "homeOverdueLine": "{count} overdue · {amount}",
+  "@homeOverdueLine": {
+    "placeholders": {
+      "count": {"type": "String"},
+      "amount": {"type": "String"}
+    }
+  },
   "previewMonth": "October",
   "percentSymbol": "%",
   "clearSearch": "Clear search",
@@ -519,6 +532,46 @@
   "studioItemLogo": "Logo design",
   "studioItemConsulting": "Consulting",
   "studioItemDelivery": "Delivery setup",
+  "studioBillTo": "Bill to",
+  "studioTplRecommended": "Recommended",
+  "studioTplSimple": "Simple",
+  "studioTplClassic": "Classic",
+  "studioTplProfessional": "Professional",
+  "studioTplCreative": "Creative",
+  "studioTplUse": "Use this template",
+  "studioTplUsing": "Using this template",
+  "studioTplPro": "PRO",
+  "studioPaperA4": "A4",
+  "studioPaperLetter": "Letter",
+  "studioPaper58": "58 mm",
+  "studioPaper80": "80 mm",
+  "studioPageOf": "{page} / {pages}",
+  "@studioPageOf": {
+    "placeholders": {
+      "page": {"type": "String"},
+      "pages": {"type": "String"}
+    }
+  },
+  "studioLineLong": "Brand system for মেসার্স রহমান অ্যান্ড সন্স, including signage and packaging",
+  "studioInvoiceSettings": "Invoice settings",
+  "studioSettingsIntro": "Defaults for new invoices. A single invoice can use its own.",
+  "studioPayDetails": "Payment details",
+  "studioPaySample": "bKash · 01712345678\nDutch-Bangla Bank · Rahman Traders",
+  "studioTaxExclusive": "Added on top",
+  "studioTaxInclusive": "Included in the price",
+  "studioDefaultCurrency": "Default currency",
+  "studioOnInvoice": "On the invoice",
+  "studioShowPaidStamp": "Show PAID stamp",
+  "studioShowTotalQty": "Show total quantity",
+  "studioShowBalanceDue": "Show balance due",
+  "studioShowQtyUnit": "Show quantity and unit separately",
+  "studioNumberRules": "Invoice numbers",
+  "studioNumberPrefix": "Prefix",
+  "studioNumberNext": "Next number",
+  "studioNumberReset": "Start again",
+  "studioResetYearly": "Each year",
+  "studioResetNever": "Never",
+  "studioTermsSample": "Payment is due by the date on the invoice. Please keep a copy for your records.",
   "shareReceiptSubject": "Receipt {number} from {business}",
   "@shareReceiptSubject": {
     "placeholders": {
@@ -529,5 +582,63 @@
         "type": "String"
       }
     }
-  }
+  },
+  "proTitle": "QuickBill Pro",
+  "proSubtitle": "Invoices and receipts stay unlimited. Pro removes ads and unlocks every template.",
+  "proYearly": "Yearly",
+  "proMonthly": "Monthly",
+  "proBestValue": "Best value",
+  "proTrialThen": "{days} days free, then {price}. Cancel anytime in Google Play.",
+  "@proTrialThen": {
+    "placeholders": {
+      "days": {"type": "String"},
+      "price": {"type": "String"}
+    }
+  },
+  "proPriceUnavailable": "Prices come from Google Play. Connect and try again.",
+  "proRestore": "Restore purchases",
+  "proRestored": "Pro is restored on this phone.",
+  "proNothingToRestore": "No Pro purchase was found for this Google account.",
+  "proBuyFailed": "The purchase did not finish. You can restore it later.",
+  "proWelcomeTitle": "Welcome to Pro",
+  "proWelcomeBody": "Ads are off, every PDF template is unlocked, and you can add as many clients and items as you need.",
+  "proWelcomeDone": "Continue",
+  "proManage": "Manage the subscription in Google Play.",
+  "proCompareFeature": "Feature",
+  "proCompareFree": "Free",
+  "proComparePro": "Pro",
+  "proRowInvoices": "Invoices and receipts",
+  "proRowUnlimited": "Unlimited",
+  "proRowTemplates": "PDF templates",
+  "proRowTemplatesFree": "Classic",
+  "proRowTemplatesPro": "All",
+  "proRowLogo": "Logo on the PDF",
+  "proRowYes": "Yes",
+  "proRowFooter": "Made with QuickBill on the PDF",
+  "proRowFooterFree": "Shown",
+  "proRowFooterPro": "Removed",
+  "proRowClients": "Clients and items",
+  "proRowClientsFree": "Up to {count}",
+  "@proRowClientsFree": {
+    "placeholders": {
+      "count": {"type": "String"}
+    }
+  },
+  "proRowClientsPro": "Unlimited",
+  "proRowBackup": "Backup",
+  "proRowBackupFree": "Manual",
+  "proRowBackupPro": "Manual",
+  "proRowAds": "Ads",
+  "proRowAdsFree": "Shown",
+  "proRowAdsPro": "None",
+  "proMoreTitle": "QuickBill Pro",
+  "proMoreBody": "Remove ads and use every template.",
+  "proMoreActive": "You are on Pro",
+  "proRequired": "QuickBill Pro is needed for this.",
+  "templateProBadge": "Pro",
+  "pdfMadeWith": "Made with QuickBill",
+  "privacyTitle": "Privacy policy",
+  "privacyBody": "QuickBill keeps your invoices, clients, items and business profile on this phone. There is no account and no IRR Dev Labs server. A backup is a file you export yourself. Free users may see Google AdMob ads. QuickBill Pro is billed by Google Play. Anonymous usage events and crash reports may be sent through Firebase. They never include names, amounts, phone numbers or emails. Questions: irrdevlabs.support@gmail.com.",
+  "termsTitle": "Terms",
+  "termsBody": "QuickBill Pro is an optional subscription billed by Google Play (quickbill_pro_monthly or quickbill_pro_yearly). A free trial, when Google Play offers one, becomes a paid plan unless you cancel in Google Play before it ends. You can cancel anytime in Google Play. Access continues until the period you already paid for ends. Invoices and receipts you create stay on your phone. IRR Dev Labs provides the app for making invoices and receipts. Questions: irrdevlabs.support@gmail.com."
 }

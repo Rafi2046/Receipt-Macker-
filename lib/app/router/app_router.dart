@@ -14,6 +14,10 @@ import '../../features/items/presentation/views/item_editor_view.dart';
 import '../../features/items/presentation/views/item_list_view.dart';
 import '../../features/onboarding/presentation/views/onboarding_view.dart';
 import '../../features/onboarding/providers.dart';
+import '../../features/paywall/presentation/views/paywall_view.dart';
+import '../../features/paywall/presentation/views/pro_welcome_view.dart';
+import '../../features/settings/presentation/views/privacy_policy_view.dart';
+import '../../features/settings/presentation/views/terms_view.dart';
 import '../shell/app_shell.dart';
 import 'invoice_routes.dart';
 import 'route_names.dart';
@@ -73,6 +77,26 @@ GoRouter appRouter(Ref ref) {
         name: RouteNames.businessProfile,
         path: RouteNames.businessProfilePath,
         builder: (_, _) => const BusinessProfileView(),
+      ),
+      GoRoute(
+        name: RouteNames.paywall,
+        path: RouteNames.paywallPath,
+        builder: (_, _) => const PaywallView(),
+      ),
+      GoRoute(
+        name: RouteNames.proWelcome,
+        path: RouteNames.proWelcomePath,
+        builder: (_, _) => const ProWelcomeView(),
+      ),
+      GoRoute(
+        name: RouteNames.privacy,
+        path: RouteNames.privacyPath,
+        builder: (_, _) => const PrivacyPolicyView(),
+      ),
+      GoRoute(
+        name: RouteNames.terms,
+        path: RouteNames.termsPath,
+        builder: (_, _) => const TermsView(),
       ),
       _itemRoutes,
       if (kDebugMode) ..._debugRoutes,

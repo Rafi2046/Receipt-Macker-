@@ -66,7 +66,7 @@ void main() {
     expect(doc.number, 'INV-0012');
     expect(doc.columns, ['Item', 'Qty', 'Price', 'Amount']);
     expect(doc.lines.single.quantity, '2.5 hour');
-    expect(doc.lines.single.amount, '৳2,700.00');
+    expect(doc.lines.single.amount, '৳2,700');
     expect(doc.lines.single.discountNote, 'Less 10%');
     expect(doc.totals.map((f) => f.label), [
       'Subtotal',
@@ -74,8 +74,8 @@ void main() {
       'Tax 15%',
       'Shipping',
     ]);
-    expect(doc.totals[1].value, '-৳100.00');
-    expect(doc.grandTotal.value, '৳3,040.00');
+    expect(doc.totals[1].value, '-৳100');
+    expect(doc.grandTotal.value, '৳3,040');
     expect(doc.meta.last.value, 'Oct 27, 2026');
     expect(doc.seller.lines, contains('VAT/BIN: 001234567'));
     expect(doc.buyer?.name, 'Karim');
@@ -93,7 +93,7 @@ void main() {
     expect(doc.title, 'ইনভয়েস');
     expect(doc.number, 'INV-০০১২');
     expect(doc.lines.single.quantity, '২.৫ hour');
-    expect(doc.grandTotal.value, '৳৩,০৪০.০০');
+    expect(doc.grandTotal.value, '৳৩,০৪০');
     expect(doc.buyer?.lines, contains('০১৮১১২২৩৩৪৪'));
     expect(doc.pageLabelParts, ['পৃষ্ঠা ', ' / ', '']);
   });

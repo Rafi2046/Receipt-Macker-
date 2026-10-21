@@ -1,13 +1,17 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/errors/failure.dart';
 import '../../../../core/errors/result.dart';
+import '../../../../core/services/purchases/free_plan.dart';
+import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/services/service_providers.dart';
 import '../../../../core/utils/id_generator.dart';
 import '../../domain/logic/item_validator.dart';
 import '../../domain/models/item.dart';
 import '../../providers.dart';
 import 'item_editor_state.dart';
+import 'item_list_view_model.dart';
 
 part 'item_editor_view_model.g.dart';
 
@@ -98,6 +102,10 @@ class ItemEditorViewModel extends _$ItemEditorViewModel {
     if (form == null || form.isBusy) return null;
     _set((f) => f.copyWith(showErrors: true));
     if (form.errors.isNotEmpty) return null;
+    if (form.isNew && !await _withinFreeLimit()) {
+      _set((f) => f.copyWith(failure: const ProRequiredFailure()));
+      return null;
+    }
     _set((f) => f.copyWith(isSaving: true));
     final result = await ref
         .read(itemRepositoryProvider)
@@ -118,6 +126,14 @@ class ItemEditorViewModel extends _$ItemEditorViewModel {
         _set((f) => f.copyWith(isSaving: false, failure: failure));
         return null;
     }
+  }
+
+  Future<bool> _withinFreeLimit() async {
+    final shown = ref.read(itemListViewModelProvider).asData?.value;
+    final count = shown != null && !shown.isSearching
+        ? shown.items.length
+        : (await ref.read(itemRepositoryProvider).watchAll().first).length;
+    return FreePlan.canAdd(isPro: ref.read(proStatusProvider), count: count);
   }
 
   /// Deletes the stored item. Returns true on success.

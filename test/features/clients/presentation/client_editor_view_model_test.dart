@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:receipt_maker/app/provider_retry.dart';
 import 'package:receipt_maker/core/errors/failure.dart';
 import 'package:receipt_maker/core/errors/result.dart';
+import 'package:receipt_maker/core/services/service_providers.dart';
 import 'package:receipt_maker/core/utils/validation_error.dart';
 import 'package:receipt_maker/features/clients/domain/models/client.dart';
 import 'package:receipt_maker/features/clients/domain/models/client_field.dart';
@@ -11,6 +12,7 @@ import 'package:receipt_maker/features/clients/presentation/view_models/client_e
 import 'package:receipt_maker/features/clients/presentation/view_models/client_editor_view_model.dart';
 import 'package:receipt_maker/features/clients/providers.dart';
 
+import '../../../helpers/fake_app_preferences.dart';
 import '../../../helpers/mock_repositories.dart';
 
 void main() {
@@ -21,7 +23,10 @@ void main() {
 
   Future<void> open(String? id) async {
     container = ProviderContainer(
-      overrides: [clientRepositoryProvider.overrideWithValue(repo)],
+      overrides: [
+        clientRepositoryProvider.overrideWithValue(repo),
+        appPreferencesProvider.overrideWithValue(FakeAppPreferences()),
+      ],
       retry: appProviderRetry,
     )..listen(clientEditorViewModelProvider(id), (_, _) {});
     try {
@@ -41,6 +46,8 @@ void main() {
     when(() => repo.save(any()))
         .thenAnswer((i) async => Ok(i.positionalArguments.first as Client));
     when(() => repo.delete(any())).thenAnswer((_) async => const Ok(null));
+    when(() => repo.watchAll(query: any(named: 'query')))
+        .thenAnswer((_) => Stream.value(const []));
   });
   tearDown(() => container.dispose());
 

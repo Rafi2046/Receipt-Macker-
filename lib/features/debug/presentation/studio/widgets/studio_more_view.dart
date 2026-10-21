@@ -11,10 +11,18 @@ import 'studio_font_specimen.dart';
 
 /// Grouped menu, the Pro card, and the side-by-side font choice.
 class StudioMoreView extends StatelessWidget {
-  const StudioMoreView({required this.font, required this.onFont, super.key});
+  const StudioMoreView({
+    required this.font,
+    required this.onFont,
+    required this.onDesign,
+    required this.onInvoiceSettings,
+    super.key,
+  });
 
   final StudioFont font;
   final ValueChanged<StudioFont> onFont;
+  final VoidCallback onDesign;
+  final VoidCallback onInvoiceSettings;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +32,7 @@ class StudioMoreView extends StatelessWidget {
         AppSpacing.pagePadding,
         AppSpacing.sm,
         AppSpacing.pagePadding,
-        AppSpacing.lg,
+        AppSizes.fabClearance,
       ),
       children: [
         Text(l10n.navMore, style: context.studioType.title(context.studio.ink)),
@@ -35,7 +43,16 @@ class StudioMoreView extends StatelessWidget {
         _Tile(icon: StudioIcons.business, label: l10n.businessProfileTitle),
         _Tile(icon: StudioIcons.items, label: l10n.itemsTitle),
         _Tile(icon: StudioIcons.payment, label: l10n.studioPaymentsReceipts),
-        _Tile(icon: StudioIcons.design, label: l10n.studioInvoiceDesign),
+        _Tile(
+          icon: StudioIcons.design,
+          label: l10n.studioInvoiceDesign,
+          onTap: onDesign,
+        ),
+        _Tile(
+          icon: StudioIcons.invoiceSettings,
+          label: l10n.studioInvoiceSettings,
+          onTap: onInvoiceSettings,
+        ),
         const SizedBox(height: AppSpacing.lg),
         _GroupLabel(l10n.studioGroupApp),
         _Tile(icon: StudioIcons.settings, label: l10n.studioSettings),
@@ -64,10 +81,11 @@ class _GroupLabel extends StatelessWidget {
 }
 
 class _Tile extends StatelessWidget {
-  const _Tile({required this.icon, required this.label});
+  const _Tile({required this.icon, required this.label, this.onTap});
 
   final IconData icon;
   final String label;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +93,7 @@ class _Tile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: StudioCard(
-        onTap: () {},
+        onTap: onTap,
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
           vertical: AppSpacing.md,

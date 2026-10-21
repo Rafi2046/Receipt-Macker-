@@ -44,8 +44,14 @@ class InvoicePdfRepositoryImpl implements InvoicePdfRepository {
     String invoiceId, {
     required PdfTemplate template,
     required String languageCode,
+    bool showBranding = false,
   }) => Result.guard(() async {
-    final (invoice, html) = await _html(invoiceId, template, languageCode);
+    final (invoice, html) = await _html(
+      invoiceId,
+      template,
+      languageCode,
+      showBranding: showBranding,
+    );
     final fileName = fileNameFor(invoice.number);
     final dir = await _cacheDirectory();
     final path = '${dir.path}/$_folder/$fileName';
@@ -64,8 +70,14 @@ class InvoicePdfRepositoryImpl implements InvoicePdfRepository {
     String invoiceId, {
     required PdfTemplate template,
     required String languageCode,
+    bool showBranding = false,
   }) => Result.guard(() async {
-    final (invoice, html) = await _html(invoiceId, template, languageCode);
+    final (invoice, html) = await _html(
+      invoiceId,
+      template,
+      languageCode,
+      showBranding: showBranding,
+    );
     await _converter.printWithSystemDialog(html: html, jobName: invoice.number);
   }, onError: _pdf);
 
@@ -78,16 +90,19 @@ class InvoicePdfRepositoryImpl implements InvoicePdfRepository {
   Future<(Invoice, String)> _html(
     String invoiceId,
     PdfTemplate template,
-    String languageCode,
-  ) async {
+    String languageCode, {
+    required bool showBranding,
+  }) async {
     final invoice = _value(await _invoices.find(invoiceId));
     final profile = _value(await _profiles.load());
     if (profile == null) throw const NotFoundFailure();
     final doc = await _document(invoice, profile, languageCode);
+    final l10n = lookupAppLocalizations(Locale(languageCode));
     final html = PdfTemplateRenderer.render(
       template,
       doc,
       fontsCss: await _fonts.css(),
+      footer: showBranding ? l10n.pdfMadeWith : null,
     );
     return (invoice, html);
   }

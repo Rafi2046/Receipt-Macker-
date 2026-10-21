@@ -10,6 +10,7 @@ abstract interface class InvoicePdfRepository {
     String invoiceId, {
     required PdfTemplate template,
     required String languageCode,
+    bool showBranding = false,
   });
 
   /// Fallback when [render] fails: the system print dialog, which can also
@@ -18,5 +19,6 @@ abstract interface class InvoicePdfRepository {
     String invoiceId, {
     required PdfTemplate template,
     required String languageCode,
+    bool showBranding = false,
   });
 }

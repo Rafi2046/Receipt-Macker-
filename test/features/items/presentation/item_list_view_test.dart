@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:receipt_maker/core/services/service_providers.dart';
 import 'package:receipt_maker/features/items/presentation/views/item_list_view.dart';
 import 'package:receipt_maker/features/items/providers.dart';
 
+import '../../../helpers/fake_app_preferences.dart';
 import '../../../helpers/mock_repositories.dart';
 import '../../../helpers/pump_app.dart';
 
@@ -21,7 +23,10 @@ void main() {
     language: language,
     textScale: textScale,
     surface: const Size(360, 740),
-    overrides: [itemRepositoryProvider.overrideWithValue(repo)],
+    overrides: [
+      itemRepositoryProvider.overrideWithValue(repo),
+      appPreferencesProvider.overrideWithValue(FakeAppPreferences()),
+    ],
   );
 
   testWidgets('empty offers to add the first item', (tester) async {

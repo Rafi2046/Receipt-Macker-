@@ -14,11 +14,25 @@ class SharedAppPreferences implements AppPreferences {
   static const String _theme = 'theme_name';
   static const String _currency = 'default_currency';
   static const String _pdfTemplate = 'pdf_template';
+  static const String _pro = 'is_pro';
+  static const String _firstLaunch = 'first_launch_millis';
+  static const String _exports = 'completed_exports';
+  static const String _lastAd = 'last_interstitial_millis';
 
   static Future<SharedAppPreferences> create() async => SharedAppPreferences._(
     await SharedPreferencesWithCache.create(
       cacheOptions: const SharedPreferencesWithCacheOptions(
-        allowList: {_onboarding, _language, _theme, _currency, _pdfTemplate},
+        allowList: {
+          _onboarding,
+          _language,
+          _theme,
+          _currency,
+          _pdfTemplate,
+          _pro,
+          _firstLaunch,
+          _exports,
+          _lastAd,
+        },
       ),
     ),
   );
@@ -55,4 +69,30 @@ class SharedAppPreferences implements AppPreferences {
 
   @override
   Future<void> setPdfTemplate(String id) => _prefs.setString(_pdfTemplate, id);
+
+  @override
+  bool get isPro => _prefs.getBool(_pro) ?? false;
+
+  @override
+  Future<void> setPro({required bool value}) => _prefs.setBool(_pro, value);
+
+  @override
+  int? get firstLaunchMillis => _prefs.getInt(_firstLaunch);
+
+  @override
+  Future<void> setFirstLaunchMillis(int millis) =>
+      _prefs.setInt(_firstLaunch, millis);
+
+  @override
+  int get completedExports => _prefs.getInt(_exports) ?? 0;
+
+  @override
+  Future<void> setCompletedExports(int count) => _prefs.setInt(_exports, count);
+
+  @override
+  int? get lastInterstitialMillis => _prefs.getInt(_lastAd);
+
+  @override
+  Future<void> setLastInterstitialMillis(int millis) =>
+      _prefs.setInt(_lastAd, millis);
 }

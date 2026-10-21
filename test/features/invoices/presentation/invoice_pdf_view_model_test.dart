@@ -75,12 +75,17 @@ void main() {
     share = _MockShare();
     save = _MockSave();
     invoices = MockInvoiceRepository();
-    prefs = FakeAppPreferences(languageCode: 'bn', pdfTemplate: 'modern');
+    prefs = FakeAppPreferences(
+      languageCode: 'bn',
+      pdfTemplate: 'modern',
+      isPro: true,
+    );
     when(
       () => pdfRepo.render(
         any(),
         template: any(named: 'template'),
         languageCode: any(named: 'languageCode'),
+        showBranding: any(named: 'showBranding'),
       ),
     ).thenAnswer((_) async => Ok(pdf));
     when(() => raster.pages(any()))
@@ -105,6 +110,18 @@ void main() {
     ).called(1);
   });
 
+  test('a free account stays on Classic', () async {
+    prefs = FakeAppPreferences(languageCode: 'bn', pdfTemplate: 'modern');
+    await open();
+    expect(state().template, PdfTemplate.classic);
+    final allowed = await container
+        .read(provider.notifier)
+        .setTemplate(PdfTemplate.minimal);
+    expect(allowed, isFalse);
+    expect(prefs.pdfTemplate, 'modern');
+    expect(state().template, PdfTemplate.classic);
+  });
+
   test('changing the template remembers it and makes a new PDF', () async {
     await open();
     await container.read(provider.notifier).setTemplate(PdfTemplate.minimal);
@@ -124,6 +141,7 @@ void main() {
         any(),
         template: any(named: 'template'),
         languageCode: any(named: 'languageCode'),
+        showBranding: any(named: 'showBranding'),
       ),
     ).thenAnswer((_) async => const Err(PdfFailure()));
     await open();

@@ -53,7 +53,7 @@ class StudioHomeView extends StatelessWidget {
         AppSpacing.pagePadding,
         AppSpacing.sm,
         AppSpacing.pagePadding,
-        AppSpacing.lg,
+        AppSizes.fabClearance,
       ),
       children: [
         _Greeting(onSettings: onSettings),

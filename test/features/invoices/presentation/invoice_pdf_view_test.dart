@@ -42,6 +42,7 @@ void main() {
       any(),
       template: any(named: 'template'),
       languageCode: any(named: 'languageCode'),
+      showBranding: any(named: 'showBranding'),
     ),
   ).thenAnswer((_) => answer());
 

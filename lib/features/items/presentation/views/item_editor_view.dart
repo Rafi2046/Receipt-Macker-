@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../app/router/route_names.dart';
+import '../../../../core/errors/failure.dart';
 import '../../../../core/utils/extensions/failure_message_extension.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/feedback/app_snackbar.dart';
@@ -52,12 +55,16 @@ class ItemEditorView extends ConsumerWidget {
     final provider = itemEditorViewModelProvider(itemId);
     ref.listen(provider.select((s) => s.value?.failure), (_, failure) {
       if (failure == null) return;
+      ref.read(provider.notifier).clearFailure();
+      if (failure is ProRequiredFailure) {
+        context.pushNamed(RouteNames.paywall);
+        return;
+      }
       AppSnackbar.show(
         context,
         context.l10n.messageFor(failure),
         tone: AppSnackbarTone.error,
       );
-      ref.read(provider.notifier).clearFailure();
     });
     final async = ref.watch(provider);
     final form = async.value;

@@ -8,7 +8,8 @@ import '../features/settings/domain/models/app_language.dart';
 import 'app.dart';
 import 'provider_retry.dart';
 
-/// Startup work before the first frame. Firebase and ads are added in M8/M9.
+/// Startup work before the first frame. Ads and Play start after the first
+/// frame. Firebase analytics is M9.
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting();

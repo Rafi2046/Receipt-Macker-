@@ -8,11 +8,13 @@ abstract interface class ReceiptPdfRepository {
     String paymentId, {
     required PdfTemplate template,
     required String languageCode,
+    bool showBranding = false,
   });
 
   Future<Result<void>> printWithSystemDialog(
     String paymentId, {
     required PdfTemplate template,
     required String languageCode,
+    bool showBranding = false,
   });
 }

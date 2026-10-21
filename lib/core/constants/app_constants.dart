@@ -25,4 +25,21 @@ abstract final class AppConstants {
   static const bool interstitialSkipFirstDay = true;
   static const int interstitialEveryNExports = 5;
   static const Duration interstitialMinInterval = Duration(minutes: 3);
+
+  /// Free clients and free catalog items, each. Working default until the
+  /// owner picks N. Pro is unlimited.
+  static const int freeRecordLimit = 20;
+
+  /// Free PDFs include a "Made with QuickBill" line. Pro removes it.
+  /// Working default until the owner says otherwise.
+  static const bool freeShowsPdfFooter = true;
+
+  /// Play Console subscription ids. Final once created there.
+  static const String proMonthlyId = 'quickbill_pro_monthly';
+  static const String proYearlyId = 'quickbill_pro_yearly';
+
+  /// Google's sample AdMob app id. Release builds replace it with
+  /// `-PADMOB_APP_ID=ca-app-pub-…` and pass `ADMOB_BANNER_ID` and
+  /// `ADMOB_INTERSTITIAL_ID` as `--dart-define`. Debug always uses test ads.
+  static const String admobTestAppId = 'ca-app-pub-3940256099942544~3347511713';
 }

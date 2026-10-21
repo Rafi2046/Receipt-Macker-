@@ -60,9 +60,15 @@ void main() {
       expect(AppFormatters.currencyDecimalDigits('JPY'), 0);
     });
 
-    test('formats per language', () {
+    test('formats per language and drops a zero fraction', () {
       expect(AppFormatters('en').currency(123450, 'BDT'), '৳1,234.50');
-      expect(AppFormatters('bn').currency(12345600, 'BDT'), '৳১,২৩,৪৫৬.০০');
+      expect(AppFormatters('en').currency(2650000, 'BDT'), '৳26,500');
+      expect(AppFormatters('en').currency(50, 'BDT'), '৳0.50');
+      expect(AppFormatters('en').currency(5, 'BDT'), '৳0.05');
+      expect(AppFormatters('en').currency(0, 'BDT'), '৳0');
+      expect(AppFormatters('bn').currency(12345600, 'BDT'), '৳১,২৩,৪৫৬');
+      expect(AppFormatters('bn').currency(123450, 'BDT'), '৳১,২৩৪.৫০');
+      expect(AppFormatters('bn').currency(5, 'BDT'), '৳০.০৫');
       expect(AppFormatters('en').currency(1500, 'JPY'), '¥1,500');
     });
   });
@@ -99,8 +105,8 @@ void main() {
   });
 
   test('a negative amount puts the sign before the symbol', () {
-    expect(AppFormatters('en').currency(-82000, 'BDT'), '-৳820.00');
-    expect(AppFormatters('bn').currency(-82000, 'BDT'), '-৳৮২০.০০');
+    expect(AppFormatters('en').currency(-82000, 'BDT'), '-৳820');
+    expect(AppFormatters('bn').currency(-82000, 'BDT'), '-৳৮২০');
     expect(AppFormatters('en').currency(-1500, 'JPY'), '-¥1,500');
   });
 }

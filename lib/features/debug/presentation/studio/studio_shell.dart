@@ -7,10 +7,14 @@ import 'studio_invoice.dart';
 import 'studio_palette.dart';
 import 'studio_scope.dart';
 import 'studio_type.dart';
+import 'templates/bill_gallery_view.dart';
+import 'templates/bill_preview_view.dart';
+import 'templates/bill_template.dart';
 import 'widgets/studio_clients_view.dart';
 import 'widgets/studio_detail_view.dart';
 import 'widgets/studio_editor_view.dart';
 import 'widgets/studio_home_view.dart';
+import 'widgets/studio_invoice_settings_view.dart';
 import 'widgets/studio_invoices_view.dart';
 import 'widgets/studio_more_view.dart';
 import 'widgets/studio_nav_bar.dart';
@@ -29,6 +33,10 @@ class _StudioShellState extends State<StudioShell> {
   StudioFont _font = StudioFont.manrope;
   StudioInvoice? _open;
   bool _editor = false;
+  bool _gallery = false;
+  bool _settings = false;
+  BillTemplate? _preview;
+  String? _selectedTemplateId;
 
   void _close() => setState(() {
     _open = null;
@@ -40,13 +48,31 @@ class _StudioShellState extends State<StudioShell> {
     final palette = StudioPalette.of(Theme.of(context).brightness);
     final l10n = context.l10n;
     final open = _open;
+    final preview = _preview;
     return StudioScope(
       palette: palette,
       type: StudioType(_font.family),
       font: _font,
       child: Material(
         color: palette.background,
-        child: _editor
+        child: preview != null
+            ? BillPreviewView(
+                template: preview,
+                selected: preview.id == _selectedTemplateId,
+                onBack: () => setState(() => _preview = null),
+                onUse: () => setState(() => _selectedTemplateId = preview.id),
+              )
+            : _settings
+            ? StudioInvoiceSettingsView(
+                onBack: () => setState(() => _settings = false),
+              )
+            : _gallery
+            ? BillGalleryView(
+                selectedId: _selectedTemplateId,
+                onBack: () => setState(() => _gallery = false),
+                onOpen: (template) => setState(() => _preview = template),
+              )
+            : _editor
             ? StudioEditorView(onBack: _close)
             : open != null
             ? StudioDetailView(invoice: open, onBack: _close)
@@ -66,6 +92,8 @@ class _StudioShellState extends State<StudioShell> {
                 onFont: (font) => setState(() => _font = font),
                 onOpen: (invoice) => setState(() => _open = invoice),
                 onCreate: () => setState(() => _editor = true),
+                onDesign: () => setState(() => _gallery = true),
+                onInvoiceSettings: () => setState(() => _settings = true),
               ),
       ),
     );
@@ -84,6 +112,8 @@ class _Tabs extends StatelessWidget {
     required this.onFont,
     required this.onOpen,
     required this.onCreate,
+    required this.onDesign,
+    required this.onInvoiceSettings,
   });
 
   final int tab;
@@ -96,6 +126,8 @@ class _Tabs extends StatelessWidget {
   final ValueChanged<StudioFont> onFont;
   final ValueChanged<StudioInvoice> onOpen;
   final VoidCallback onCreate;
+  final VoidCallback onDesign;
+  final VoidCallback onInvoiceSettings;
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +153,12 @@ class _Tabs extends StatelessWidget {
                 ),
                 StudioInvoicesView(onOpen: onOpen),
                 const StudioClientsView(),
-                StudioMoreView(font: font, onFont: onFont),
+                StudioMoreView(
+                  font: font,
+                  onFont: onFont,
+                  onDesign: onDesign,
+                  onInvoiceSettings: onInvoiceSettings,
+                ),
               ],
             ),
           ),

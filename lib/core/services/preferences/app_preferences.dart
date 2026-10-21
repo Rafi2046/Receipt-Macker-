@@ -19,4 +19,18 @@ abstract interface class AppPreferences {
   /// Id of the last PDF template used; null means the default.
   String? get pdfTemplate;
   Future<void> setPdfTemplate(String id);
+
+  /// Cached Pro flag. Google Play is checked again on startup.
+  bool get isPro;
+  Future<void> setPro({required bool value});
+
+  /// First time the app ran, for the day-one ad cap.
+  int? get firstLaunchMillis;
+  Future<void> setFirstLaunchMillis(int millis);
+
+  int get completedExports;
+  Future<void> setCompletedExports(int count);
+
+  int? get lastInterstitialMillis;
+  Future<void> setLastInterstitialMillis(int millis);
 }

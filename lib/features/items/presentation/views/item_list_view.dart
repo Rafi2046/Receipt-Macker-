@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
 import '../../../../core/constants/app_icons.dart';
+import '../../../../core/services/ads/list_ad_banner.dart';
+import '../../../../core/services/purchases/free_plan.dart';
+import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/buttons/app_fab.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
@@ -11,6 +14,7 @@ import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../core/widgets/layout/searchable_list.dart';
+import '../../providers.dart';
 import '../view_models/item_list_state.dart';
 import '../view_models/item_list_view_model.dart';
 import '../widgets/item_list_tile.dart';
@@ -29,9 +33,10 @@ class ItemListView extends ConsumerWidget {
       floatingActionButton: showFab
           ? AppFab(
               label: l10n.itemAdd,
-              onPressed: () => context.pushNamed(RouteNames.itemNew),
+              onPressed: () => _openNewItem(context, ref),
             )
           : null,
+      bottomBar: const ListAdBanner(),
       // Keep the list (and the search box) on screen while a new search runs.
       body: items.when(
         skipLoadingOnReload: true,
@@ -64,7 +69,7 @@ class _ItemList extends ConsumerWidget {
         title: l10n.itemsEmptyTitle,
         message: l10n.itemsEmptyBody,
         actionLabel: l10n.itemsEmptyAction,
-        onAction: () => context.pushNamed(RouteNames.itemNew),
+        onAction: () => _openNewItem(context, ref),
       ),
       itemCount: state.items.length,
       itemBuilder: (context, i) {
@@ -79,4 +84,21 @@ class _ItemList extends ConsumerWidget {
       },
     );
   }
+}
+
+Future<void> _openNewItem(BuildContext context, WidgetRef ref) async {
+  final shown = ref.read(itemListViewModelProvider).asData?.value;
+  final count = shown != null && !shown.isSearching
+      ? shown.items.length
+      : (await ref.read(itemRepositoryProvider).watchAll().first).length;
+  if (!context.mounted) return;
+  final allowed = FreePlan.canAdd(
+    isPro: ref.read(proStatusProvider),
+    count: count,
+  );
+  if (!allowed) {
+    await context.pushNamed(RouteNames.paywall);
+    return;
+  }
+  await context.pushNamed(RouteNames.itemNew);
 }

@@ -47,8 +47,14 @@ class ReceiptPdfRepositoryImpl implements ReceiptPdfRepository {
     String paymentId, {
     required PdfTemplate template,
     required String languageCode,
+    bool showBranding = false,
   }) => Result.guard(() async {
-    final (payment, html) = await _html(paymentId, template, languageCode);
+    final (payment, html) = await _html(
+      paymentId,
+      template,
+      languageCode,
+      showBranding: showBranding,
+    );
     final fileName = fileNameFor(payment.receiptNumber);
     final dir = await _cacheDirectory();
     final path = '${dir.path}/$_folder/$fileName';
@@ -67,8 +73,14 @@ class ReceiptPdfRepositoryImpl implements ReceiptPdfRepository {
     String paymentId, {
     required PdfTemplate template,
     required String languageCode,
+    bool showBranding = false,
   }) => Result.guard(() async {
-    final (payment, html) = await _html(paymentId, template, languageCode);
+    final (payment, html) = await _html(
+      paymentId,
+      template,
+      languageCode,
+      showBranding: showBranding,
+    );
     await _converter.printWithSystemDialog(
       html: html,
       jobName: payment.receiptNumber,
@@ -83,8 +95,9 @@ class ReceiptPdfRepositoryImpl implements ReceiptPdfRepository {
   Future<(Payment, String)> _html(
     String paymentId,
     PdfTemplate template,
-    String languageCode,
-  ) async {
+    String languageCode, {
+    required bool showBranding,
+  }) async {
     final payment = _value(await _payments.find(paymentId));
     final invoice = _value(await _invoices.find(payment.invoiceId));
     final all = await _payments.watchForInvoice(payment.invoiceId).first;
@@ -107,10 +120,12 @@ class ReceiptPdfRepositoryImpl implements ReceiptPdfRepository {
           logoDataUri: await _dataUri(profile.logoPath),
           signatureDataUri: await _dataUri(profile.signaturePath),
         );
+    final l10n = lookupAppLocalizations(Locale(languageCode));
     final html = PdfTemplateRenderer.render(
       template,
       doc,
       fontsCss: await _fonts.css(),
+      footer: showBranding ? l10n.pdfMadeWith : null,
     );
     return (payment, html);
   }

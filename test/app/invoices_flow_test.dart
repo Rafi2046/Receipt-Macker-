@@ -88,12 +88,12 @@ void main() {
     await tap(tester, find.widgetWithText(OutlinedButton, 'Add an item'));
     await tap(tester, find.text('Logo design'));
     expect(find.text('Tax 15%'), findsOneWidget, reason: 'item default tax');
-    expect(find.text('৳5,750.00'), findsOneWidget);
+    expect(find.text('৳5,750'), findsOneWidget);
 
     await tap(tester, find.text('Save'));
     expect(find.text('Invoice saved'), findsOneWidget);
     expect(find.text('Draft'), findsOneWidget);
-    expect(find.text('৳5,750.00'), findsNWidgets(2), reason: 'header, total');
+    expect(find.text('৳5,750'), findsNWidgets(2), reason: 'header, total');
 
     await menu(tester, 'Mark as sent');
     expect(find.text('Sent'), findsOneWidget);

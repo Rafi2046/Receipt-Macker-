@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../features/settings/domain/models/app_theme_preference.dart';
 import '../features/settings/presentation/view_models/app_settings_view_model.dart';
 import '../l10n/gen/app_localizations.dart';
+import 'monetization_starter.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 
@@ -33,6 +34,8 @@ class App extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       routerConfig: ref.watch(appRouterProvider),
+      builder: (context, child) =>
+          MonetizationStarter(child: child ?? const SizedBox.shrink()),
     );
   }
 }

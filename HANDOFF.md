@@ -109,7 +109,7 @@ m6-payments (current) = main + M6 commits
 | M5 | PDF templates, preview, share, print | Done (one check open, see §8) | https://claude.ai/artifact/TYaVegdPbNG3S4CZVfJ6Fg |
 | M6 | Payments + receipts + statuses | Done on `m6-payments`. Phone-tested on the A52. | `docs/reviews/M6.md` |
 | **M7** | **Dashboard + settings + backup/restore** | **Next. Design shown, not approved for code.** | |
-| M8 | Monetization (ads, Pro, paywall) | | |
+| M8 | Monetization (ads, Pro, paywall) | In progress on `ui-redesign` (not committed) | |
 | M9 | Analytics, privacy, polish | | |
 | M10 | Release prep | | |
 
@@ -170,9 +170,11 @@ m6-payments (current) = main + M6 commits
 
 ### Still to decide by the owner (remind them)
 
-- Free plan limit N on clients/items (CLAUDE.md §9.1), before M8.
-- "Made with QuickBill" footer on Free PDFs: yes/no (§9.1).
-- Which templates are Free vs Pro (M8).
+- Free plan limit N on clients/items. Working default in code: 20 each (`AppConstants.freeRecordLimit`). Not an owner decision yet.
+- "Made with QuickBill" on Free PDFs. Working default: shown for Free, removed for Pro (`AppConstants.freeShowsPdfFooter`).
+- Which templates are Free vs Pro. Working default: Classic free, Modern and Minimal Pro.
+- Play product ids `quickbill_pro_monthly` and `quickbill_pro_yearly` are in code and are not created in Play Console yet. Real AdMob ids are not in the repo: debug uses Google's test ids; a release build needs `-PADMOB_APP_ID` plus `--dart-define` for the banner and interstitial.
+- Privacy policy and terms are in-app pages. There is no public URL yet.
 - Subscription product ids are *proposed* as `quickbill_pro_monthly` /
   `quickbill_pro_yearly`; confirm before creating them in Play Console.
 - How to merge the stacked branches into `main`, and when to push.
@@ -259,7 +261,7 @@ approve. Proposed shape:
 - Two packages are not in the app yet and need a yes before coding:
   `url_launcher` (Call / WhatsApp) and `archive` (the zip).
 
-After M7: M8 (ads, Pro, paywall), M9 (analytics, privacy, polish), M10
+After M7: M8 (ads, Pro, paywall — started, see the defaults above), M9 (analytics, privacy polish, Firebase), M10
 (release prep).
 
 ## 10. Testing on the phone (how we did it)

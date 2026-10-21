@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_spacing.dart';
 import '../../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../../core/utils/initials.dart';
@@ -31,7 +32,7 @@ class _StudioClientsViewState extends State<StudioClientsView> {
         AppSpacing.pagePadding,
         AppSpacing.sm,
         AppSpacing.pagePadding,
-        AppSpacing.lg,
+        AppSizes.fabClearance,
       ),
       children: [
         Text(

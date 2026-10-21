@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
-import '../../../../core/widgets/buttons/app_fab.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
@@ -23,15 +22,8 @@ class InvoiceListView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final invoices = ref.watch(invoiceListViewModelProvider);
-    final showFab = invoices.value?.isEmpty == false;
     return AppScaffold(
       title: l10n.invoicesTitle,
-      floatingActionButton: showFab
-          ? AppFab(
-              label: l10n.invoiceNewTitle,
-              onPressed: () => context.pushNamed(RouteNames.invoiceNew),
-            )
-          : null,
       body: invoices.when(
         skipLoadingOnReload: true,
         data: (state) => _InvoiceList(state: state),

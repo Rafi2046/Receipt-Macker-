@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/constants/app_icons.dart';
+import '../../core/services/ads/list_ad_banner.dart';
 import '../../core/utils/extensions/l10n_extension.dart';
+import '../../core/widgets/layout/app_nav_bar.dart';
 import '../router/route_names.dart';
 
 /// The four tabs that stay on screen: Home, Invoices, Clients, More.
@@ -28,34 +29,29 @@ class AppShell extends StatelessWidget {
     return Scaffold(
       // Pages show their own snackbars. Without this messenger the shell
       // scaffold would draw them over a Save bar.
-      body: ScaffoldMessenger(child: shell),
-      bottomNavigationBar: show
-          ? NavigationBar(
-              selectedIndex: shell.currentIndex,
-              onDestinationSelected: (index) => shell.goBranch(
+      body: Column(
+        children: [
+          Expanded(child: ScaffoldMessenger(child: shell)),
+          if (path == RouteNames.invoicesPath || path == RouteNames.clientsPath)
+            const ListAdBanner(),
+          if (show)
+            AppNavBar(
+              index: shell.currentIndex,
+              labels: [
+                l10n.navHome,
+                l10n.invoicesTitle,
+                l10n.clientsTitle,
+                l10n.navMore,
+              ],
+              createLabel: l10n.invoiceNewTitle,
+              onSelected: (index) => shell.goBranch(
                 index,
                 initialLocation: index == shell.currentIndex,
               ),
-              destinations: [
-                NavigationDestination(
-                  icon: const Icon(AppIcons.dashboard),
-                  label: l10n.navHome,
-                ),
-                NavigationDestination(
-                  icon: const Icon(AppIcons.invoice),
-                  label: l10n.invoicesTitle,
-                ),
-                NavigationDestination(
-                  icon: const Icon(AppIcons.client),
-                  label: l10n.clientsTitle,
-                ),
-                NavigationDestination(
-                  icon: const Icon(AppIcons.more),
-                  label: l10n.navMore,
-                ),
-              ],
-            )
-          : null,
+              onCreate: () => context.pushNamed(RouteNames.invoiceNew),
+            ),
+        ],
+      ),
     );
   }
 }

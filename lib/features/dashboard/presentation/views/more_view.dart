@@ -4,10 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_icons.dart';
+import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
+import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
+import '../../../../core/widgets/layout/app_card.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../core/widgets/layout/section_header.dart';
 import '../../../debug/presentation/view_models/sample_data_view_model.dart';
@@ -24,8 +28,15 @@ class MoreView extends ConsumerWidget {
     return AppScaffold(
       title: l10n.navMore,
       body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.pagePadding),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.pagePadding,
+          AppSpacing.pagePadding,
+          AppSpacing.pagePadding,
+          AppSizes.fabClearance,
+        ),
         children: [
+          const _ProCard(),
+          const SizedBox(height: AppSpacing.sm),
           HomeLinkTile(
             icon: AppIcons.business,
             label: l10n.businessProfileTitle,
@@ -36,6 +47,18 @@ class MoreView extends ConsumerWidget {
             icon: AppIcons.item,
             label: l10n.itemsTitle,
             onTap: () => context.pushNamed(RouteNames.items),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          HomeLinkTile(
+            icon: AppIcons.info,
+            label: l10n.privacyTitle,
+            onTap: () => context.pushNamed(RouteNames.privacy),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          HomeLinkTile(
+            icon: AppIcons.info,
+            label: l10n.termsTitle,
+            onTap: () => context.pushNamed(RouteNames.terms),
           ),
           if (kDebugMode) ...[
             const SizedBox(height: AppSpacing.sectionGap),
@@ -68,6 +91,40 @@ class MoreView extends ConsumerWidget {
                   .addSampleInvoices(),
             ),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+class _ProCard extends ConsumerWidget {
+  const _ProCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final pro = ref.watch(proStatusProvider);
+    return AppCard(
+      onTap: () =>
+          context.pushNamed(pro ? RouteNames.proWelcome : RouteNames.paywall),
+      child: Row(
+        children: [
+          Icon(AppIcons.pro, color: context.appColors.secondary),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.proMoreTitle, style: context.textStyles.titleMedium),
+                Text(
+                  pro ? l10n.proMoreActive : l10n.proMoreBody,
+                  style: context.textStyles.bodyMedium?.copyWith(
+                    color: context.appColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

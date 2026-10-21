@@ -11,6 +11,7 @@ import '../../../../core/widgets/feedback/app_snackbar.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
+import '../../../../core/widgets/pdf/choose_pdf_template.dart';
 import '../../../../core/widgets/pdf/pdf_action_bar.dart';
 import '../../../../core/widgets/pdf/pdf_options_bar.dart';
 import '../../../../core/widgets/pdf/pdf_page_list.dart';
@@ -93,7 +94,11 @@ class InvoicePdfView extends ConsumerWidget {
             template: state.template,
             languageCode: state.languageCode,
             enabled: !state.isRendering,
-            onTemplate: vm.setTemplate,
+            onTemplate: (template) => choosePdfTemplate(
+              context,
+              template: template,
+              setTemplate: vm.setTemplate,
+            ),
             onLanguage: vm.setLanguage,
           ),
           Expanded(

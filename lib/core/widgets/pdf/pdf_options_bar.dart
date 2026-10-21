@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../l10n/gen/app_localizations.dart';
 import '../../constants/app_spacing.dart';
 import '../../services/pdf/pdf_template.dart';
 import '../../utils/extensions/l10n_extension.dart';
@@ -22,6 +23,16 @@ class PdfOptionsBar extends StatelessWidget {
   final ValueChanged<PdfTemplate> onTemplate;
   final ValueChanged<String> onLanguage;
   final bool enabled;
+
+  static String _templateName(AppLocalizations l10n, PdfTemplate template) {
+    final name = switch (template) {
+      PdfTemplate.classic => l10n.templateClassic,
+      PdfTemplate.modern => l10n.templateModern,
+      PdfTemplate.minimal => l10n.templateMinimal,
+    };
+    if (!template.requiresPro) return name;
+    return '$name · ${l10n.templateProBadge}';
+  }
 
   static const String _en = 'en';
   static const String _bn = 'bn';
@@ -50,11 +61,7 @@ class PdfOptionsBar extends StatelessWidget {
             children: [
               for (final t in PdfTemplate.values)
                 ChoiceChip(
-                  label: Text(switch (t) {
-                    PdfTemplate.classic => l10n.templateClassic,
-                    PdfTemplate.modern => l10n.templateModern,
-                    PdfTemplate.minimal => l10n.templateMinimal,
-                  }),
+                  label: Text(_templateName(l10n, t)),
                   selected: t == template,
                   onSelected: enabled ? (_) => onTemplate(t) : null,
                 ),

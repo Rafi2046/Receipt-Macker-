@@ -14,7 +14,7 @@
 | Package id | `com.rafi.quickbill` (permanent once published) |
 | Developer / publisher | IRR Dev Labs |
 | Support email | irrdevlabs.support@gmail.com |
-| Brand colors | Bottle green & gold (decided M0). Light: primary `#006A4E`, secondary `#E0A100`. Dark: primary `#4CC9A0`, secondary `#F5C542`. Source of truth: `app/theme/app_colors.dart` |
+| Brand colors | Bottle green & gold (decided M0). Light: primary `#006A4E`, secondary `#E0A100`. Dark: primary `#3DDC97`, secondary `#F5C542`. Source of truth: `app/theme/app_colors.dart` |
 | Logo / app icon | Concept A, receipt with a lightning bolt (owner pick). Source SVGs in `assets/branding/`; regenerate icons and splash with `scripts/branding.sh` |
 | Languages | English + Bangla (from day one) |
 | Default currency | BDT (৳), user can change; every currency supported |
@@ -330,6 +330,7 @@ Status colors are semantic and identical across the app: Draft = neutral, Sent =
 - Currencies with 0 decimals (e.g. JPY) must work.
 - Tax inclusive vs exclusive must both be correct.
 - Display formatting goes through `formatters.dart` using `intl`, respecting the app language: Bangla UI shows Bangla digits (০১২৩…) and English UI shows Latin digits, everywhere (lists, PDF, notifications). Add tests for this.
+- A whole amount hides the trailing fraction (`৳26,500`, Bangla `৳২৬,৫০০`). A fractional amount keeps its decimals (`৳1,234.50`, `৳0.05`). Zero-decimal currencies (JPY) stay whole.
 - Dates are stored in UTC, displayed in local time. Overdue = due date (local, end of day) passed and balance > 0.
 - Invoice numbers are unique per profile; deleting an invoice never reuses its number automatically.
 
@@ -359,6 +360,9 @@ Status colors are semantic and identical across the app: Draft = neutral, Sent =
 ### 9.1 Pro subscription
 - Products: `quickbill_pro_monthly`, `quickbill_pro_yearly` (proposed) (Google Play subscriptions, free-trial offer configured in Play Console). Ids are final once created; confirm with the owner.
 - Paywall: shows real store prices and trial terms ("X days free, then <price>/<period>, cancel anytime in Google Play"), Restore purchases, Terms and Privacy links. Works in light and dark mode.
+- The price the customer is actually billed (for example `৳4,200/year`) is the largest price on the paywall. A per-week or per-month breakdown, if shown, is smaller type under that price.
+- No countdown timers and no "limited offer" banners.
+- The paywall includes a clear Free vs Pro comparison table.
 - After purchase: a "Welcome to Pro" screen listing what was unlocked and a "Manage subscription" link.
 - Pro status is cached locally and re-checked with Google Play on app start (works offline after first check).
 - Free vs Pro split is an **owner decision**. Proposed default (confirm before building):

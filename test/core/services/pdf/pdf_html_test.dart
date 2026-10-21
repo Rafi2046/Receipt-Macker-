@@ -35,8 +35,11 @@ void main() {
     notes: notes,
   );
 
-  String render(PdfDocument d, [PdfTemplate t = PdfTemplate.classic]) =>
-      PdfTemplateRenderer.render(t, d, fontsCss: '/*fonts*/');
+  String render(
+    PdfDocument d, [
+    PdfTemplate t = PdfTemplate.classic,
+    String? footer,
+  ]) => PdfTemplateRenderer.render(t, d, fontsCss: '/*fonts*/', footer: footer);
 
   test('user text is escaped, never markup', () {
     final html = render(doc());
@@ -103,6 +106,15 @@ void main() {
       size: PdfPageSize.letter,
     );
     expect(letter, contains('size: letter'));
+  });
+
+  test('a free footer is escaped and left off otherwise', () {
+    expect(
+      render(doc(), PdfTemplate.classic, 'Made with QuickBill'),
+      contains('Made with QuickBill'),
+    );
+    expect(render(doc(), PdfTemplate.classic, 'A & B'), contains('A &amp; B'));
+    expect(render(doc()), isNot(contains('Made with QuickBill')));
   });
 
   test('template ids are stable and unknown ids fall back', () {

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 /// Type scale. Registered in ThemeData.textTheme; colors come from the theme.
 ///
-/// Noto Sans covers Latin; Noto Sans Bengali is the fallback for Bangla.
+/// Manrope for Latin. Noto Sans Bengali is the fallback for Bangla glyphs.
 /// Bangla needs extra line height for vowel signs above and below the line.
 abstract final class AppTextStyles {
-  static const String fontFamily = 'NotoSans';
+  static const String fontFamily = 'Manrope';
   static const List<String> fontFamilyFallback = ['NotoSansBengali'];
 
   static const double _tight = 1.3;

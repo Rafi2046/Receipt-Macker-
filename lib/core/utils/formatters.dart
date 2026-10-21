@@ -36,11 +36,19 @@ class AppFormatters {
     return '$sign$whole${_integer.symbols.DECIMAL_SEP}$fraction';
   }
 
-  /// Amount with currency symbol, e.g. `৳1,234.50` or `¥1,500`.
-  /// A negative amount puts the sign first: `-৳820.00`.
+  /// Amount with currency symbol. A whole amount omits the fraction
+  /// (`৳26,500`); a fractional one keeps it (`৳1,234.50`, `৳0.05`).
+  /// Zero-decimal currencies stay whole (`¥1,500`). A negative amount puts
+  /// the sign first: `-৳820`.
   String currency(int minor, String currencyCode) {
     final digits = currencyDecimalDigits(currencyCode);
-    final amount = minorUnits(minor.abs(), decimalDigits: digits);
+    final unit = _pow10(digits);
+    final absMinor = minor.abs();
+    final whole = digits > 0 && absMinor % unit == 0;
+    final amount = minorUnits(
+      whole ? absMinor ~/ unit : absMinor,
+      decimalDigits: whole ? 0 : digits,
+    );
     final sign = minor < 0 ? _integer.symbols.MINUS_SIGN : '';
     return '$sign${currencySymbol(currencyCode)}$amount';
   }
@@ -75,6 +83,14 @@ class AppFormatters {
   /// ISO 4217 minor-unit digits: 2 for BDT/USD, 0 for JPY.
   static int currencyDecimalDigits(String currencyCode) =>
       NumberFormat.currency(name: currencyCode).decimalDigits ?? 2;
+
+  static int _pow10(int digits) {
+    var unit = 1;
+    for (var i = 0; i < digits; i++) {
+      unit *= 10;
+    }
+    return unit;
+  }
 
   /// Short symbol (`৳`, `\$`, `¥`); falls back to the ISO code.
   static String currencySymbol(String currencyCode) =>

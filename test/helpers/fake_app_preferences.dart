@@ -8,6 +8,10 @@ class FakeAppPreferences implements AppPreferences {
     this.themeName,
     this.defaultCurrency,
     this.pdfTemplate,
+    this.isPro = false,
+    this.firstLaunchMillis,
+    this.completedExports = 0,
+    this.lastInterstitialMillis,
   });
 
   @override
@@ -40,4 +44,30 @@ class FakeAppPreferences implements AppPreferences {
 
   @override
   Future<void> setPdfTemplate(String id) async => pdfTemplate = id;
+
+  @override
+  bool isPro;
+
+  @override
+  int? firstLaunchMillis;
+
+  @override
+  int completedExports;
+
+  @override
+  int? lastInterstitialMillis;
+
+  @override
+  Future<void> setPro({required bool value}) async => isPro = value;
+
+  @override
+  Future<void> setFirstLaunchMillis(int millis) async =>
+      firstLaunchMillis = millis;
+
+  @override
+  Future<void> setCompletedExports(int count) async => completedExports = count;
+
+  @override
+  Future<void> setLastInterstitialMillis(int millis) async =>
+      lastInterstitialMillis = millis;
 }

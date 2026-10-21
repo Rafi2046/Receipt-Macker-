@@ -25,6 +25,7 @@ abstract final class StudioIcons {
   static const IconData business = Icons.storefront_outlined;
   static const IconData items = Icons.inventory_2_outlined;
   static const IconData design = Icons.palette_outlined;
+  static const IconData invoiceSettings = Icons.tune_rounded;
   static const IconData settings = Icons.settings_outlined;
   static const IconData backup = Icons.cloud_upload_outlined;
   static const IconData help = Icons.help_outline_rounded;

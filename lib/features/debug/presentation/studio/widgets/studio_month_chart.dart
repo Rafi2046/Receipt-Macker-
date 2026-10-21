@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../../core/constants/app_durations.dart';
 import '../../../../../core/constants/app_spacing.dart';
+import '../studio_money.dart';
 import '../studio_palette.dart';
 import '../studio_scope.dart';
 import '../studio_snapshot.dart';
@@ -25,6 +26,13 @@ class StudioMonthChart extends StatefulWidget {
 class _StudioMonthChartState extends State<StudioMonthChart>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
+  int? _tapped;
+
+  @override
+  void didUpdateWidget(StudioMonthChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selected != widget.selected) _tapped = null;
+  }
 
   @override
   void initState() {
@@ -55,28 +63,53 @@ class _StudioMonthChartState extends State<StudioMonthChart>
         DateFormat.MMM(locale).format(month.month),
     ];
     final values = [for (final month in widget.months) month.invoicedMinor];
+    final focus = _tapped ?? widget.selected;
+    final amount = values.isEmpty
+        ? ''
+        : '${labels[focus]} · ${studioMoney(context, values[focus])}';
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) => Column(
         children: [
-          SizedBox(
-            height: StudioPalette.chartHeight,
-            width: double.infinity,
-            child: CustomPaint(
-              painter: _BarPainter(
-                values: values,
-                selected: widget.selected,
-                progress: _controller.value,
-                accent: palette.accent,
-                muted: palette.chartMuted,
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTapDown: (details) => _tapBar(details.localPosition.dx),
+            child: Semantics(
+              label: amount,
+              child: SizedBox(
+                height: StudioPalette.chartHeight,
+                width: double.infinity,
+                child: CustomPaint(
+                  painter: _BarPainter(
+                    values: values,
+                    selected: focus,
+                    progress: _controller.value,
+                    accent: palette.accent,
+                    muted: palette.chartMuted,
+                  ),
+                ),
               ),
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          _Labels(labels: labels, selected: widget.selected),
+          _Labels(labels: labels, selected: focus),
+          if (amount.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(amount, style: context.studioType.amountSm(palette.ink)),
+          ],
         ],
       ),
     );
+  }
+
+  void _tapBar(double dx) {
+    final box = context.findRenderObject();
+    if (box is! RenderBox || widget.months.isEmpty) return;
+    final width = box.size.width;
+    if (width <= 0) return;
+    final index = (dx / (width / widget.months.length)).floor();
+    if (index < 0 || index >= widget.months.length) return;
+    setState(() => _tapped = index);
   }
 }
 

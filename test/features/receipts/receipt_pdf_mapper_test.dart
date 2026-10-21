@@ -63,10 +63,10 @@ void main() {
     expect(doc.buyerHeading, 'Received from');
     expect(doc.buyer?.name, 'করিম স্টোর');
     expect(doc.lines.single.name, 'Payment for INV-0004');
-    expect(doc.lines.single.amount, '৳200.00');
+    expect(doc.lines.single.amount, '৳200');
     expect(doc.grandTotal.label, 'Amount received');
     expect(doc.meta.map((f) => f.value), ['Oct 20, 2026', 'bKash', 'INV-0004']);
-    expect(doc.afterTotal.single.value, '৳300.00');
+    expect(doc.afterTotal.single.value, '৳300');
     expect(doc.stamp, isNull);
   });
 
@@ -76,9 +76,9 @@ void main() {
     ).map(payment: payment, invoice: invoice, balanceAfter: 0, seller: seller);
     expect(doc.title, 'রসিদ');
     expect(doc.number, 'RCPT-০০০১');
-    expect(doc.lines.single.amount, '৳২০০.০০');
+    expect(doc.lines.single.amount, '৳২০০');
     expect(doc.meta[1].value, 'বিকাশ');
-    expect(doc.grandTotal.value, '৳২০০.০০');
+    expect(doc.grandTotal.value, '৳২০০');
     expect(doc.stamp, 'পরিশোধিত');
     expect(doc.buyer?.lines.join(), contains('০১৮১১২২৩৩৪৪'));
   });
