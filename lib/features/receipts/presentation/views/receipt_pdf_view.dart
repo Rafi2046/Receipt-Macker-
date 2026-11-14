@@ -81,6 +81,7 @@ class ReceiptPdfView extends ConsumerWidget {
             languageCode: state.languageCode,
             brandAccentColor: state.brandAccentColor,
             enabled: !state.isRendering,
+            onAccentColor: vm.setBrandAccentColor,
             onOpenStudio: () => TemplateStudioSheet.show(
               context,
               selectedTemplate: state.template,

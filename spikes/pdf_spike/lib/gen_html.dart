@@ -17,21 +17,29 @@ Future<Uint8List> buildWithHtmlSystemFonts() => _build(embedFonts: false);
 
 Future<Uint8List> _build({required bool embedFonts}) async {
   Future<String> face(String family, String file, int weight) async {
-    final b64 = base64Encode((await rootBundle.load('assets/fonts/$file')).buffer.asUint8List());
+    final b64 = base64Encode(
+      (await rootBundle.load('assets/fonts/$file')).buffer.asUint8List(),
+    );
     return "@font-face{font-family:'$family';font-weight:$weight;src:url(data:font/ttf;base64,$b64) format('truetype');}";
   }
 
-  final fonts = !embedFonts ? '' : [
-    await face('SpikeLatin', 'NotoSans-Regular.ttf', 400),
-    await face('SpikeLatin', 'NotoSans-Bold.ttf', 700),
-    await face('SpikeBengali', 'NotoSansBengali-Regular.ttf', 400),
-    await face('SpikeBengali', 'NotoSansBengali-Bold.ttf', 700),
-  ].join();
+  final fonts = !embedFonts
+      ? ''
+      : [
+          await face('SpikeLatin', 'NotoSans-Regular.ttf', 400),
+          await face('SpikeLatin', 'NotoSans-Bold.ttf', 700),
+          await face('SpikeBengali', 'NotoSansBengali-Regular.ttf', 400),
+          await face('SpikeBengali', 'NotoSansBengali-Bold.ttf', 700),
+        ].join();
   const esc = HtmlEscape();
   final rows = SpikeData.rows()
-      .map((r) => '<tr>${r.indexed.map((c) => '<td class="c${c.$1}">${esc.convert(c.$2)}</td>').join()}</tr>')
+      .map(
+        (r) =>
+            '<tr>${r.indexed.map((c) => '<td class="c${c.$1}">${esc.convert(c.$2)}</td>').join()}</tr>',
+      )
       .join();
-  final html = '''
+  final html =
+      '''
 <!doctype html><html><head><meta charset="utf-8"><style>
 $fonts
 @page{size:A4;margin:36pt}
@@ -54,6 +62,8 @@ td{border-bottom:.5pt solid #bbb;padding:4pt}
 <p style="font-size:10pt">${SpikeData.paragraph}</p>
 <table><thead><tr>${SpikeData.headers.map((h) => '<th>${esc.convert(h)}</th>').join()}</tr></thead><tbody>$rows</tbody></table>
 </body></html>''';
-  final bytes = await _channel.invokeMethod<Uint8List>('convert', {'html': html});
+  final bytes = await _channel.invokeMethod<Uint8List>('convert', {
+    'html': html,
+  });
   return bytes ?? (throw StateError('no bytes'));
 }

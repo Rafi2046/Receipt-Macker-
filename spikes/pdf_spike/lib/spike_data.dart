@@ -2,11 +2,13 @@
 abstract final class SpikeData {
   static const title = 'INVOICE · চালান';
   static const conjuncts = 'ক্ষ   ন্দ্র   স্ত্র   ঙ্ক   জ্ঞ';
-  static const conjunctWords = 'পরীক্ষা · চন্দ্র · বস্ত্র · অঙ্ক · জ্ঞান · কর্মী · ব্যবসা · উৎসব · রাষ্ট্র';
+  static const conjunctWords =
+      'পরীক্ষা · চন্দ্র · বস্ত্র · অঙ্ক · জ্ঞান · কর্মী · ব্যবসা · উৎসব · রাষ্ট্র';
   static const vowelSigns = 'কি কী কু কূ কৃ কে কৈ কো কৌ  কং কঃ কঁ';
   static const digits = 'বাংলা অঙ্ক: ০১২৩৪৫৬৭৮৯   Latin: 0123456789';
   static const taka = 'মোট: ৳ ১,২৩,৪৫৬.৭৮   Total: ৳ 1,23,456.78';
-  static const mixed = 'Bill to: রহিম উদ্দিন (Rahim Uddin), বাড়ি ১২, রোড ৫, মিরপুর-১০, ঢাকা ১২১৬';
+  static const mixed =
+      'Bill to: রহিম উদ্দিন (Rahim Uddin), বাড়ি ১২, রোড ৫, মিরপুর-১০, ঢাকা ১২১৬';
   static const paragraph =
       'Thank you for your business. Payment is due within fifteen days of the invoice date. '
       'Please include the invoice number in the reference of your bank transfer or mobile banking payment so that we can '
@@ -61,5 +63,8 @@ abstract final class SpikeData {
     return bn([...parts, last3].join(',') + '.$frac');
   }
 
-  static String bn(String s) => s.replaceAllMapped(RegExp('[0-9]'), (m) => '০১২৩৪৫৬৭৮৯'[int.parse(m[0]!)]);
+  static String bn(String s) => s.replaceAllMapped(
+    RegExp('[0-9]'),
+    (m) => '০১২৩৪৫৬৭৮৯'[int.parse(m[0]!)],
+  );
 }

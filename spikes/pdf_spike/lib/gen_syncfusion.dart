@@ -9,9 +9,14 @@ import 'spike_data.dart';
 /// Candidate B: syncfusion_flutter_pdf. It has no font fallback, so it uses
 /// a merged Latin+Bengali Noto font (spike-only) to give it a fair test.
 Future<Uint8List> buildWithSyncfusion() async {
-  final regular = (await rootBundle.load('assets/fonts/NotoMerged-Regular.ttf')).buffer.asUint8List();
-  final bold = (await rootBundle.load('assets/fonts/NotoMerged-Bold.ttf')).buffer.asUint8List();
-  PdfFont f(double size, {bool b = false}) => PdfTrueTypeFont(b ? bold : regular, size);
+  final regular = (await rootBundle.load('assets/fonts/NotoMerged-Regular.ttf'))
+      .buffer
+      .asUint8List();
+  final bold = (await rootBundle.load('assets/fonts/NotoMerged-Bold.ttf'))
+      .buffer
+      .asUint8List();
+  PdfFont f(double size, {bool b = false}) =>
+      PdfTrueTypeFont(b ? bold : regular, size);
 
   final doc = PdfDocument();
   doc.pageSettings
@@ -23,11 +28,10 @@ Future<Uint8List> buildWithSyncfusion() async {
   final layout = PdfLayoutFormat(layoutType: PdfLayoutType.paginate);
 
   void text(String s, PdfFont font) {
-    final result = PdfTextElement(text: s, font: font).draw(
-      page: page,
-      bounds: Rect.fromLTWH(0, y, width, 0),
-      format: layout,
-    );
+    final result = PdfTextElement(
+      text: s,
+      font: font,
+    ).draw(page: page, bounds: Rect.fromLTWH(0, y, width, 0), format: layout);
     if (result == null) return;
     page = result.page;
     y = result.bounds.bottom + 6;

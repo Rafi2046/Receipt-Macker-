@@ -12,7 +12,15 @@ class BrandSwatch {
   final String hex;
   final String softHex;
 
-  /// Default brand color (Emerald / QuickBill primary).
+  /// Flagship brand color (Radiant Coral / QuickBill primary).
+  static const BrandSwatch coral = BrandSwatch(
+    id: 'coral',
+    name: 'Coral',
+    hex: '#FF5738',
+    softHex: '#FFF1EE',
+  );
+
+  /// Emerald swatch.
   static const BrandSwatch emerald = BrandSwatch(
     id: 'emerald',
     name: 'Emerald',
@@ -70,8 +78,9 @@ class BrandSwatch {
   );
 
   static const List<BrandSwatch> values = [
-    emerald,
+    coral,
     navy,
+    emerald,
     crimson,
     slate,
     amber,
@@ -81,16 +90,16 @@ class BrandSwatch {
   ];
 
   static BrandSwatch fromHex(String? hex) {
-    if (hex == null || hex.isEmpty) return emerald;
+    if (hex == null || hex.isEmpty) return coral;
     final normalized = hex.trim().toLowerCase();
     return values.firstWhere(
       (s) => s.hex.toLowerCase() == normalized,
-      orElse: () => emerald,
+      orElse: () => coral,
     );
   }
 
   static String softFor(String? hex) {
-    if (hex == null || hex.isEmpty) return emerald.softHex;
+    if (hex == null || hex.isEmpty) return coral.softHex;
     final match = fromHex(hex);
     if (match.hex.toLowerCase() == hex.trim().toLowerCase()) {
       return match.softHex;

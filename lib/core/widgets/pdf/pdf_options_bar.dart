@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../l10n/gen/app_localizations.dart';
 import '../../constants/app_spacing.dart';
+import '../../services/pdf/brand_swatch.dart';
 import '../../services/pdf/pdf_template.dart';
 import '../../utils/extensions/l10n_extension.dart';
 
-/// Template and language choice above a PDF preview. Disabled while a PDF
-/// is being made.
+/// Template, color accent and language choice above a PDF preview.
 class PdfOptionsBar extends StatelessWidget {
   const PdfOptionsBar({
     required this.template,
@@ -15,6 +15,7 @@ class PdfOptionsBar extends StatelessWidget {
     required this.onTemplate,
     required this.onLanguage,
     this.onOpenStudio,
+    this.onAccentColor,
     this.brandAccentColor,
     this.enabled = true,
     super.key,
@@ -25,6 +26,7 @@ class PdfOptionsBar extends StatelessWidget {
   final ValueChanged<PdfTemplate> onTemplate;
   final ValueChanged<String> onLanguage;
   final VoidCallback? onOpenStudio;
+  final ValueChanged<String>? onAccentColor;
   final String? brandAccentColor;
   final bool enabled;
 
@@ -45,6 +47,12 @@ class PdfOptionsBar extends StatelessWidget {
 
   static const String _en = 'en';
   static const String _bn = 'bn';
+
+  static Color _colorFromHex(String hex) {
+    final clean = hex.replaceAll('#', '');
+    final val = int.tryParse(clean, radix: 16) ?? 0xFF5738;
+    return Color(0xFF000000 | val);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +105,38 @@ class PdfOptionsBar extends StatelessWidget {
               ],
             ),
           ),
+          if (onAccentColor != null) ...[
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  for (final swatch in BrandSwatch.values) ...[
+                    GestureDetector(
+                      onTap: enabled ? () => onAccentColor!(swatch.hex) : null,
+                      child: Container(
+                        width: 22,
+                        height: 22,
+                        decoration: BoxDecoration(
+                          color: _colorFromHex(swatch.hex),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color:
+                                (brandAccentColor ?? BrandSwatch.coral.hex)
+                                        .toLowerCase() ==
+                                    swatch.hex.toLowerCase()
+                                ? context.appColors.textPrimary
+                                : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                  ],
+                ],
+              ),
+            ),
+          ],
           Text(l10n.pdfLanguageLabel, style: label),
           Wrap(
             spacing: AppSpacing.sm,

@@ -22,7 +22,7 @@ class NavBarCreateButton extends StatelessWidget {
     return Tooltip(
       message: tooltip,
       child: Material(
-        color: colors.secondary,
+        color: colors.primary,
         shape: const CircleBorder(),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -31,7 +31,7 @@ class NavBarCreateButton extends StatelessWidget {
             dimension: AppSizes.minTapTarget,
             child: Icon(
               AppIcons.addRounded,
-              color: colors.onSecondary,
+              color: colors.onPrimary,
               size: AppSizes.iconMd,
             ),
           ),

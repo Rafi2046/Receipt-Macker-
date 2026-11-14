@@ -5,6 +5,7 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/display/amount_text.dart';
+import '../../../../core/widgets/display/avatar_initials.dart';
 import '../../../../core/widgets/layout/app_card.dart';
 import '../../../invoices/presentation/widgets/invoice_status_chip.dart';
 import '../home_invoice.dart';
@@ -20,6 +21,7 @@ class HomeInvoiceRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final summary = invoice.summary;
     final format = AppFormatters(Localizations.localeOf(context).languageCode);
+    final client = summary.clientName ?? context.l10n.noClient;
     final muted = context.textStyles.bodySmall?.copyWith(
       color: context.appColors.textSecondary,
     );
@@ -31,12 +33,14 @@ class HomeInvoiceRow extends StatelessWidget {
       ),
       child: Row(
         children: [
+          AvatarInitials(name: client),
+          const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  summary.clientName ?? context.l10n.noClient,
+                  client,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: context.textStyles.titleSmall,

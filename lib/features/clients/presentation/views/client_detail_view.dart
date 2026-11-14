@@ -339,7 +339,9 @@ class _FinancialSummaryGrid extends StatelessWidget {
             amountMinor: finances.totalPaidMinor,
             currencyCode: finances.currencyCode,
             format: format,
-            textColor: context.appColors.success,
+            backgroundColor: const Color(0xFFEFF6FF),
+            borderColor: const Color(0xFFBFDBFE),
+            textColor: const Color(0xFF1D4ED8),
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
@@ -349,8 +351,14 @@ class _FinancialSummaryGrid extends StatelessWidget {
             amountMinor: finances.balanceMinor,
             currencyCode: finances.currencyCode,
             format: format,
+            backgroundColor: finances.balanceMinor > 0
+                ? const Color(0xFFFFF1EE)
+                : null,
+            borderColor: finances.balanceMinor > 0
+                ? const Color(0xFFFFD5CE)
+                : null,
             textColor: finances.balanceMinor > 0
-                ? context.appColors.danger
+                ? context.appColors.primary
                 : null,
           ),
         ),
@@ -366,6 +374,8 @@ class _StatCard extends StatelessWidget {
     required this.currencyCode,
     required this.format,
     this.textColor,
+    this.backgroundColor,
+    this.borderColor,
   });
 
   final String label;
@@ -373,10 +383,14 @@ class _StatCard extends StatelessWidget {
   final String currencyCode;
   final AppFormatters format;
   final Color? textColor;
+  final Color? backgroundColor;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
     return AppCard(
+      color: backgroundColor,
+      borderColor: borderColor,
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm,
         vertical: AppSpacing.md,
@@ -386,8 +400,11 @@ class _StatCard extends StatelessWidget {
           Text(
             label,
             style: context.textStyles.bodySmall?.copyWith(
-              color: context.appColors.textSecondary,
+              color: textColor != null
+                  ? textColor!.withValues(alpha: 0.8)
+                  : context.appColors.textSecondary,
               fontSize: 11,
+              fontWeight: FontWeight.w500,
             ),
             textAlign: TextAlign.center,
             maxLines: 1,

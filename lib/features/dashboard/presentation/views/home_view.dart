@@ -15,8 +15,10 @@ import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../home_snapshot.dart';
 import '../view_models/home_view_model.dart';
+import '../widgets/home_create_banner.dart';
 import '../widgets/home_hero_card.dart';
 import '../widgets/home_invoice_row.dart';
+import '../widgets/home_templates_carousel.dart';
 
 /// Home tab: what is owed, this month, and the newest invoices.
 class HomeView extends ConsumerWidget {
@@ -61,7 +63,12 @@ class _HomeBody extends StatelessWidget {
             color: context.appColors.textSecondary,
           ),
         ),
-        Text(snapshot.businessName, style: context.textStyles.titleLarge),
+        Text(
+          snapshot.businessName,
+          style: context.textStyles.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         Align(
           alignment: AlignmentDirectional.centerStart,
           child: TextButton(
@@ -70,6 +77,8 @@ class _HomeBody extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
+        const HomeCreateBanner(),
+        const SizedBox(height: AppSpacing.lg),
         HomeHeroCard(snapshot: snapshot),
         if (snapshot.overdueCount > 0) ...[
           const SizedBox(height: AppSpacing.md),
@@ -80,9 +89,12 @@ class _HomeBody extends StatelessWidget {
             ),
             style: context.textStyles.bodyMedium?.copyWith(
               color: context.appColors.danger,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
+        const SizedBox(height: AppSpacing.xl),
+        const HomeTemplatesCarousel(),
         const SizedBox(height: AppSpacing.xl),
         if (snapshot.hasInvoices)
           _Recent(snapshot: snapshot)

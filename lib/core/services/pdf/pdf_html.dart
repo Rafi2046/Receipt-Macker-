@@ -30,7 +30,7 @@ abstract final class PdfHtml {
     String? accentColor,
     String? accentSoftColor,
   }) {
-    final accent = accentColor ?? '#006A4E';
+    final accent = accentColor ?? '#FF5738';
     final soft = accentSoftColor ?? '${accent}18';
     final root =
         ':root { --brand-accent: $accent; --brand-accent-soft: $soft; }\n';

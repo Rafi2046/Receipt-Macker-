@@ -3,18 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_icons.dart';
+import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../core/widgets/layout/searchable_list.dart';
+import '../../domain/models/invoice_status.dart';
 import '../view_models/invoice_list_state.dart';
 import '../view_models/invoice_list_view_model.dart';
 import '../widgets/invoice_list_tile.dart';
 
-/// All invoices, newest first, searchable. Tap one to open it.
+/// All invoices, newest first, searchable and filterable.
 class InvoiceListView extends ConsumerWidget {
   const InvoiceListView({super.key});
 
@@ -37,19 +40,75 @@ class InvoiceListView extends ConsumerWidget {
   }
 }
 
-class _InvoiceList extends ConsumerWidget {
+enum _InvoiceFilter { all, unpaid, overdue, paid }
+
+class _InvoiceList extends ConsumerStatefulWidget {
   const _InvoiceList({required this.state});
 
   final InvoiceListState state;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_InvoiceList> createState() => _InvoiceListState();
+}
+
+class _InvoiceListState extends ConsumerState<_InvoiceList> {
+  _InvoiceFilter _filter = _InvoiceFilter.all;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final filtered = widget.state.entries.where((entry) {
+      return switch (_filter) {
+        _InvoiceFilter.all => true,
+        _InvoiceFilter.unpaid => entry.status != InvoiceStatus.paid,
+        _InvoiceFilter.overdue => entry.status == InvoiceStatus.overdue,
+        _InvoiceFilter.paid => entry.status == InvoiceStatus.paid,
+      };
+    }).toList();
+
     return SearchableList(
       searchHint: l10n.invoicesSearchHint,
-      query: state.query,
+      query: widget.state.query,
       onSearch: ref.read(invoiceListViewModelProvider.notifier).search,
-      isEmpty: state.isEmpty,
+      isEmpty: widget.state.isEmpty,
+      header: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.pagePadding,
+          0,
+          AppSpacing.pagePadding,
+          AppSpacing.sm,
+        ),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              _FilterChip(
+                label: l10n.filterAll,
+                selected: _filter == _InvoiceFilter.all,
+                onTap: () => setState(() => _filter = _InvoiceFilter.all),
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              _FilterChip(
+                label: l10n.filterUnpaid,
+                selected: _filter == _InvoiceFilter.unpaid,
+                onTap: () => setState(() => _filter = _InvoiceFilter.unpaid),
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              _FilterChip(
+                label: l10n.filterOverdue,
+                selected: _filter == _InvoiceFilter.overdue,
+                onTap: () => setState(() => _filter = _InvoiceFilter.overdue),
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              _FilterChip(
+                label: l10n.filterPaid,
+                selected: _filter == _InvoiceFilter.paid,
+                onTap: () => setState(() => _filter = _InvoiceFilter.paid),
+              ),
+            ],
+          ),
+        ),
+      ),
       empty: EmptyState(
         icon: AppIcons.invoice,
         title: l10n.invoicesEmptyTitle,
@@ -58,9 +117,9 @@ class _InvoiceList extends ConsumerWidget {
         onAction: () => context.pushNamed(RouteNames.invoiceNew),
       ),
       cards: true,
-      itemCount: state.entries.length,
+      itemCount: filtered.length,
       itemBuilder: (context, i) {
-        final entry = state.entries[i];
+        final entry = filtered[i];
         return InvoiceListTile(
           entry: entry,
           onTap: () => context.pushNamed(
@@ -69,6 +128,46 @@ class _InvoiceList extends ConsumerWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _FilterChip extends StatelessWidget {
+  const _FilterChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: selected
+              ? colors.primary.withValues(alpha: 0.12)
+              : colors.surfaceAlt,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: selected ? colors.primary : colors.border,
+            width: selected ? 1.5 : 1,
+          ),
+        ),
+        child: Text(
+          label,
+          style: context.textStyles.labelMedium?.copyWith(
+            color: selected ? colors.primary : colors.textSecondary,
+            fontWeight: selected ? FontWeight.bold : FontWeight.w500,
+          ),
+        ),
+      ),
     );
   }
 }

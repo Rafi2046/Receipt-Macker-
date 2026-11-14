@@ -24,7 +24,7 @@ abstract final class PdfTemplateRenderer {
     String? footer,
     String? accentColor,
   }) {
-    final hex = accentColor ?? BrandSwatch.emerald.hex;
+    final hex = accentColor ?? BrandSwatch.coral.hex;
     final soft = BrandSwatch.softFor(hex);
 
     final html = switch (template) {

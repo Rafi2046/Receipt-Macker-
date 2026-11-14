@@ -20,6 +20,7 @@ class SearchableList extends StatelessWidget {
     required this.itemCount,
     required this.itemBuilder,
     this.cards = false,
+    this.header,
     super.key,
   });
 
@@ -32,6 +33,9 @@ class SearchableList extends StatelessWidget {
   final Widget empty;
   final int itemCount;
   final IndexedWidgetBuilder itemBuilder;
+
+  /// Optional header placed between search and the list (e.g. filter chips).
+  final Widget? header;
 
   /// Rows are cards: inset to the page margin with gaps between them
   /// instead of full-width rows with dividers.
@@ -55,6 +59,7 @@ class SearchableList extends StatelessWidget {
             onChanged: onSearch,
           ),
         ),
+        ?header,
         Expanded(
           child: itemCount == 0
               ? _NoMatches(query: query.trim())

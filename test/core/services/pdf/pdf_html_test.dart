@@ -144,8 +144,8 @@ void main() {
       doc(),
       fontsCss: '',
     );
-    expect(defaultAccent, contains('--brand-accent: #006A4E'));
-    expect(defaultAccent, contains('--brand-accent-soft: #E6F2EE'));
+    expect(defaultAccent, contains('--brand-accent: #FF5738'));
+    expect(defaultAccent, contains('--brand-accent-soft: #FFF1EE'));
   });
 
   test('free watermark renders across all 8 templates when provided', () {
@@ -190,8 +190,8 @@ void main() {
       doc(),
       fontsCss: '',
     );
-    expect(defaultAccent, contains('--brand-accent: #006A4E'));
-    expect(defaultAccent, contains('--brand-accent-soft: #E6F2EE'));
+    expect(defaultAccent, contains('--brand-accent: #FF5738'));
+    expect(defaultAccent, contains('--brand-accent-soft: #FFF1EE'));
   });
 
   test('free watermark renders across all 8 templates when provided', () {
