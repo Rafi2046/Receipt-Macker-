@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/database/app_database_provider.dart';
+import '../../../../core/services/telemetry/analytics_service.dart';
 import '../../domain/models/backup_validation_exception.dart';
 import '../../providers.dart';
 import 'backup_state.dart';
@@ -25,6 +28,7 @@ class BackupViewModel extends _$BackupViewModel {
       final repo = ref.read(backupRepositoryProvider);
       final file = await repo.createBackup();
       await repo.shareBackup(file);
+      unawaited(ref.read(analyticsServiceProvider).logBackupExported());
       state = state.copyWith(
         isCreatingBackup: false,
         lastBackupDate: repo.getLastBackupDate(),

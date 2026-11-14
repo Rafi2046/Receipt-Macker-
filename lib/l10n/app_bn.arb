@@ -579,5 +579,8 @@
   },
   "upgradeToPro": "Pro-তে আপগ্রেড করুন",
   "privacyConsentTitle": "বিজ্ঞাপন গোপনীয়তা সেটিংস",
-  "privacyConsentSubtitle": "বিজ্ঞাপনের সম্মতি সংক্রান্ত পছন্দসমূহ পরিবর্তন করুন"
+  "privacyConsentSubtitle": "বিজ্ঞাপনের সম্মতি সংক্রান্ত পছন্দসমূহ পরিবর্তন করুন",
+  "legalSectionTitle": "আইনি ও তথ্যাবলী",
+  "settingsPrivacyPolicy": "গোপনীয়তা নীতি",
+  "settingsTermsOfService": "ব্যবহারের শর্তাবলী"
 }

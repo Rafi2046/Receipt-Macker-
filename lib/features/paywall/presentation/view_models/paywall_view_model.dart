@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/errors/result.dart';
 import '../../../../core/services/purchases/purchase_providers.dart';
+import '../../../../core/services/telemetry/analytics_service.dart';
 import '../paywall_state.dart';
 
 final paywallViewModelProvider =
@@ -31,7 +34,15 @@ class PaywallViewModel extends Notifier<PaywallState> {
     state = state.copyWith(busy: true, clearNotice: true);
     final result = await ref.read(purchaseRepositoryProvider).buy(productId);
     if (!ref.mounted) return false;
-    return _finish(result);
+    final success = await _finish(result);
+    if (success && ref.mounted) {
+      unawaited(
+        ref
+            .read(analyticsServiceProvider)
+            .logProPurchased(productId: productId),
+      );
+    }
+    return success;
   }
 
   Future<void> restore() async {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/constants/app_constants.dart';
@@ -5,6 +7,7 @@ import '../../../../core/errors/failure.dart';
 import '../../../../core/errors/result.dart';
 import '../../../../core/services/clock.dart';
 import '../../../../core/services/service_providers.dart';
+import '../../../../core/services/telemetry/analytics_service.dart';
 import '../../../../core/utils/calendar_date.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/id_generator.dart';
@@ -175,6 +178,7 @@ class InvoiceEditorViewModel extends _$InvoiceEditorViewModel {
   Future<Invoice?> save() async {
     final f = form;
     if (f == null || f.isSaving) return null;
+    final wasNew = f.isNew || f.isCopy;
     _patch((f) => f.copyWith(showErrors: true));
     if (!f.validation.isValid) return null;
     _patch((f) => f.copyWith(isSaving: true));
@@ -184,6 +188,18 @@ class InvoiceEditorViewModel extends _$InvoiceEditorViewModel {
         .save(f.draft.copyWith(updatedAt: now));
     switch (result) {
       case Ok(:final value):
+        if (wasNew) {
+          final template =
+              ref.read(appPreferencesProvider).pdfTemplate ?? 'classic';
+          unawaited(
+            ref
+                .read(analyticsServiceProvider)
+                .logInvoiceCreated(
+                  templateName: template,
+                  itemCount: value.lines.length,
+                ),
+          );
+        }
         _patch(
           (f) => f.copyWith(
             draft: value,

@@ -10,6 +10,7 @@ import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/services/ads/consent_service.dart';
+import '../../../../core/services/url_launch_service.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
@@ -338,6 +339,64 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
               ),
             ),
           ],
+
+          // 6. About & Legal
+          const SizedBox(height: AppSpacing.sectionGap),
+          SectionHeader(title: l10n.legalSectionTitle),
+          const SizedBox(height: AppSpacing.sm),
+          AppCard(
+            onTap: () =>
+                UrlLaunchService.openUrl(AppConstants.privacyPolicyUrl),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.md,
+            ),
+            child: Row(
+              children: [
+                Icon(AppIcons.privacy, color: context.appColors.primary),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Text(
+                    l10n.settingsPrivacyPolicy,
+                    style: context.textStyles.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Icon(
+                  AppIcons.chevronRight,
+                  color: context.appColors.textSecondary,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppCard(
+            onTap: () =>
+                UrlLaunchService.openUrl(AppConstants.termsOfServiceUrl),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.md,
+            ),
+            child: Row(
+              children: [
+                Icon(AppIcons.terms, color: context.appColors.primary),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Text(
+                    l10n.settingsTermsOfService,
+                    style: context.textStyles.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Icon(
+                  AppIcons.chevronRight,
+                  color: context.appColors.textSecondary,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

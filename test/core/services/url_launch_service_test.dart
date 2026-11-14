@@ -14,5 +14,22 @@ void main() {
       expect(await UrlLaunchService.callPhone('---'), isFalse);
       expect(await UrlLaunchService.openWhatsApp('---'), isFalse);
     });
+
+    test('openUrl invokes urlLauncherOverride when provided', () async {
+      String? launchedUrl;
+      UrlLaunchService.urlLauncherOverride = (url) async {
+        launchedUrl = url;
+        return true;
+      };
+      addTearDown(() => UrlLaunchService.urlLauncherOverride = null);
+
+      final result = await UrlLaunchService.openUrl('https://example.com/test');
+      expect(result, isTrue);
+      expect(launchedUrl, 'https://example.com/test');
+    });
+
+    test('openUrl returns false for empty or malformed URL', () async {
+      expect(await UrlLaunchService.openUrl(''), isFalse);
+    });
   });
 }

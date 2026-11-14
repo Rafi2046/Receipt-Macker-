@@ -11,6 +11,7 @@ import '../../../../core/services/pdf/pdf_template.dart';
 import '../../../../core/services/purchases/free_plan.dart';
 import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/services/service_providers.dart';
+import '../../../../core/services/telemetry/analytics_service.dart';
 import '../../domain/models/invoice_stage.dart';
 import '../../providers.dart';
 import 'invoice_pdf_state.dart';
@@ -147,8 +148,12 @@ class InvoicePdfViewModel extends _$InvoicePdfViewModel {
   bool get _showBranding =>
       FreePlan.showPdfFooter(isPro: ref.read(proStatusProvider));
 
-  Future<void> _countExport() =>
-      ref.read(exportAdGateProvider).afterSuccessfulExport();
+  Future<void> _countExport() async {
+    await ref
+        .read(analyticsServiceProvider)
+        .logInvoiceExported(templateName: state.template.id, format: 'pdf');
+    await ref.read(exportAdGateProvider).afterSuccessfulExport();
+  }
 
   void clearActionFailure() => state = state.copyWith(actionFailure: null);
 

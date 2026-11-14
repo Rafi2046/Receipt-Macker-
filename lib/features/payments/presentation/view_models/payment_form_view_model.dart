@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../../../core/errors/result.dart';
 import '../../../../core/services/clock.dart';
+import '../../../../core/services/telemetry/analytics_service.dart';
 import '../../../../core/utils/calendar_date.dart';
 import '../../../../core/utils/id_generator.dart';
 import '../../../invoices/domain/logic/invoice_calculator.dart';
@@ -94,6 +97,16 @@ class PaymentFormViewModel extends _$PaymentFormViewModel {
         .save(shown.draft.copyWith(updatedAt: now));
     switch (result) {
       case Ok(:final value):
+        if (shown.isNew) {
+          unawaited(
+            ref
+                .read(analyticsServiceProvider)
+                .logPaymentRecorded(
+                  paymentMethod: value.method.name,
+                  isFullPayment: value.amountMinor >= shown.maxMinor,
+                ),
+          );
+        }
         return value;
       case Err(:final failure):
         state = AsyncData(shown.copyWith(failure: failure));

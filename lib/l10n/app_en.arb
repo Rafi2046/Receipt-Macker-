@@ -746,5 +746,8 @@
   },
   "upgradeToPro": "Upgrade to Pro",
   "privacyConsentTitle": "Ad Privacy Settings",
-  "privacyConsentSubtitle": "Manage your advertising consent preferences"
+  "privacyConsentSubtitle": "Manage your advertising consent preferences",
+  "legalSectionTitle": "About & Legal",
+  "settingsPrivacyPolicy": "Privacy Policy",
+  "settingsTermsOfService": "Terms of Service"
 }

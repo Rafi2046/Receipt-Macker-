@@ -43,4 +43,22 @@ abstract final class AppConstants {
   /// `-PADMOB_APP_ID=ca-app-pub-…` and pass `ADMOB_BANNER_ID` and
   /// `ADMOB_INTERSTITIAL_ID` as `--dart-define`. Debug always uses test ads.
   static const String admobTestAppId = 'ca-app-pub-3940256099942544~3347511713';
+
+  static const String _privacyUrl = String.fromEnvironment(
+    'PRIVACY_POLICY_URL',
+  );
+  static const String _termsUrl = String.fromEnvironment(
+    'TERMS_OF_SERVICE_URL',
+  );
+
+  static const String defaultPrivacyUrl =
+      'https://ishmakrafi.vercel.app/quickbill/privacy';
+  static const String defaultTermsUrl =
+      'https://ishmakrafi.vercel.app/quickbill/terms';
+
+  static String get privacyPolicyUrl =>
+      _privacyUrl.isNotEmpty ? _privacyUrl : defaultPrivacyUrl;
+
+  static String get termsOfServiceUrl =>
+      _termsUrl.isNotEmpty ? _termsUrl : defaultTermsUrl;
 }

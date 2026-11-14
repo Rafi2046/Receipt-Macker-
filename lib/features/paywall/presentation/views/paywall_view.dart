@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_spacing.dart';
+import '../../../../core/services/url_launch_service.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/feedback/app_snackbar.dart';
@@ -61,13 +63,15 @@ class PaywallView extends ConsumerWidget {
             label: l10n.privacyTitle,
             variant: AppButtonVariant.text,
             expand: true,
-            onPressed: () => context.pushNamed(RouteNames.privacy),
+            onPressed: () =>
+                UrlLaunchService.openUrl(AppConstants.privacyPolicyUrl),
           ),
           AppButton(
             label: l10n.termsTitle,
             variant: AppButtonVariant.text,
             expand: true,
-            onPressed: () => context.pushNamed(RouteNames.terms),
+            onPressed: () =>
+                UrlLaunchService.openUrl(AppConstants.termsOfServiceUrl),
           ),
         ],
       ),
