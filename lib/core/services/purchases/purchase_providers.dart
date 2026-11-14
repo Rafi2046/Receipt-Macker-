@@ -30,7 +30,9 @@ class ProStatus extends Notifier<bool> {
   /// True unlocks, false clears, null (store down) leaves the cache.
   Future<void> refreshFromStore() async {
     // Preserve local debug unlock for testing without active Google Play store subscriptions
-    if (!runningUnderTest && kDebugMode && ref.read(appPreferencesProvider).isPro) {
+    if (!runningUnderTest &&
+        kDebugMode &&
+        ref.read(appPreferencesProvider).isPro) {
       return;
     }
     final result = await ref.read(purchaseRepositoryProvider).restore();
