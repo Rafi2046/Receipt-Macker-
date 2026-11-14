@@ -1,3 +1,6 @@
+import java.nio.charset.StandardCharsets
+import java.util.Base64
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -34,7 +37,7 @@ android {
         if (dartDefines != null) {
             dartDefines.split(",").forEach { encoded ->
                 try {
-                    val decoded = String(java.util.Base64.getDecoder().decode(encoded), java.nio.charset.StandardCharsets.UTF_8)
+                    val decoded = String(Base64.getDecoder().decode(encoded), StandardCharsets.UTF_8)
                     if (decoded.startsWith("ADMOB_APP_ID=")) {
                         admobAppIdFromDefine = decoded.substringAfter("ADMOB_APP_ID=")
                     }
