@@ -31,6 +31,10 @@ Future<void> bootstrap() async {
   }
   await initializeDateFormatting();
   final prefs = await SharedAppPreferences.create();
+  // Auto-unlock Pro in debug mode so all 8 premium templates are available for testing.
+  if (kDebugMode && !prefs.isPro) {
+    await prefs.setPro(value: true);
+  }
   // First run: follow the phone's language if it is Bangla.
   if (prefs.languageCode == null) {
     final device = WidgetsBinding.instance.platformDispatcher.locale;

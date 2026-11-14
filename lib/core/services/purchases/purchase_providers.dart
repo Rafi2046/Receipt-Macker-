@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../errors/result.dart';
+import '../ads/running_under_test.dart';
 import '../service_providers.dart';
 import 'play_purchase_repository.dart';
 import 'purchase_repository.dart';
@@ -27,6 +29,10 @@ class ProStatus extends Notifier<bool> {
 
   /// True unlocks, false clears, null (store down) leaves the cache.
   Future<void> refreshFromStore() async {
+    // Preserve local debug unlock for testing without active Google Play store subscriptions
+    if (!runningUnderTest && kDebugMode && ref.read(appPreferencesProvider).isPro) {
+      return;
+    }
     final result = await ref.read(purchaseRepositoryProvider).restore();
     if (!ref.mounted) return;
     switch (result) {

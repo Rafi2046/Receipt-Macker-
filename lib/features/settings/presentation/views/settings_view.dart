@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +11,7 @@ import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/services/ads/consent_service.dart';
+import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/services/url_launch_service.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/formatters.dart';
@@ -397,6 +399,48 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
               ],
             ),
           ),
+          if (kDebugMode) ...[
+            const SizedBox(height: AppSpacing.xl),
+            const SectionHeader(title: 'Developer Test Mode'),
+            const SizedBox(height: AppSpacing.sm),
+            AppCard(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.md,
+              ),
+              child: Row(
+                children: [
+                  Icon(AppIcons.pro, color: context.appColors.secondary),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Unlock All Pro Features',
+                          style: context.textStyles.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          'Unlocks all 8 templates, removes watermark and ads',
+                          style: context.textStyles.bodySmall?.copyWith(
+                            color: context.appColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Switch.adaptive(
+                    value: ref.watch(proStatusProvider),
+                    onChanged: (val) => ref
+                        .read(proStatusProvider.notifier)
+                        .setUnlocked(value: val),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
