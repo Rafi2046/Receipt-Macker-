@@ -27,10 +27,17 @@ abstract final class PdfHtml {
     required String templateCss,
     required String body,
     PdfPageSize size = PdfPageSize.a4,
-  }) =>
-      '<!doctype html><html lang="${esc(doc.languageCode)}"><head>'
-      '<meta charset="utf-8"><style>$fontsCss${_baseCss(doc, size)}'
-      '$templateCss</style></head><body>$body</body></html>';
+    String? accentColor,
+    String? accentSoftColor,
+  }) {
+    final accent = accentColor ?? '#006A4E';
+    final soft = accentSoftColor ?? '${accent}18';
+    final root =
+        ':root { --brand-accent: $accent; --brand-accent-soft: $soft; }\n';
+    return '<!doctype html><html lang="${esc(doc.languageCode)}"><head>'
+        '<meta charset="utf-8"><style>$root$fontsCss${_baseCss(doc, size)}'
+        '$templateCss</style></head><body>$body</body></html>';
+  }
 
   static String _baseCss(PdfDocument doc, PdfPageSize size) {
     final paper = size == PdfPageSize.letter ? 'letter' : 'A4';

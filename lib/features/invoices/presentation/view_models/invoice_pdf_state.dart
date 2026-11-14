@@ -15,6 +15,7 @@ abstract class InvoicePdfState with _$InvoicePdfState {
 
     /// `en` or `bn`: the PDF's language, independent of the app's.
     required String languageCode,
+    String? brandAccentColor,
     RenderedPdf? pdf,
 
     /// The pages as PNG images for the preview.

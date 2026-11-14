@@ -31,6 +31,7 @@ class ReceiptPdfViewModel extends _$ReceiptPdfViewModel {
     return ReceiptPdfState(
       template: template,
       languageCode: prefs.languageCode ?? _fallbackLanguage,
+      brandAccentColor: prefs.brandAccentColor,
     );
   }
 
@@ -44,6 +45,7 @@ class ReceiptPdfViewModel extends _$ReceiptPdfViewModel {
           template: s.template,
           languageCode: s.languageCode,
           showBranding: _showBranding,
+          accentColor: s.brandAccentColor,
         );
     if (!ref.mounted) return;
     switch (result) {
@@ -76,6 +78,13 @@ class ReceiptPdfViewModel extends _$ReceiptPdfViewModel {
     await ref.read(appPreferencesProvider).setPdfTemplate(template.id);
     await render();
     return true;
+  }
+
+  Future<void> setBrandAccentColor(String hex) async {
+    if (hex == state.brandAccentColor) return;
+    state = state.copyWith(brandAccentColor: hex);
+    await ref.read(appPreferencesProvider).setBrandAccentColor(hex);
+    await render();
   }
 
   Future<void> setLanguage(String languageCode) async {
@@ -118,6 +127,7 @@ class ReceiptPdfViewModel extends _$ReceiptPdfViewModel {
           template: s.template,
           languageCode: s.languageCode,
           showBranding: _showBranding,
+          accentColor: s.brandAccentColor,
         );
     if (result case Err(:final failure) when ref.mounted) {
       state = state.copyWith(actionFailure: failure);

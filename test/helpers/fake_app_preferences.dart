@@ -11,6 +11,7 @@ class FakeAppPreferences implements AppPreferences {
     this.defaultTaxRateBasisPoints,
     this.defaultTaxInclusive = false,
     this.pdfTemplate,
+    this.brandAccentColor,
     this.isPro = false,
     this.firstLaunchMillis,
     this.completedExports = 0,
@@ -68,6 +69,12 @@ class FakeAppPreferences implements AppPreferences {
 
   @override
   Future<void> setPdfTemplate(String id) async => pdfTemplate = id;
+
+  @override
+  String? brandAccentColor;
+
+  @override
+  Future<void> setBrandAccentColor(String? hex) async => brandAccentColor = hex;
 
   @override
   bool isPro;

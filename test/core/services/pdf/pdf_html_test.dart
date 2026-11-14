@@ -118,8 +118,106 @@ void main() {
   });
 
   test('template ids are stable and unknown ids fall back', () {
+    expect(PdfTemplate.values, hasLength(8));
     expect(PdfTemplate.fromId('modern'), PdfTemplate.modern);
+    expect(PdfTemplate.fromId('executive'), PdfTemplate.executive);
+    expect(PdfTemplate.fromId('studio'), PdfTemplate.studio);
+    expect(PdfTemplate.fromId('editorial'), PdfTemplate.editorial);
+    expect(PdfTemplate.fromId('compact'), PdfTemplate.compact);
+    expect(PdfTemplate.fromId('ledger'), PdfTemplate.ledger);
     expect(PdfTemplate.fromId('gone'), PdfTemplate.classic);
     expect(PdfTemplate.fromId(null), PdfTemplate.classic);
+  });
+
+  test('brand accent color custom properties are injected dynamically', () {
+    final custom = PdfTemplateRenderer.render(
+      PdfTemplate.executive,
+      doc(),
+      fontsCss: '',
+      accentColor: '#1E3A8A',
+    );
+    expect(custom, contains('--brand-accent: #1E3A8A'));
+    expect(custom, contains('--brand-accent-soft: #EFF6FF'));
+
+    final defaultAccent = PdfTemplateRenderer.render(
+      PdfTemplate.classic,
+      doc(),
+      fontsCss: '',
+    );
+    expect(defaultAccent, contains('--brand-accent: #006A4E'));
+    expect(defaultAccent, contains('--brand-accent-soft: #E6F2EE'));
+  });
+
+  test('free watermark renders across all 8 templates when provided', () {
+    for (final t in PdfTemplate.values) {
+      final html = PdfTemplateRenderer.render(
+        t,
+        doc(),
+        fontsCss: '',
+        footer: 'Made with QuickBill',
+      );
+      expect(html, contains('Made with QuickBill'), reason: t.id);
+    }
+  });
+
+  test('all 8 templates render Bangla script safely', () {
+    final bnDoc = doc(
+      language: 'bn',
+      notes: const [
+        PdfField(label: 'শর্তাবলী', value: '১৫ দিনের মধ্যে প্রদেয়'),
+      ],
+    );
+    for (final t in PdfTemplate.values) {
+      final html = PdfTemplateRenderer.render(t, bnDoc, fontsCss: '/*fonts*/');
+      expect(html, contains('lang="bn"'), reason: t.id);
+      expect(html, contains('শর্তাবলী'), reason: t.id);
+      expect(html, contains('১৫ দিনের মধ্যে প্রদেয়'), reason: t.id);
+    }
+  });
+
+  test('brand accent color custom properties are injected dynamically', () {
+    final custom = PdfTemplateRenderer.render(
+      PdfTemplate.executive,
+      doc(),
+      fontsCss: '',
+      accentColor: '#1E3A8A',
+    );
+    expect(custom, contains('--brand-accent: #1E3A8A'));
+    expect(custom, contains('--brand-accent-soft: #EFF6FF'));
+
+    final defaultAccent = PdfTemplateRenderer.render(
+      PdfTemplate.classic,
+      doc(),
+      fontsCss: '',
+    );
+    expect(defaultAccent, contains('--brand-accent: #006A4E'));
+    expect(defaultAccent, contains('--brand-accent-soft: #E6F2EE'));
+  });
+
+  test('free watermark renders across all 8 templates when provided', () {
+    for (final t in PdfTemplate.values) {
+      final html = PdfTemplateRenderer.render(
+        t,
+        doc(),
+        fontsCss: '',
+        footer: 'Made with QuickBill',
+      );
+      expect(html, contains('Made with QuickBill'), reason: t.id);
+    }
+  });
+
+  test('all 8 templates render Bangla script safely', () {
+    final bnDoc = doc(
+      language: 'bn',
+      notes: const [
+        PdfField(label: 'শর্তাবলী', value: '১৫ দিনের মধ্যে প্রদেয়'),
+      ],
+    );
+    for (final t in PdfTemplate.values) {
+      final html = PdfTemplateRenderer.render(t, bnDoc, fontsCss: '/*fonts*/');
+      expect(html, contains('lang="bn"'), reason: t.id);
+      expect(html, contains('শর্তাবলী'), reason: t.id);
+      expect(html, contains('১৫ দিনের মধ্যে প্রদেয়'), reason: t.id);
+    }
   });
 }

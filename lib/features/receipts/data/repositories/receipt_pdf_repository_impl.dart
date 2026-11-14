@@ -48,12 +48,14 @@ class ReceiptPdfRepositoryImpl implements ReceiptPdfRepository {
     required PdfTemplate template,
     required String languageCode,
     bool showBranding = false,
+    String? accentColor,
   }) => Result.guard(() async {
     final (payment, html) = await _html(
       paymentId,
       template,
       languageCode,
       showBranding: showBranding,
+      accentColor: accentColor,
     );
     final fileName = fileNameFor(payment.receiptNumber);
     final dir = await _cacheDirectory();
@@ -74,12 +76,14 @@ class ReceiptPdfRepositoryImpl implements ReceiptPdfRepository {
     required PdfTemplate template,
     required String languageCode,
     bool showBranding = false,
+    String? accentColor,
   }) => Result.guard(() async {
     final (payment, html) = await _html(
       paymentId,
       template,
       languageCode,
       showBranding: showBranding,
+      accentColor: accentColor,
     );
     await _converter.printWithSystemDialog(
       html: html,
@@ -97,6 +101,7 @@ class ReceiptPdfRepositoryImpl implements ReceiptPdfRepository {
     PdfTemplate template,
     String languageCode, {
     required bool showBranding,
+    String? accentColor,
   }) async {
     final payment = _value(await _payments.find(paymentId));
     final invoice = _value(await _invoices.find(payment.invoiceId));
@@ -126,6 +131,7 @@ class ReceiptPdfRepositoryImpl implements ReceiptPdfRepository {
       doc,
       fontsCss: await _fonts.css(),
       footer: showBranding ? l10n.pdfMadeWith : null,
+      accentColor: accentColor,
     );
     return (payment, html);
   }

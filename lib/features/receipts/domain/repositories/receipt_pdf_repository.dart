@@ -9,6 +9,7 @@ abstract interface class ReceiptPdfRepository {
     required PdfTemplate template,
     required String languageCode,
     bool showBranding = false,
+    String? accentColor,
   });
 
   Future<Result<void>> printWithSystemDialog(
@@ -16,5 +17,6 @@ abstract interface class ReceiptPdfRepository {
     required PdfTemplate template,
     required String languageCode,
     bool showBranding = false,
+    String? accentColor,
   });
 }

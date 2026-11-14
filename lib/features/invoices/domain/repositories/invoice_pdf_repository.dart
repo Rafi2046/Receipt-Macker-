@@ -11,6 +11,7 @@ abstract interface class InvoicePdfRepository {
     required PdfTemplate template,
     required String languageCode,
     bool showBranding = false,
+    String? accentColor,
   });
 
   /// Fallback when [render] fails: the system print dialog, which can also
@@ -20,5 +21,6 @@ abstract interface class InvoicePdfRepository {
     required PdfTemplate template,
     required String languageCode,
     bool showBranding = false,
+    String? accentColor,
   });
 }

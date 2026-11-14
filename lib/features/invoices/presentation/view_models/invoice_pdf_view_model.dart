@@ -28,12 +28,17 @@ class InvoicePdfViewModel extends _$InvoicePdfViewModel {
   InvoicePdfState build(String invoiceId) {
     final prefs = ref.read(appPreferencesProvider);
     final language = prefs.languageCode ?? _fallbackLanguage;
+    final accent = prefs.brandAccentColor;
     var template = PdfTemplate.fromId(prefs.pdfTemplate);
     if (!FreePlan.canUse(template, isPro: prefs.isPro)) {
       template = PdfTemplate.classic;
     }
     scheduleMicrotask(render);
-    return InvoicePdfState(template: template, languageCode: language);
+    return InvoicePdfState(
+      template: template,
+      languageCode: language,
+      brandAccentColor: accent,
+    );
   }
 
   /// (Re)makes the PDF with the current template and language.
@@ -47,6 +52,7 @@ class InvoicePdfViewModel extends _$InvoicePdfViewModel {
           template: s.template,
           languageCode: s.languageCode,
           showBranding: _showBranding,
+          accentColor: s.brandAccentColor,
         );
     if (!ref.mounted) return;
     switch (result) {
@@ -79,6 +85,13 @@ class InvoicePdfViewModel extends _$InvoicePdfViewModel {
     await ref.read(appPreferencesProvider).setPdfTemplate(template.id);
     await render();
     return true;
+  }
+
+  Future<void> setBrandAccentColor(String hex) async {
+    if (hex == state.brandAccentColor) return;
+    state = state.copyWith(brandAccentColor: hex);
+    await ref.read(appPreferencesProvider).setBrandAccentColor(hex);
+    await render();
   }
 
   Future<void> setLanguage(String languageCode) async {
@@ -127,6 +140,7 @@ class InvoicePdfViewModel extends _$InvoicePdfViewModel {
           template: s.template,
           languageCode: s.languageCode,
           showBranding: _showBranding,
+          accentColor: s.brandAccentColor,
         );
     if (result case Err(:final failure) when ref.mounted) {
       state = state.copyWith(actionFailure: failure);

@@ -13,6 +13,7 @@ abstract class ReceiptPdfState with _$ReceiptPdfState {
   const factory ReceiptPdfState({
     required PdfTemplate template,
     required String languageCode,
+    String? brandAccentColor,
     RenderedPdf? pdf,
     @Default([]) List<Uint8List> pages,
     @Default(true) bool isRendering,

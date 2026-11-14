@@ -50,6 +50,8 @@ abstract final class AppIcons {
   static const IconData backup = Icons.backup_outlined;
   static const IconData restore = Icons.settings_backup_restore_outlined;
   static const IconData pro = Icons.workspace_premium_outlined;
+  static const IconData proBadge = Icons.workspace_premium_rounded;
+  static const IconData lock = Icons.lock_outline;
   static const IconData privacy = Icons.shield_outlined;
   static const IconData terms = Icons.description_outlined;
 }

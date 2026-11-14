@@ -45,12 +45,14 @@ class InvoicePdfRepositoryImpl implements InvoicePdfRepository {
     required PdfTemplate template,
     required String languageCode,
     bool showBranding = false,
+    String? accentColor,
   }) => Result.guard(() async {
     final (invoice, html) = await _html(
       invoiceId,
       template,
       languageCode,
       showBranding: showBranding,
+      accentColor: accentColor,
     );
     final fileName = fileNameFor(invoice.number);
     final dir = await _cacheDirectory();
@@ -71,12 +73,14 @@ class InvoicePdfRepositoryImpl implements InvoicePdfRepository {
     required PdfTemplate template,
     required String languageCode,
     bool showBranding = false,
+    String? accentColor,
   }) => Result.guard(() async {
     final (invoice, html) = await _html(
       invoiceId,
       template,
       languageCode,
       showBranding: showBranding,
+      accentColor: accentColor,
     );
     await _converter.printWithSystemDialog(html: html, jobName: invoice.number);
   }, onError: _pdf);
@@ -92,6 +96,7 @@ class InvoicePdfRepositoryImpl implements InvoicePdfRepository {
     PdfTemplate template,
     String languageCode, {
     required bool showBranding,
+    String? accentColor,
   }) async {
     final invoice = _value(await _invoices.find(invoiceId));
     final profile = _value(await _profiles.load());
@@ -103,6 +108,7 @@ class InvoicePdfRepositoryImpl implements InvoicePdfRepository {
       doc,
       fontsCss: await _fonts.css(),
       footer: showBranding ? l10n.pdfMadeWith : null,
+      accentColor: accentColor,
     );
     return (invoice, html);
   }

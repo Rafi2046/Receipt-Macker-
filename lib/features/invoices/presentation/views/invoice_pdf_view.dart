@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/errors/failure.dart';
+import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/utils/extensions/failure_message_extension.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
@@ -15,6 +16,7 @@ import '../../../../core/widgets/pdf/choose_pdf_template.dart';
 import '../../../../core/widgets/pdf/pdf_action_bar.dart';
 import '../../../../core/widgets/pdf/pdf_options_bar.dart';
 import '../../../../core/widgets/pdf/pdf_page_list.dart';
+import '../../../../core/widgets/pdf/template_studio_sheet.dart';
 import '../../../business_profile/business_profile.dart';
 import '../view_models/invoice_detail_view_model.dart';
 import '../view_models/invoice_pdf_state.dart';
@@ -93,7 +95,20 @@ class InvoicePdfView extends ConsumerWidget {
           PdfOptionsBar(
             template: state.template,
             languageCode: state.languageCode,
+            brandAccentColor: state.brandAccentColor,
             enabled: !state.isRendering,
+            onOpenStudio: () => TemplateStudioSheet.show(
+              context,
+              selectedTemplate: state.template,
+              selectedAccentHex: state.brandAccentColor,
+              isPro: ref.read(proStatusProvider),
+              onSelectTemplate: (template) => choosePdfTemplate(
+                context,
+                template: template,
+                setTemplate: vm.setTemplate,
+              ),
+              onSelectAccentHex: vm.setBrandAccentColor,
+            ),
             onTemplate: (template) => choosePdfTemplate(
               context,
               template: template,

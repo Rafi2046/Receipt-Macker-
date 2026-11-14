@@ -32,6 +32,10 @@ abstract interface class AppPreferences {
   String? get pdfTemplate;
   Future<void> setPdfTemplate(String id);
 
+  /// Brand accent color hex for PDF templates (e.g. '#006A4E'); null means default.
+  String? get brandAccentColor;
+  Future<void> setBrandAccentColor(String? hex);
+
   /// Cached Pro flag. Google Play is checked again on startup.
   bool get isPro;
   Future<void> setPro({required bool value});

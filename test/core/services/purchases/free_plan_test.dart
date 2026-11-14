@@ -35,20 +35,28 @@ void main() {
       expect(FreePlan.canAddItem(isPro: true, count: 200), isTrue);
     });
 
-    test('canUse template gates Modern and Minimal behind Pro', () {
+    test('canUse template gates all non-classic templates behind Pro', () {
       expect(PdfTemplate.classic.requiresPro, isFalse);
       expect(PdfTemplate.modern.requiresPro, isTrue);
       expect(PdfTemplate.minimal.requiresPro, isTrue);
+      expect(PdfTemplate.executive.requiresPro, isTrue);
+      expect(PdfTemplate.studio.requiresPro, isTrue);
+      expect(PdfTemplate.editorial.requiresPro, isTrue);
+      expect(PdfTemplate.compact.requiresPro, isTrue);
+      expect(PdfTemplate.ledger.requiresPro, isTrue);
 
       // Free user
       expect(FreePlan.canUse(PdfTemplate.classic, isPro: false), isTrue);
-      expect(FreePlan.canUse(PdfTemplate.modern, isPro: false), isFalse);
-      expect(FreePlan.canUse(PdfTemplate.minimal, isPro: false), isFalse);
+      for (final t in PdfTemplate.values.where(
+        (t) => t != PdfTemplate.classic,
+      )) {
+        expect(FreePlan.canUse(t, isPro: false), isFalse, reason: t.id);
+      }
 
       // Pro user
-      expect(FreePlan.canUse(PdfTemplate.classic, isPro: true), isTrue);
-      expect(FreePlan.canUse(PdfTemplate.modern, isPro: true), isTrue);
-      expect(FreePlan.canUse(PdfTemplate.minimal, isPro: true), isTrue);
+      for (final t in PdfTemplate.values) {
+        expect(FreePlan.canUse(t, isPro: true), isTrue, reason: t.id);
+      }
     });
 
     test('showPdfFooter is true for Free and false for Pro', () {

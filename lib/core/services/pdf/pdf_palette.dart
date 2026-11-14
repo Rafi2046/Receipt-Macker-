@@ -2,8 +2,8 @@
 /// gold, as in `AppColors.light()`. Paper is always white, whatever the
 /// app theme.
 abstract final class PdfPalette {
-  static const String brand = '#006A4E';
-  static const String brandSoft = '#E6F2EE';
+  static const String brand = 'var(--brand-accent, #006A4E)';
+  static const String brandSoft = 'var(--brand-accent-soft, #E6F2EE)';
   static const String accent = '#E0A100';
   static const String ink = '#14181C';
   static const String muted = '#56606B';

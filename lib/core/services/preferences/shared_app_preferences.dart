@@ -17,6 +17,7 @@ class SharedAppPreferences implements AppPreferences {
   static const String _defaultTaxRate = 'default_tax_rate_basis_points';
   static const String _defaultTaxInclusive = 'default_tax_inclusive';
   static const String _pdfTemplate = 'pdf_template';
+  static const String _brandAccent = 'brand_accent_color';
   static const String _pro = 'is_pro';
   static const String _firstLaunch = 'first_launch_millis';
   static const String _exports = 'completed_exports';
@@ -35,6 +36,7 @@ class SharedAppPreferences implements AppPreferences {
           _defaultTaxRate,
           _defaultTaxInclusive,
           _pdfTemplate,
+          _brandAccent,
           _pro,
           _firstLaunch,
           _exports,
@@ -100,6 +102,14 @@ class SharedAppPreferences implements AppPreferences {
 
   @override
   Future<void> setPdfTemplate(String id) => _prefs.setString(_pdfTemplate, id);
+
+  @override
+  String? get brandAccentColor => _prefs.getString(_brandAccent);
+
+  @override
+  Future<void> setBrandAccentColor(String? hex) => hex == null
+      ? _prefs.remove(_brandAccent)
+      : _prefs.setString(_brandAccent, hex);
 
   @override
   bool get isPro => _prefs.getBool(_pro) ?? false;

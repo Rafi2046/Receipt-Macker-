@@ -10,11 +10,15 @@ abstract final class ClassicTemplate {
     PdfDocument doc, {
     required String fontsCss,
     PdfPageSize size = PdfPageSize.a4,
+    String? accentColor,
+    String? accentSoftColor,
   }) => PdfHtml.page(
     doc: doc,
     fontsCss: fontsCss,
     templateCss: _css,
     size: size,
+    accentColor: accentColor,
+    accentSoftColor: accentSoftColor,
     body: _body(doc),
   );
 

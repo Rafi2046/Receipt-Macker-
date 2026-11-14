@@ -14,6 +14,8 @@ class PdfOptionsBar extends StatelessWidget {
     required this.languageCode,
     required this.onTemplate,
     required this.onLanguage,
+    this.onOpenStudio,
+    this.brandAccentColor,
     this.enabled = true,
     super.key,
   });
@@ -22,13 +24,20 @@ class PdfOptionsBar extends StatelessWidget {
   final String languageCode;
   final ValueChanged<PdfTemplate> onTemplate;
   final ValueChanged<String> onLanguage;
+  final VoidCallback? onOpenStudio;
+  final String? brandAccentColor;
   final bool enabled;
 
   static String _templateName(AppLocalizations l10n, PdfTemplate template) {
     final name = switch (template) {
       PdfTemplate.classic => l10n.templateClassic,
-      PdfTemplate.modern => l10n.templateModern,
       PdfTemplate.minimal => l10n.templateMinimal,
+      PdfTemplate.modern => l10n.templateModern,
+      PdfTemplate.executive => l10n.templateExecutive,
+      PdfTemplate.studio => l10n.templateStudio,
+      PdfTemplate.editorial => l10n.templateEditorial,
+      PdfTemplate.compact => l10n.templateCompact,
+      PdfTemplate.ledger => l10n.templateLedger,
     };
     if (!template.requiresPro) return name;
     return '$name · ${l10n.templateProBadge}';
@@ -54,18 +63,39 @@ class PdfOptionsBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: AppSpacing.xs,
         children: [
-          Text(l10n.pdfTemplateLabel, style: label),
           Wrap(
-            spacing: AppSpacing.sm,
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: AppSpacing.xs,
             runSpacing: AppSpacing.xs,
             children: [
-              for (final t in PdfTemplate.values)
-                ChoiceChip(
-                  label: Text(_templateName(l10n, t)),
-                  selected: t == template,
-                  onSelected: enabled ? (_) => onTemplate(t) : null,
+              Text(l10n.pdfTemplateLabel, style: label),
+              if (onOpenStudio != null)
+                TextButton.icon(
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                  ),
+                  icon: const Icon(Icons.palette_outlined, size: 16),
+                  label: Text(l10n.templateStudioAction),
+                  onPressed: enabled ? onOpenStudio : null,
                 ),
             ],
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final t in PdfTemplate.values) ...[
+                  ChoiceChip(
+                    label: Text(_templateName(l10n, t)),
+                    selected: t == template,
+                    onSelected: enabled ? (_) => onTemplate(t) : null,
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                ],
+              ],
+            ),
           ),
           Text(l10n.pdfLanguageLabel, style: label),
           Wrap(
