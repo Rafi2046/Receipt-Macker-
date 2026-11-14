@@ -29,17 +29,21 @@ class StatusChip extends StatelessWidget {
     };
     return DecoratedBox(
       decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
         borderRadius: AppRadius.chip,
-        border: Border.all(color: color),
+        border: Border.all(color: color.withValues(alpha: 0.32), width: 1.0),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.xxs,
+          horizontal: AppSpacing.sm,
+          vertical: 2,
         ),
         child: Text(
           label,
-          style: context.textStyles.labelMedium?.copyWith(color: color),
+          style: context.textStyles.labelSmall?.copyWith(
+            color: color,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );

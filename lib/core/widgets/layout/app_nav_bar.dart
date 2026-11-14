@@ -100,13 +100,23 @@ class _Dock extends StatelessWidget {
       height: AppSizes.navDockHeight,
       padding: const EdgeInsets.all(AppSpacing.xs),
       decoration: ShapeDecoration(
-        color: colors.surface,
-        shape: StadiumBorder(side: BorderSide(color: colors.border)),
+        color: colors.surface.withValues(alpha: 0.94),
+        shape: StadiumBorder(
+          side: BorderSide(
+            color: colors.border.withValues(alpha: 0.8),
+            width: 1.0,
+          ),
+        ),
         shadows: [
           BoxShadow(
-            color: colors.textPrimary.withValues(alpha: AppOpacity.shadow),
+            color: colors.textPrimary.withValues(alpha: AppOpacity.shadow * 1.5),
             blurRadius: AppSpacing.xxl,
             offset: const Offset(0, AppSpacing.sm),
+          ),
+          BoxShadow(
+            color: colors.primary.withValues(alpha: 0.04),
+            blurRadius: AppSpacing.md,
+            offset: const Offset(0, 1),
           ),
         ],
       ),

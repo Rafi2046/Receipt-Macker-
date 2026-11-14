@@ -58,7 +58,7 @@ abstract final class AppTheme {
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.card,
-          side: BorderSide(color: c.border),
+          side: BorderSide(color: c.border, width: 1.0),
         ),
       ),
       dividerTheme: DividerThemeData(
@@ -70,11 +70,11 @@ abstract final class AppTheme {
         fillColor: c.surface,
         border: OutlineInputBorder(
           borderRadius: AppRadius.input,
-          borderSide: BorderSide(color: c.border),
+          borderSide: BorderSide(color: c.border, width: 1.0),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: AppRadius.input,
-          borderSide: BorderSide(color: c.border),
+          borderSide: BorderSide(color: c.border, width: 1.0),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -82,6 +82,8 @@ abstract final class AppTheme {
           minimumSize: buttonSize,
           shape: buttonShape,
           textStyle: label,
+          backgroundColor: c.primary,
+          foregroundColor: c.onPrimary,
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
