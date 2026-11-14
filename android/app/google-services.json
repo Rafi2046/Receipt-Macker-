@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "782713276196",
+    "project_id": "quickbill-d6286",
+    "storage_bucket": "quickbill-d6286.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782713276196:android:23069a3044a82fd6d8d5b1",
+        "android_client_info": {
+          "package_name": "com.IIRDevLabs.quickbill"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9Juyp4skPx-4n896OQEmas4PlITvt1fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
