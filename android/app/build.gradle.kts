@@ -27,9 +27,24 @@ android {
         // flag during build.
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        // Test AdMob app id until a release build passes -PADMOB_APP_ID=ca-app-pub-…
+
+        // Resolve AdMob App ID from gradle property, dart-defines, or official test App ID
+        val dartDefines = project.findProperty("dart-defines") as? String
+        var admobAppIdFromDefine: String? = null
+        if (dartDefines != null) {
+            dartDefines.split(",").forEach { encoded ->
+                try {
+                    val decoded = String(java.util.Base64.getDecoder().decode(encoded), java.nio.charset.StandardCharsets.UTF_8)
+                    if (decoded.startsWith("ADMOB_APP_ID=")) {
+                        admobAppIdFromDefine = decoded.substringAfter("ADMOB_APP_ID=")
+                    }
+                } catch (_: Exception) {}
+            }
+        }
+
         manifestPlaceholders["admobAppId"] =
             (project.findProperty("ADMOB_APP_ID") as String?)
+                ?: admobAppIdFromDefine
                 ?: "ca-app-pub-3940256099942544~3347511713"
     }
 

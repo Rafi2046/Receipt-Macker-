@@ -9,6 +9,7 @@ import '../../../../core/constants/app_currencies.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
+import '../../../../core/services/ads/consent_service.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
@@ -290,6 +291,53 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
               ],
             ),
           ),
+
+          // 5. Privacy & Consent (shown when required)
+          if (ref.watch(privacyOptionsRequiredProvider).value ?? false) ...[
+            const SizedBox(height: AppSpacing.sectionGap),
+            SectionHeader(title: l10n.privacyConsentTitle),
+            const SizedBox(height: AppSpacing.sm),
+            AppCard(
+              onTap: () async {
+                await ref.read(consentServiceProvider).showPrivacyOptionsForm();
+                ref.invalidate(privacyOptionsRequiredProvider);
+              },
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.md,
+              ),
+              child: Row(
+                children: [
+                  Icon(AppIcons.privacy, color: context.appColors.primary),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.privacyConsentTitle,
+                          style: context.textStyles.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.xxs),
+                        Text(
+                          l10n.privacyConsentSubtitle,
+                          style: context.textStyles.bodySmall?.copyWith(
+                            color: context.appColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    AppIcons.chevronRight,
+                    color: context.appColors.textSecondary,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );

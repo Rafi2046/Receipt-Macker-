@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/services/ads/list_ad_banner.dart';
 import '../../../../core/services/purchases/free_plan.dart';
 import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/buttons/app_fab.dart';
+import '../../../../core/widgets/feedback/confirm_dialog.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
@@ -92,12 +94,20 @@ Future<void> _openNewItem(BuildContext context, WidgetRef ref) async {
       ? shown.items.length
       : (await ref.read(itemRepositoryProvider).watchAll().first).length;
   if (!context.mounted) return;
-  final allowed = FreePlan.canAdd(
+  final allowed = FreePlan.canAddItem(
     isPro: ref.read(proStatusProvider),
     count: count,
   );
   if (!allowed) {
-    await context.pushNamed(RouteNames.paywall);
+    final confirmed = await ConfirmDialog.show(
+      context,
+      title: context.l10n.itemLimitReachedTitle,
+      message: context.l10n.itemLimitReachedMessage(AppConstants.freeItemLimit),
+      confirmLabel: context.l10n.upgradeToPro,
+    );
+    if (confirmed && context.mounted) {
+      await context.pushNamed(RouteNames.paywall);
+    }
     return;
   }
   await context.pushNamed(RouteNames.itemNew);

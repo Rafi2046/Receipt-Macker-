@@ -725,5 +725,26 @@
   },
   "backupConfirmButton": "Restore data",
   "backupExportSuccess": "Backup exported successfully",
-  "backupRestoreSuccess": "Data restored successfully"
+  "backupRestoreSuccess": "Data restored successfully",
+  "clientLimitReachedTitle": "Client Limit Reached",
+  "clientLimitReachedMessage": "You have reached the free limit of {limit} clients. Upgrade to QuickBill Pro for unlimited clients and items.",
+  "@clientLimitReachedMessage": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "itemLimitReachedTitle": "Item Limit Reached",
+  "itemLimitReachedMessage": "You have reached the free limit of {limit} items. Upgrade to QuickBill Pro for unlimited clients and items.",
+  "@itemLimitReachedMessage": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "upgradeToPro": "Upgrade to Pro",
+  "privacyConsentTitle": "Ad Privacy Settings",
+  "privacyConsentSubtitle": "Manage your advertising consent preferences"
 }

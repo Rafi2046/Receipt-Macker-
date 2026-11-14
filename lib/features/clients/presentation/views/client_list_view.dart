@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/services/purchases/free_plan.dart';
 import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/buttons/app_fab.dart';
+import '../../../../core/widgets/feedback/confirm_dialog.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
@@ -91,12 +93,22 @@ Future<void> _openNewClient(BuildContext context, WidgetRef ref) async {
       ? shown.clients.length
       : (await ref.read(clientRepositoryProvider).watchAll().first).length;
   if (!context.mounted) return;
-  final allowed = FreePlan.canAdd(
+  final allowed = FreePlan.canAddClient(
     isPro: ref.read(proStatusProvider),
     count: count,
   );
   if (!allowed) {
-    await context.pushNamed(RouteNames.paywall);
+    final confirmed = await ConfirmDialog.show(
+      context,
+      title: context.l10n.clientLimitReachedTitle,
+      message: context.l10n.clientLimitReachedMessage(
+        AppConstants.freeClientLimit,
+      ),
+      confirmLabel: context.l10n.upgradeToPro,
+    );
+    if (confirmed && context.mounted) {
+      await context.pushNamed(RouteNames.paywall);
+    }
     return;
   }
   await context.pushNamed(RouteNames.clientNew);

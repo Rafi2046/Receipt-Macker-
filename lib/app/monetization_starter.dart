@@ -36,6 +36,10 @@ class _MonetizationStarterState extends ConsumerState<MonetizationStarter> {
       AppLogger.error('pro refresh', error, stackTrace);
     }
     if (!mounted) return;
+    if (ref.read(proStatusProvider)) {
+      // Pro users do not load consent forms or request ads.
+      return;
+    }
     _prepareAds();
   }
 
@@ -50,20 +54,30 @@ class _MonetizationStarterState extends ConsumerState<MonetizationStarter> {
       ConsentInformation.instance.requestConsentInfoUpdate(
         ConsentRequestParameters(),
         _afterConsent,
-        (_) => _afterConsent(),
+        (error) {
+          AppLogger.error('consent update failure: ${error.message}');
+          _afterConsent();
+        },
       );
     } on Object catch (error, stackTrace) {
       AppLogger.error('consent', error, stackTrace);
+      _afterConsent();
     }
   }
 
   Future<void> _afterConsent() async {
     try {
-      await ConsentForm.loadAndShowConsentFormIfRequired((_) {});
+      await ConsentForm.loadAndShowConsentFormIfRequired((error) {
+        if (error != null) {
+          AppLogger.error('consent form dismissed error: ${error.message}');
+        }
+      });
       if (!mounted) return;
+      if (ref.read(proStatusProvider)) return;
       if (!await ConsentInformation.instance.canRequestAds()) return;
       await MobileAds.instance.initialize();
       if (!mounted) return;
+      if (ref.read(proStatusProvider)) return;
       ref.read(adsReadyProvider.notifier).markReady();
       await ref.read(adPresenterProvider).preload();
     } on Object catch (error, stackTrace) {

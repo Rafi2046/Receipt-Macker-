@@ -133,7 +133,10 @@ class ItemEditorViewModel extends _$ItemEditorViewModel {
     final count = shown != null && !shown.isSearching
         ? shown.items.length
         : (await ref.read(itemRepositoryProvider).watchAll().first).length;
-    return FreePlan.canAdd(isPro: ref.read(proStatusProvider), count: count);
+    return FreePlan.canAddItem(
+      isPro: ref.read(proStatusProvider),
+      count: count,
+    );
   }
 
   /// Deletes the stored item. Returns true on success.

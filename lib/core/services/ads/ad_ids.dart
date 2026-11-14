@@ -12,10 +12,23 @@ abstract final class AdIds {
     'ADMOB_INTERSTITIAL_ID',
   );
 
-  static String get banner =>
-      kReleaseMode && _banner.isNotEmpty ? _banner : testBanner;
+  static String get banner => resolveBanner(isRelease: kReleaseMode);
 
-  static String get interstitial => kReleaseMode && _interstitial.isNotEmpty
-      ? _interstitial
-      : testInterstitial;
+  static String get interstitial =>
+      resolveInterstitial(isRelease: kReleaseMode);
+
+  /// Resolves banner unit ID, falling back to test ID in debug or if unset.
+  static String resolveBanner({required bool isRelease, String? customId}) {
+    final candidate = customId ?? _banner;
+    return isRelease && candidate.isNotEmpty ? candidate : testBanner;
+  }
+
+  /// Resolves interstitial unit ID, falling back to test ID in debug or if unset.
+  static String resolveInterstitial({
+    required bool isRelease,
+    String? customId,
+  }) {
+    final candidate = customId ?? _interstitial;
+    return isRelease && candidate.isNotEmpty ? candidate : testInterstitial;
+  }
 }

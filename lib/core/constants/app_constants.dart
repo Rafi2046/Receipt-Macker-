@@ -26,8 +26,9 @@ abstract final class AppConstants {
   static const int interstitialEveryNExports = 5;
   static const Duration interstitialMinInterval = Duration(minutes: 3);
 
-  /// Free clients and free catalog items, each. Working default until the
-  /// owner picks N. Pro is unlimited.
+  /// Free-tier limits: 10 clients, 20 catalog items. Pro is unlimited.
+  static const int freeClientLimit = 10;
+  static const int freeItemLimit = 20;
   static const int freeRecordLimit = 20;
 
   /// Free PDFs include a "Made with QuickBill" line. Pro removes it.

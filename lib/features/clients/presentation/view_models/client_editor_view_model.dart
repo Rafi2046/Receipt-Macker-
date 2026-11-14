@@ -96,7 +96,10 @@ class ClientEditorViewModel extends _$ClientEditorViewModel {
     final count = shown != null && !shown.isSearching
         ? shown.clients.length
         : (await ref.read(clientRepositoryProvider).watchAll().first).length;
-    return FreePlan.canAdd(isPro: ref.read(proStatusProvider), count: count);
+    return FreePlan.canAddClient(
+      isPro: ref.read(proStatusProvider),
+      count: count,
+    );
   }
 
   /// Deletes the stored client. Returns true on success.

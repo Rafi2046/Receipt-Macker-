@@ -3,6 +3,12 @@ import '../pdf/pdf_template.dart';
 
 /// What a free account may do. Pro skips every check.
 abstract final class FreePlan {
+  static bool canAddClient({required bool isPro, required int count}) =>
+      isPro || count < AppConstants.freeClientLimit;
+
+  static bool canAddItem({required bool isPro, required int count}) =>
+      isPro || count < AppConstants.freeItemLimit;
+
   static bool canAdd({required bool isPro, required int count}) =>
       isPro || count < AppConstants.freeRecordLimit;
 

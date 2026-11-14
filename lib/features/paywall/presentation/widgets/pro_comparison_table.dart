@@ -14,8 +14,9 @@ class ProComparisonTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final count = AppFormatters(Localizations.localeOf(context).languageCode)
-        .integer(AppConstants.freeRecordLimit);
+    final format = AppFormatters(Localizations.localeOf(context).languageCode);
+    final count =
+        '${format.integer(AppConstants.freeClientLimit)} / ${format.integer(AppConstants.freeItemLimit)}';
     final rows = _rows(l10n, count);
     final header = context.textStyles.labelMedium?.copyWith(
       color: context.appColors.textSecondary,

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/utils/extensions/failure_message_extension.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
@@ -57,7 +58,18 @@ class ClientEditorView extends ConsumerWidget {
       if (failure == null) return;
       ref.read(provider.notifier).clearFailure();
       if (failure is ProRequiredFailure) {
-        context.pushNamed(RouteNames.paywall);
+        ConfirmDialog.show(
+          context,
+          title: context.l10n.clientLimitReachedTitle,
+          message: context.l10n.clientLimitReachedMessage(
+            AppConstants.freeClientLimit,
+          ),
+          confirmLabel: context.l10n.upgradeToPro,
+        ).then((confirmed) {
+          if (confirmed && context.mounted) {
+            context.pushNamed(RouteNames.paywall);
+          }
+        });
         return;
       }
       AppSnackbar.show(

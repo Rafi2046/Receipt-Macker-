@@ -558,5 +558,26 @@
   },
   "backupConfirmButton": "ডেটা রিস্টোর করুন",
   "backupExportSuccess": "ব্যাকআপ সফলভাবে এক্সপোর্ট করা হয়েছে",
-  "backupRestoreSuccess": "ডেটা সফলভাবে রিস্টোর করা হয়েছে"
+  "backupRestoreSuccess": "ডেটা সফলভাবে রিস্টোর করা হয়েছে",
+  "clientLimitReachedTitle": "ক্লায়েন্ট সীমা পূর্ণ",
+  "clientLimitReachedMessage": "আপনি বিনামূল্যে {limit}টি ক্লায়েন্টের সীমায় পৌঁছে গেছেন। সীমাহীন ক্লায়েন্ট ও আইটেম যোগ করতে QuickBill Pro-তে আপগ্রেড করুন।",
+  "@clientLimitReachedMessage": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "itemLimitReachedTitle": "আইটেম সীমা পূর্ণ",
+  "itemLimitReachedMessage": "আপনি বিনামূল্যে {limit}টি আইটেমের সীমায় পৌঁছে গেছেন। সীমাহীন ক্লায়েন্ট ও আইটেম যোগ করতে QuickBill Pro-তে আপগ্রেড করুন।",
+  "@itemLimitReachedMessage": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "upgradeToPro": "Pro-তে আপগ্রেড করুন",
+  "privacyConsentTitle": "বিজ্ঞাপন গোপনীয়তা সেটিংস",
+  "privacyConsentSubtitle": "বিজ্ঞাপনের সম্মতি সংক্রান্ত পছন্দসমূহ পরিবর্তন করুন"
 }

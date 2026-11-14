@@ -58,49 +58,59 @@ void main() {
     }
   });
 
-  test('createBackup exports database, manifest with counts, and media assets', () async {
-    final now = DateTime.utc(2026, 10, 2);
-    // 1. Populate database with records
-    await db.into(db.businessProfilesTable).insert(
-      BusinessProfilesTableCompanion.insert(
-        id: 'p1',
-        name: 'My Business',
-        createdAt: now,
-        updatedAt: now,
-      ),
-    );
-    await db.into(db.clientsTable).insert(
-      ClientsTableCompanion.insert(
-        id: 'c1',
-        name: 'Rahman Traders',
-        createdAt: now,
-        updatedAt: now,
-      ),
-    );
-    await db.into(db.itemsTable).insert(
-      ItemsTableCompanion.insert(
-        id: 'i1',
-        name: 'Service',
-        unitPriceMinor: 100000,
-        currencyCode: 'BDT',
-        createdAt: now,
-        updatedAt: now,
-      ),
-    );
-    await db.into(db.invoicesTable).insert(
-      InvoicesTableCompanion.insert(
-        id: 'inv1',
-        profileId: 'p1',
-        number: 'INV-0001',
-        currencyCode: 'BDT',
-        issueDate: CalendarDate(2026, 10, 2).key,
-        dueDate: CalendarDate(2026, 10, 9).key,
-        stage: 'sent',
-        totalMinor: 100000,
-        createdAt: now,
-        updatedAt: now,
-      ),
-    );
+  test(
+    'createBackup exports database, manifest with counts, and media assets',
+    () async {
+      final now = DateTime.utc(2026, 10, 2);
+      // 1. Populate database with records
+      await db
+          .into(db.businessProfilesTable)
+          .insert(
+            BusinessProfilesTableCompanion.insert(
+              id: 'p1',
+              name: 'My Business',
+              createdAt: now,
+              updatedAt: now,
+            ),
+          );
+      await db
+          .into(db.clientsTable)
+          .insert(
+            ClientsTableCompanion.insert(
+              id: 'c1',
+              name: 'Rahman Traders',
+              createdAt: now,
+              updatedAt: now,
+            ),
+          );
+      await db
+          .into(db.itemsTable)
+          .insert(
+            ItemsTableCompanion.insert(
+              id: 'i1',
+              name: 'Service',
+              unitPriceMinor: 100000,
+              currencyCode: 'BDT',
+              createdAt: now,
+              updatedAt: now,
+            ),
+          );
+      await db
+          .into(db.invoicesTable)
+          .insert(
+            InvoicesTableCompanion.insert(
+              id: 'inv1',
+              profileId: 'p1',
+              number: 'INV-0001',
+              currencyCode: 'BDT',
+              issueDate: CalendarDate(2026, 10, 2).key,
+              dueDate: CalendarDate(2026, 10, 9).key,
+              stage: 'sent',
+              totalMinor: 100000,
+              createdAt: now,
+              updatedAt: now,
+            ),
+          );
 
       // 2. Create test logo file
       final imagesDir = Directory('${tempDocDir.path}/images');
@@ -132,14 +142,16 @@ void main() {
   test('restoreBackup overwrites database and restores media files', () async {
     final now = DateTime.utc(2026, 10, 2);
     // 1. Setup backup data in first database
-    await db.into(db.clientsTable).insert(
-      ClientsTableCompanion.insert(
-        id: 'orig1',
-        name: 'Original Client',
-        createdAt: now,
-        updatedAt: now,
-      ),
-    );
+    await db
+        .into(db.clientsTable)
+        .insert(
+          ClientsTableCompanion.insert(
+            id: 'orig1',
+            name: 'Original Client',
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
     final imagesDir = Directory('${tempDocDir.path}/images');
     await imagesDir.create(recursive: true);
     final logoFile = File('${imagesDir.path}/restored_logo.png');
@@ -149,14 +161,16 @@ void main() {
     final zipBytes = await zipFile.readAsBytes();
 
     // 2. Change original data to simulate different state before restore
-    await db.into(db.clientsTable).insert(
-      ClientsTableCompanion.insert(
-        id: 'different2',
-        name: 'Different Client',
-        createdAt: now,
-        updatedAt: now,
-      ),
-    );
+    await db
+        .into(db.clientsTable)
+        .insert(
+          ClientsTableCompanion.insert(
+            id: 'different2',
+            name: 'Different Client',
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
     // Delete the logo
     await logoFile.delete();
 
