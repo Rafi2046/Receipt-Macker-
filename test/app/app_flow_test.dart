@@ -72,7 +72,7 @@ void main() {
     await pumpApp(tester);
     expect(find.text('Rahman Traders'), findsOneWidget);
 
-    await tester.tap(find.text('Edit business profile'));
+    await tester.tap(find.byTooltip('Edit business profile'));
     await settle(tester);
     expect(find.text('Business profile'), findsOneWidget);
 

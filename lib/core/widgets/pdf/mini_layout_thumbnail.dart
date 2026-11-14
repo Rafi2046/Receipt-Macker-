@@ -25,12 +25,17 @@ class MiniLayoutThumbnail extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: const Color(0xFFD9DEE3), width: 0.8),
+        border: Border.all(color: const Color(0xFFDCE2E8), width: 0.8),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x10000000),
-            blurRadius: 3,
-            offset: Offset(0, 1),
+            color: Color(0x18000000),
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+          BoxShadow(
+            color: Color(0x0A000000),
+            blurRadius: 1,
+            offset: Offset(0, 0.5),
           ),
         ],
       ),

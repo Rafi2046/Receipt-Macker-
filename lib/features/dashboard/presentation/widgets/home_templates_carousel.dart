@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
-import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/services/pdf/brand_swatch.dart';
 import '../../../../core/services/pdf/pdf_template.dart';
@@ -146,49 +145,81 @@ class _CarouselCard extends StatelessWidget {
           border: Border.all(color: colors.border),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 6,
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 8,
               offset: const Offset(0, 2),
             ),
           ],
         ),
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: Center(
-                child: MiniLayoutThumbnail(
-                  template: template,
-                  accentColor: accentColor,
-                  width: 44,
-                  height: 56,
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
               children: [
-                Flexible(
-                  child: Text(
-                    name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.textStyles.labelSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 11,
+                Expanded(
+                  child: Center(
+                    child: MiniLayoutThumbnail(
+                      template: template,
+                      accentColor: accentColor,
+                      width: 44,
+                      height: 58,
                     ),
                   ),
                 ),
-                if (template.requiresPro) ...[
-                  const SizedBox(width: 3),
-                  Icon(
-                    isLocked ? AppIcons.lock : AppIcons.proBadge,
-                    size: 11,
-                    color: colors.secondary,
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: context.textStyles.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
                   ),
-                ],
+                ),
               ],
             ),
+            if (template.requiresPro)
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 1.5,
+                  ),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFFEF3C7),
+                    shape: const StadiumBorder(),
+                    shadows: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.06),
+                        blurRadius: 2,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        isLocked ? Icons.lock : Icons.auto_awesome,
+                        size: 9,
+                        color: const Color(0xFFD97706),
+                      ),
+                      const SizedBox(width: 2),
+                      const Text(
+                        'PRO',
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFFB45309),
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
           ],
         ),
       ),

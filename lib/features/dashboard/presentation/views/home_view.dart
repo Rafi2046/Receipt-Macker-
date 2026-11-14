@@ -7,15 +7,14 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
-import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
+import '../../../../core/widgets/display/avatar_initials.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../home_snapshot.dart';
 import '../view_models/home_view_model.dart';
-import '../widgets/home_create_banner.dart';
 import '../widgets/home_hero_card.dart';
 import '../widgets/home_invoice_row.dart';
 import '../widgets/home_templates_carousel.dart';
@@ -48,7 +47,6 @@ class _HomeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final format = AppFormatters(Localizations.localeOf(context).languageCode);
     return ListView(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.pagePadding,
@@ -57,45 +55,66 @@ class _HomeBody extends StatelessWidget {
         AppSizes.fabClearance,
       ),
       children: [
-        Text(
-          _greeting(l10n, snapshot.hour),
-          style: context.textStyles.bodyMedium?.copyWith(
-            color: context.appColors.textSecondary,
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _greeting(l10n, snapshot.hour),
+                    style: context.textStyles.bodyMedium?.copyWith(
+                      color: context.appColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    snapshot.businessName,
+                    style: context.textStyles.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Tooltip(
+              message: l10n.homeEditProfile,
+              child: Material(
+                color: Colors.transparent,
+                shape: const CircleBorder(),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  key: const Key('home_profile_avatar_button'),
+                  onTap: () => context.pushNamed(RouteNames.businessProfile),
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: context.appColors.primary.withValues(
+                          alpha: 0.35,
+                        ),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: AvatarInitials(
+                      name: snapshot.businessName,
+                      size: 42,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-        Text(
-          snapshot.businessName,
-          style: context.textStyles.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: TextButton(
-            onPressed: () => context.pushNamed(RouteNames.businessProfile),
-            child: Text(l10n.homeEditProfile),
-          ),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        const HomeCreateBanner(),
         const SizedBox(height: AppSpacing.lg),
         HomeHeroCard(snapshot: snapshot),
-        if (snapshot.overdueCount > 0) ...[
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            l10n.homeOverdueLine(
-              format.integer(snapshot.overdueCount),
-              format.currency(snapshot.overdueMinor, snapshot.currencyCode),
-            ),
-            style: context.textStyles.bodyMedium?.copyWith(
-              color: context.appColors.danger,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-        const SizedBox(height: AppSpacing.xl),
+        const SizedBox(height: AppSpacing.lg),
         const HomeTemplatesCarousel(),
-        const SizedBox(height: AppSpacing.xl),
+        const SizedBox(height: AppSpacing.lg),
         if (snapshot.hasInvoices)
           _Recent(snapshot: snapshot)
         else

@@ -102,14 +102,13 @@ class _Dock extends StatelessWidget {
       decoration: ShapeDecoration(
         color: colors.surface.withValues(alpha: 0.94),
         shape: StadiumBorder(
-          side: BorderSide(
-            color: colors.border.withValues(alpha: 0.8),
-            width: 1.0,
-          ),
+          side: BorderSide(color: colors.border.withValues(alpha: 0.8)),
         ),
         shadows: [
           BoxShadow(
-            color: colors.textPrimary.withValues(alpha: AppOpacity.shadow * 1.5),
+            color: colors.textPrimary.withValues(
+              alpha: AppOpacity.shadow * 1.5,
+            ),
             blurRadius: AppSpacing.xxl,
             offset: const Offset(0, AppSpacing.sm),
           ),
