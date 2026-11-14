@@ -473,5 +473,40 @@
   "privacyTitle": "গোপনীয়তা নীতি",
   "privacyBody": "QuickBill আপনার ইনভয়েস, ক্লায়েন্ট, আইটেম ও ব্যবসার তথ্য এই ফোনে রাখে। কোনো অ্যাকাউন্ট নেই এবং IRR Dev Labs-এর কোনো সার্ভার নেই। ব্যাকআপ একটি ফাইল, যা আপনি নিজে রপ্তানি করেন। ফ্রি ব্যবহারে Google AdMob-এর বিজ্ঞাপন আসতে পারে। QuickBill Pro-এর বিল Google Play করে। বেনামি ব্যবহার ও ক্র্যাশ রিপোর্ট Firebase-এ যেতে পারে। তাতে নাম, টাকার পরিমাণ, ফোন নম্বর বা ইমেল থাকে না। প্রশ্ন: irrdevlabs.support@gmail.com।",
   "termsTitle": "শর্তাবলি",
-  "termsBody": "QuickBill Pro একটি ঐচ্ছিক সাবস্ক্রিপশন, যার বিল Google Play করে (quickbill_pro_monthly অথবা quickbill_pro_yearly)। Google Play ফ্রি ট্রায়াল দিলে, শেষ হওয়ার আগে বাতিল না করলে সেটি পেইড প্ল্যান হয়ে যায়। Google Play থেকে যেকোনো সময় বাতিল করা যায়। ইতিমধ্যে পরিশোধ করা সময় শেষ না হওয়া পর্যন্ত প্রো চালু থাকে। আপনার তৈরি ইনভয়েস ও রসিদ ফোনেই থাকে। IRR Dev Labs এই অ্যাপ ইনভয়েস ও রসিদ তৈরির জন্য দিচ্ছে। প্রশ্ন: irrdevlabs.support@gmail.com।"
+  "termsBody": "QuickBill Pro একটি ঐচ্ছিক সাবস্ক্রিপশন, যার বিল Google Play করে (quickbill_pro_monthly অথবা quickbill_pro_yearly)। Google Play ফ্রি ট্রায়াল দিলে, শেষ হওয়ার আগে বাতিল না করলে সেটি পেইড প্ল্যান হয়ে যায়। Google Play থেকে যেকোনো সময় বাতিল করা যায়। ইতিমধ্যে পরিশোধ করা সময় শেষ না হওয়া পর্যন্ত প্রো চালু থাকে। আপনার তৈরি ইনভয়েস ও রসিদ ফোনেই থাকে। IRR Dev Labs এই অ্যাপ ইনভয়েস ও রসিদ তৈরির জন্য দিচ্ছে। প্রশ্ন: irrdevlabs.support@gmail.com।",
+  "settingsTitle": "সেটিংস",
+  "settingsAppearance": "চেহারা ও ভাষা",
+  "settingsLanguage": "অ্যাপের ভাষা",
+  "settingsTheme": "থিম",
+  "settingsThemeSystem": "সিস্টেম",
+  "settingsThemeLight": "লাইট",
+  "settingsThemeDark": "ডার্ক",
+  "settingsDefaults": "চালানের ডিফল্ট শর্ত",
+  "settingsDueDays": "পরিশোধের মেয়াদ",
+  "settingsTaxRate": "ডিফল্ট করের হার",
+  "settingsTaxInclusive": "মূল্যের মধ্যে কর অন্তর্ভুক্ত",
+  "settingsNumbering": "চালান নম্বর নির্ধারণ",
+  "settingsPrefix": "চালান প্রিফিক্স",
+  "settingsNextNumber": "পরবর্তী নম্বর",
+  "settingsNumberingHelp": "সর্বোচ্চ ব্যবহৃত চালানের চেয়ে কম হতে পারবে না: {min}",
+  "@settingsNumberingHelp": {
+    "placeholders": {
+      "min": {"type": "String"}
+    }
+  },
+  "settingsSaveNumbering": "নম্বর সংরক্ষণ করুন",
+  "settingsNumberingSaved": "চালান নম্বর আপডেট করা হয়েছে",
+  "settingsNumberingInvalid": "পরবর্তী নম্বরটি বিদ্যমান চালানের চেয়ে বড় হতে হবে",
+  "clientDetailTitle": "ক্লায়েন্টের বিবরণ",
+  "clientActionCall": "কল",
+  "clientActionWhatsApp": "হোয়াটসঅ্যাপ",
+  "clientTotalBilled": "মোট বিল",
+  "clientTotalPaid": "মোট পরিশোধ",
+  "clientBalanceDue": "বকেয়া ব্যালেন্স",
+  "clientInvoicesHeader": "চালানসমূহ",
+  "clientNoInvoices": "এই ক্লায়েন্টের কোনো চালান এখনও নেই",
+  "clientNoPhone": "এই ক্লায়েন্টের কোনো ফোন নম্বর নেই",
+  "couldNotLaunchPhone": "কল করা সম্ভব হয়নি",
+  "couldNotLaunchWhatsApp": "হোয়াটসঅ্যাপ খোলা সম্ভব হয়নি",
+  "dashboardFinancialSummary": "আর্থিক সারসংক্ষেপ"
 }

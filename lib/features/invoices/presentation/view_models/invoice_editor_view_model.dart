@@ -53,14 +53,15 @@ class InvoiceEditorViewModel extends _$InvoiceEditorViewModel {
     }
     final profile =
         (await ref.read(businessProfileRepositoryProvider).load()).valueOrNull;
+    final prefs = ref.read(appPreferencesProvider);
     final blank = Invoice(
       id: IdGenerator.next(),
       number: number,
-      currencyCode:
-          ref.read(appPreferencesProvider).defaultCurrency ??
-          AppConstants.defaultCurrencyCode,
+      currencyCode: prefs.defaultCurrency ?? AppConstants.defaultCurrencyCode,
       issueDate: today,
-      dueDate: today.addDays(AppConstants.defaultDueDays),
+      dueDate: today.addDays(prefs.defaultDueDays),
+      taxRateBasisPoints: prefs.defaultTaxRateBasisPoints,
+      taxInclusive: prefs.defaultTaxInclusive,
       createdAt: now,
       updatedAt: now,
       notes: profile?.defaultNotes ?? '',

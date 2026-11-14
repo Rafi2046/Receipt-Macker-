@@ -13,6 +13,9 @@ class SharedAppPreferences implements AppPreferences {
   static const String _language = 'language_code';
   static const String _theme = 'theme_name';
   static const String _currency = 'default_currency';
+  static const String _defaultDueDays = 'default_due_days';
+  static const String _defaultTaxRate = 'default_tax_rate_basis_points';
+  static const String _defaultTaxInclusive = 'default_tax_inclusive';
   static const String _pdfTemplate = 'pdf_template';
   static const String _pro = 'is_pro';
   static const String _firstLaunch = 'first_launch_millis';
@@ -27,6 +30,9 @@ class SharedAppPreferences implements AppPreferences {
           _language,
           _theme,
           _currency,
+          _defaultDueDays,
+          _defaultTaxRate,
+          _defaultTaxInclusive,
           _pdfTemplate,
           _pro,
           _firstLaunch,
@@ -63,6 +69,29 @@ class SharedAppPreferences implements AppPreferences {
   @override
   Future<void> setDefaultCurrency(String code) =>
       _prefs.setString(_currency, code);
+
+  @override
+  int get defaultDueDays => _prefs.getInt(_defaultDueDays) ?? 7;
+
+  @override
+  Future<void> setDefaultDueDays(int days) =>
+      _prefs.setInt(_defaultDueDays, days);
+
+  @override
+  int? get defaultTaxRateBasisPoints => _prefs.getInt(_defaultTaxRate);
+
+  @override
+  Future<void> setDefaultTaxRateBasisPoints(int? basisPoints) =>
+      basisPoints == null
+      ? _prefs.remove(_defaultTaxRate)
+      : _prefs.setInt(_defaultTaxRate, basisPoints);
+
+  @override
+  bool get defaultTaxInclusive => _prefs.getBool(_defaultTaxInclusive) ?? false;
+
+  @override
+  Future<void> setDefaultTaxInclusive({required bool value}) =>
+      _prefs.setBool(_defaultTaxInclusive, value);
 
   @override
   String? get pdfTemplate => _prefs.getString(_pdfTemplate);

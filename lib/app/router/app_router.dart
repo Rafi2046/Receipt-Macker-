@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/business_profile/presentation/views/business_profile_view.dart';
+import '../../features/clients/presentation/views/client_detail_view.dart';
 import '../../features/clients/presentation/views/client_editor_view.dart';
 import '../../features/clients/presentation/views/client_list_view.dart';
 import '../../features/dashboard/presentation/views/home_view.dart';
@@ -17,6 +18,7 @@ import '../../features/onboarding/providers.dart';
 import '../../features/paywall/presentation/views/paywall_view.dart';
 import '../../features/paywall/presentation/views/pro_welcome_view.dart';
 import '../../features/settings/presentation/views/privacy_policy_view.dart';
+import '../../features/settings/presentation/views/settings_view.dart';
 import '../../features/settings/presentation/views/terms_view.dart';
 import '../shell/app_shell.dart';
 import 'invoice_routes.dart';
@@ -79,6 +81,11 @@ GoRouter appRouter(Ref ref) {
         builder: (_, _) => const BusinessProfileView(),
       ),
       GoRoute(
+        name: RouteNames.settings,
+        path: RouteNames.settingsPath,
+        builder: (_, _) => const SettingsView(),
+      ),
+      GoRoute(
         name: RouteNames.paywall,
         path: RouteNames.paywallPath,
         builder: (_, _) => const PaywallView(),
@@ -116,10 +123,20 @@ final GoRoute _clientRoutes = GoRoute(
       builder: (_, _) => const ClientEditorView(),
     ),
     GoRoute(
-      name: RouteNames.clientEdit,
-      path: RouteNames.clientEditPath,
-      builder: (_, state) =>
-          ClientEditorView(clientId: state.pathParameters[RouteNames.idParam]),
+      name: RouteNames.clientDetail,
+      path: RouteNames.clientDetailPath,
+      builder: (_, state) => ClientDetailView(
+        clientId: state.pathParameters[RouteNames.idParam] ?? '',
+      ),
+      routes: [
+        GoRoute(
+          name: RouteNames.clientEdit,
+          path: RouteNames.clientEditPath,
+          builder: (_, state) => ClientEditorView(
+            clientId: state.pathParameters[RouteNames.idParam],
+          ),
+        ),
+      ],
     ),
   ],
 );

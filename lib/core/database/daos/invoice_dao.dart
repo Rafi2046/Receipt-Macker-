@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+import '../../../features/invoices/domain/logic/invoice_number_generator.dart';
 import '../app_database.dart';
 import '../search_pattern.dart';
 import '../tables/invoice_lines_table.dart';
@@ -34,6 +35,17 @@ class InvoiceDao extends DatabaseAccessor<AppDatabase> with _$InvoiceDaoMixin {
     }
     return stmt.watch();
   }
+
+  /// All invoices billed to [clientId], newest first.
+  Stream<List<InvoiceRow>> watchByClientId(String clientId) =>
+      (select(invoicesTable)
+            ..where((t) => t.clientId.equals(clientId))
+            ..orderBy([
+              (t) => OrderingTerm.desc(t.issueDate),
+              (t) => OrderingTerm.desc(t.createdAt),
+              (t) => OrderingTerm.desc(t.number),
+            ]))
+          .watch();
 
   SimpleSelectStatement<$InvoicesTableTable, InvoiceRow> _byId(String id) =>
       select(invoicesTable)..where((t) => t.id.equals(id));
@@ -93,6 +105,26 @@ class InvoiceDao extends DatabaseAccessor<AppDatabase> with _$InvoiceDaoMixin {
 
   Future<void> upsertNumbering(InvoiceNumberingRow row) =>
       into(invoiceNumberingTable).insertOnConflictUpdate(row);
+
+  /// The highest numeric sequence among all invoices matching [prefix].
+  /// Returns 0 if none exist.
+  Future<int> highestSequenceForPrefix(String profileId, String prefix) async {
+    final query = selectOnly(invoicesTable)
+      ..addColumns([invoicesTable.number])
+      ..where(invoicesTable.profileId.equals(profileId));
+    final rows = await query.get();
+    int highest = 0;
+    for (final row in rows) {
+      final num = row.read(invoicesTable.number);
+      if (num != null) {
+        final seq = InvoiceNumberGenerator.sequenceOf(prefix, num);
+        if (seq != null && seq > highest) {
+          highest = seq;
+        }
+      }
+    }
+    return highest;
+  }
 
   /// Stores the recomputed sum of payments. The invoice watch emits again.
   Future<void> setPaidMinor(String id, int paidMinor) =>

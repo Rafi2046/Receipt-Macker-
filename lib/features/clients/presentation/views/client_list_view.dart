@@ -76,7 +76,7 @@ class _ClientList extends ConsumerWidget {
         return ClientListTile(
           client: client,
           onTap: () => context.pushNamed(
-            RouteNames.clientEdit,
+            RouteNames.clientDetail,
             pathParameters: {RouteNames.idParam: client.id},
           ),
         );

@@ -7,6 +7,9 @@ class FakeAppPreferences implements AppPreferences {
     this.languageCode = 'en',
     this.themeName,
     this.defaultCurrency,
+    this.defaultDueDays = 7,
+    this.defaultTaxRateBasisPoints,
+    this.defaultTaxInclusive = false,
     this.pdfTemplate,
     this.isPro = false,
     this.firstLaunchMillis,
@@ -25,6 +28,26 @@ class FakeAppPreferences implements AppPreferences {
 
   @override
   String? defaultCurrency;
+
+  @override
+  int defaultDueDays;
+
+  @override
+  int? defaultTaxRateBasisPoints;
+
+  @override
+  bool defaultTaxInclusive;
+
+  @override
+  Future<void> setDefaultDueDays(int days) async => defaultDueDays = days;
+
+  @override
+  Future<void> setDefaultTaxRateBasisPoints(int? basisPoints) async =>
+      defaultTaxRateBasisPoints = basisPoints;
+
+  @override
+  Future<void> setDefaultTaxInclusive({required bool value}) async =>
+      defaultTaxInclusive = value;
 
   @override
   Future<void> setOnboardingComplete({required bool value}) async =>

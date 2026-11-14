@@ -70,6 +70,7 @@ void main() {
     await settle(tester);
 
     await tap(tester, find.text('Karim Store'));
+    await tap(tester, find.byTooltip('Edit'));
     expect(find.text('Edit client'), findsOneWidget);
     await tester.enterText(field('Karim Store'), 'Karim & Sons');
     await tester.pump();
@@ -78,12 +79,17 @@ void main() {
     expect(find.text('Discard changes?'), findsOneWidget);
     await tap(tester, find.text('Cancel'));
     await tap(tester, find.text('Save'));
+    expect(find.text('Karim & Sons'), findsWidgets);
+    await tester.pageBack();
+    await settle(tester);
     expect(find.text('Karim & Sons'), findsOneWidget);
 
     await tap(tester, find.text('Karim & Sons'));
+    await tap(tester, find.byTooltip('Edit'));
     await tap(tester, find.byTooltip('Delete'));
     expect(find.text('Delete this client?'), findsOneWidget);
     await tap(tester, find.widgetWithText(FilledButton, 'Delete'));
+    await settle(tester);
     expect(find.text('Client deleted'), findsOneWidget);
     expect(find.text('No clients yet'), findsOneWidget);
     await tester.tearDownFullApp(env);

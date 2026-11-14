@@ -16,6 +16,18 @@ abstract interface class AppPreferences {
   String? get defaultCurrency;
   Future<void> setDefaultCurrency(String code);
 
+  /// Default days until invoice due date.
+  int get defaultDueDays;
+  Future<void> setDefaultDueDays(int days);
+
+  /// Default invoice tax rate in basis points (e.g. 500 = 5%); null for none.
+  int? get defaultTaxRateBasisPoints;
+  Future<void> setDefaultTaxRateBasisPoints(int? basisPoints);
+
+  /// Whether tax is included in line item prices by default.
+  bool get defaultTaxInclusive;
+  Future<void> setDefaultTaxInclusive({required bool value});
+
   /// Id of the last PDF template used; null means the default.
   String? get pdfTemplate;
   Future<void> setPdfTemplate(String id);

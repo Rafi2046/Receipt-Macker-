@@ -23,6 +23,10 @@ class ClientRepositoryImpl implements ClientRepository {
   }
 
   @override
+  Stream<Client?> watch(String id) =>
+      _dao.watchById(id).map((row) => row?.toDomain());
+
+  @override
   Future<Result<Client>> find(String id) => Result.guard(() async {
     final row = await _dao.findById(id);
     if (row == null) throw const NotFoundFailure();

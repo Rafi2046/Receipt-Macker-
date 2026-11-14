@@ -640,5 +640,40 @@
   "privacyTitle": "Privacy policy",
   "privacyBody": "QuickBill keeps your invoices, clients, items and business profile on this phone. There is no account and no IRR Dev Labs server. A backup is a file you export yourself. Free users may see Google AdMob ads. QuickBill Pro is billed by Google Play. Anonymous usage events and crash reports may be sent through Firebase. They never include names, amounts, phone numbers or emails. Questions: irrdevlabs.support@gmail.com.",
   "termsTitle": "Terms",
-  "termsBody": "QuickBill Pro is an optional subscription billed by Google Play (quickbill_pro_monthly or quickbill_pro_yearly). A free trial, when Google Play offers one, becomes a paid plan unless you cancel in Google Play before it ends. You can cancel anytime in Google Play. Access continues until the period you already paid for ends. Invoices and receipts you create stay on your phone. IRR Dev Labs provides the app for making invoices and receipts. Questions: irrdevlabs.support@gmail.com."
+  "termsBody": "QuickBill Pro is an optional subscription billed by Google Play (quickbill_pro_monthly or quickbill_pro_yearly). A free trial, when Google Play offers one, becomes a paid plan unless you cancel in Google Play before it ends. You can cancel anytime in Google Play. Access continues until the period you already paid for ends. Invoices and receipts you create stay on your phone. IRR Dev Labs provides the app for making invoices and receipts. Questions: irrdevlabs.support@gmail.com.",
+  "settingsTitle": "Settings",
+  "settingsAppearance": "Appearance & Language",
+  "settingsLanguage": "App language",
+  "settingsTheme": "Theme",
+  "settingsThemeSystem": "System",
+  "settingsThemeLight": "Light",
+  "settingsThemeDark": "Dark",
+  "settingsDefaults": "Default invoice terms",
+  "settingsDueDays": "Default due date",
+  "settingsTaxRate": "Default tax rate",
+  "settingsTaxInclusive": "Tax is included in prices",
+  "settingsNumbering": "Invoice numbering",
+  "settingsPrefix": "Invoice prefix",
+  "settingsNextNumber": "Next sequence number",
+  "settingsNumberingHelp": "Cannot be lower than {min} (highest used invoice)",
+  "@settingsNumberingHelp": {
+    "placeholders": {
+      "min": {"type": "String"}
+    }
+  },
+  "settingsSaveNumbering": "Save numbering",
+  "settingsNumberingSaved": "Invoice numbering updated",
+  "settingsNumberingInvalid": "Next number must be higher than existing invoices",
+  "clientDetailTitle": "Client details",
+  "clientActionCall": "Call",
+  "clientActionWhatsApp": "WhatsApp",
+  "clientTotalBilled": "Total Billed",
+  "clientTotalPaid": "Total Paid",
+  "clientBalanceDue": "Outstanding Balance",
+  "clientInvoicesHeader": "Invoices",
+  "clientNoInvoices": "No invoices for this client yet",
+  "clientNoPhone": "No phone number for this client",
+  "couldNotLaunchPhone": "Could not make phone call",
+  "couldNotLaunchWhatsApp": "Could not open WhatsApp",
+  "dashboardFinancialSummary": "Financial Summary"
 }

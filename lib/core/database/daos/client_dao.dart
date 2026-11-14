@@ -35,6 +35,9 @@ class ClientDao extends DatabaseAccessor<AppDatabase> with _$ClientDaoMixin {
   Future<ClientRow?> findById(String id) =>
       (select(clientsTable)..where((t) => t.id.equals(id))).getSingleOrNull();
 
+  Stream<ClientRow?> watchById(String id) =>
+      (select(clientsTable)..where((t) => t.id.equals(id))).watchSingleOrNull();
+
   Future<void> upsert(ClientRow row) =>
       into(clientsTable).insertOnConflictUpdate(row);
 

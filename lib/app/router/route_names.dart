@@ -8,6 +8,8 @@ abstract final class RouteNames {
   static const String onboardingPath = '/onboarding';
   static const String businessProfile = 'businessProfile';
   static const String businessProfilePath = '/business-profile';
+  static const String settings = 'settings';
+  static const String settingsPath = '/settings';
   static const String paywall = 'paywall';
   static const String paywallPath = '/paywall';
   static const String proWelcome = 'proWelcome';
@@ -26,8 +28,10 @@ abstract final class RouteNames {
   static const String clientsPath = '/clients';
   static const String clientNew = 'clientNew';
   static const String clientNewPath = _newPath;
+  static const String clientDetail = 'clientDetail';
+  static const String clientDetailPath = ':$idParam';
   static const String clientEdit = 'clientEdit';
-  static const String clientEditPath = _editPath;
+  static const String clientEditPath = 'edit';
 
   static const String items = 'items';
   static const String itemsPath = '/items';

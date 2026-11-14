@@ -7,6 +7,7 @@ import '../../../../core/errors/result.dart';
 import '../../domain/logic/invoice_calculator.dart';
 import '../../domain/logic/invoice_number_generator.dart';
 import '../../domain/models/invoice.dart';
+import '../../domain/models/invoice_numbering.dart';
 import '../../domain/models/invoice_summary.dart';
 import '../../domain/repositories/invoice_repository.dart';
 import '../mappers/invoice_mapper.dart';
@@ -26,6 +27,11 @@ class InvoiceRepositoryImpl implements InvoiceRepository {
   @override
   Stream<List<InvoiceSummary>> watchAll({String query = ''}) => _dao
       .watchAll(query: query.trim())
+      .map((rows) => [for (final r in rows) r.toSummary()]);
+
+  @override
+  Stream<List<InvoiceSummary>> watchByClient(String clientId) => _dao
+      .watchByClientId(clientId)
       .map((rows) => [for (final r in rows) r.toSummary()]);
 
   @override
@@ -50,6 +56,48 @@ class InvoiceRepositoryImpl implements InvoiceRepository {
       padding: AppConstants.invoiceNumberPadding,
     );
   }, onError: _db);
+
+  @override
+  Future<Result<InvoiceNumbering>> getNumbering() => Result.guard(() async {
+    final numbering = await _numbering(await _profileId());
+    return InvoiceNumbering(
+      prefix: numbering.prefix,
+      nextSequence: numbering.nextSequence,
+    );
+  }, onError: _db);
+
+  @override
+  Future<Result<void>> updateNumbering({
+    required String prefix,
+    required int nextSequence,
+  }) => Result.guard(() async {
+    final trimmedPrefix = prefix.trim();
+    if (trimmedPrefix.isEmpty) {
+      throw const ValidationFailure('prefix');
+    }
+    final profileId = await _profileId();
+    final highest = await _dao.highestSequenceForPrefix(
+      profileId,
+      trimmedPrefix,
+    );
+    if (nextSequence <= highest) {
+      throw const ValidationFailure('nextSequence');
+    }
+    await _dao.upsertNumbering(
+      InvoiceNumberingRow(
+        profileId: profileId,
+        prefix: trimmedPrefix,
+        nextSequence: nextSequence,
+      ),
+    );
+  }, onError: _db);
+
+  @override
+  Future<Result<int>> getHighestSequence(String prefix) =>
+      Result.guard(() async {
+        final profileId = await _profileId();
+        return _dao.highestSequenceForPrefix(profileId, prefix.trim());
+      }, onError: _db);
 
   @override
   Future<Result<Invoice>> save(Invoice invoice) => Result.guard(
