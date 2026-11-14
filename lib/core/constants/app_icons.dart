@@ -47,5 +47,7 @@ abstract final class AppIcons {
   static const IconData check = Icons.check;
   static const IconData pdf = Icons.picture_as_pdf_outlined;
   static const IconData download = Icons.download_outlined;
+  static const IconData backup = Icons.backup_outlined;
+  static const IconData restore = Icons.settings_backup_restore_outlined;
   static const IconData pro = Icons.workspace_premium_outlined;
 }

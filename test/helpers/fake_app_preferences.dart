@@ -15,6 +15,7 @@ class FakeAppPreferences implements AppPreferences {
     this.firstLaunchMillis,
     this.completedExports = 0,
     this.lastInterstitialMillis,
+    this.lastBackupMillis,
   });
 
   @override
@@ -93,4 +94,11 @@ class FakeAppPreferences implements AppPreferences {
   @override
   Future<void> setLastInterstitialMillis(int millis) async =>
       lastInterstitialMillis = millis;
+
+  @override
+  int? lastBackupMillis;
+
+  @override
+  Future<void> setLastBackupMillis(int millis) async =>
+      lastBackupMillis = millis;
 }

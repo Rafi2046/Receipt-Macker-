@@ -675,5 +675,55 @@
   "clientNoPhone": "No phone number for this client",
   "couldNotLaunchPhone": "Could not make phone call",
   "couldNotLaunchWhatsApp": "Could not open WhatsApp",
-  "dashboardFinancialSummary": "Financial Summary"
+  "dashboardFinancialSummary": "Financial Summary",
+  "backupTitle": "Backup & restore",
+  "backupExportTitle": "Export backup",
+  "backupExportDescription": "Create a single file containing all your invoices, clients, catalog items, payments, and business media.",
+  "backupExportButton": "Export backup",
+  "backupLastDate": "Last backup: {date}",
+  "@backupLastDate": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "backupNever": "No backups created yet",
+  "backupRestoreTitle": "Restore from backup",
+  "backupRestoreDescription": "Select a previously exported .zip backup file to restore your data.",
+  "backupRestoreWarning": "Restoring will replace all existing invoices, clients, and items on this device.",
+  "backupRestoreButton": "Select backup file",
+  "backupConfirmRestoreTitle": "Restore data?",
+  "backupConfirmWarning": "Warning: All current data on this device will be replaced with the data from this backup file. This action cannot be undone.",
+  "backupMetadataDate": "Backup Date: {date}",
+  "@backupMetadataDate": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "backupMetadataInvoices": "Invoices: {count}",
+  "@backupMetadataInvoices": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "backupMetadataClients": "Clients: {count}",
+  "@backupMetadataClients": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "backupMetadataItems": "Items: {count}",
+  "@backupMetadataItems": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "backupMetadataSchema": "Schema version: {version}",
+  "@backupMetadataSchema": {
+    "placeholders": {
+      "version": {"type": "int"}
+    }
+  },
+  "backupConfirmButton": "Restore data",
+  "backupExportSuccess": "Backup exported successfully",
+  "backupRestoreSuccess": "Data restored successfully"
 }

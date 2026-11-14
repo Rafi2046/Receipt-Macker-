@@ -45,4 +45,8 @@ abstract interface class AppPreferences {
 
   int? get lastInterstitialMillis;
   Future<void> setLastInterstitialMillis(int millis);
+
+  /// Timestamp of the last successful backup export, or null if none.
+  int? get lastBackupMillis;
+  Future<void> setLastBackupMillis(int millis);
 }

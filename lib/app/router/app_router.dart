@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../features/backup/presentation/views/backup_view.dart';
 import '../../features/business_profile/presentation/views/business_profile_view.dart';
 import '../../features/clients/presentation/views/client_detail_view.dart';
 import '../../features/clients/presentation/views/client_editor_view.dart';
@@ -84,6 +85,11 @@ GoRouter appRouter(Ref ref) {
         name: RouteNames.settings,
         path: RouteNames.settingsPath,
         builder: (_, _) => const SettingsView(),
+      ),
+      GoRoute(
+        name: RouteNames.backup,
+        path: RouteNames.backupPath,
+        builder: (_, _) => const BackupView(),
       ),
       GoRoute(
         name: RouteNames.paywall,

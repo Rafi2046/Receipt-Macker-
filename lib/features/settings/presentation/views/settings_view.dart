@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_currencies.dart';
+import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
@@ -253,6 +256,36 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                     final seq = int.tryParse(_seqController.text) ?? 1;
                     vm.updateNumbering(prefix: prefix, nextSequence: seq);
                   },
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sectionGap),
+
+          // 4. Backup & Data
+          SectionHeader(title: l10n.backupTitle),
+          const SizedBox(height: AppSpacing.sm),
+          AppCard(
+            onTap: () => context.pushNamed(RouteNames.backup),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.md,
+            ),
+            child: Row(
+              children: [
+                Icon(AppIcons.backup, color: context.appColors.primary),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Text(
+                    l10n.backupTitle,
+                    style: context.textStyles.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Icon(
+                  AppIcons.chevronRight,
+                  color: context.appColors.textSecondary,
                 ),
               ],
             ),

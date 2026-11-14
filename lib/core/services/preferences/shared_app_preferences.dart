@@ -21,6 +21,7 @@ class SharedAppPreferences implements AppPreferences {
   static const String _firstLaunch = 'first_launch_millis';
   static const String _exports = 'completed_exports';
   static const String _lastAd = 'last_interstitial_millis';
+  static const String _lastBackup = 'last_backup_millis';
 
   static Future<SharedAppPreferences> create() async => SharedAppPreferences._(
     await SharedPreferencesWithCache.create(
@@ -38,6 +39,7 @@ class SharedAppPreferences implements AppPreferences {
           _firstLaunch,
           _exports,
           _lastAd,
+          _lastBackup,
         },
       ),
     ),
@@ -124,4 +126,11 @@ class SharedAppPreferences implements AppPreferences {
   @override
   Future<void> setLastInterstitialMillis(int millis) =>
       _prefs.setInt(_lastAd, millis);
+
+  @override
+  int? get lastBackupMillis => _prefs.getInt(_lastBackup);
+
+  @override
+  Future<void> setLastBackupMillis(int millis) =>
+      _prefs.setInt(_lastBackup, millis);
 }

@@ -508,5 +508,55 @@
   "clientNoPhone": "এই ক্লায়েন্টের কোনো ফোন নম্বর নেই",
   "couldNotLaunchPhone": "কল করা সম্ভব হয়নি",
   "couldNotLaunchWhatsApp": "হোয়াটসঅ্যাপ খোলা সম্ভব হয়নি",
-  "dashboardFinancialSummary": "আর্থিক সারসংক্ষেপ"
+  "dashboardFinancialSummary": "আর্থিক সারসংক্ষেপ",
+  "backupTitle": "ব্যাকআপ ও রিস্টোর",
+  "backupExportTitle": "ব্যাকআপ এক্সপোর্ট",
+  "backupExportDescription": "আপনার সমস্ত চালান, ক্লায়েন্ট, ক্যাটালগ আইটেম, পেমেন্ট ও মিডিয়ার একটি ফাইল তৈরি করুন।",
+  "backupExportButton": "ব্যাকআপ এক্সপোর্ট করুন",
+  "backupLastDate": "সর্বশেষ ব্যাকআপ: {date}",
+  "@backupLastDate": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "backupNever": "এখনও কোনো ব্যাকআপ তৈরি করা হয়নি",
+  "backupRestoreTitle": "ব্যাকআপ থেকে রিস্টোর",
+  "backupRestoreDescription": "পূর্বে সংরক্ষিত .zip ব্যাকআপ ফাইল বেছে নিয়ে আপনার ডেটা রিস্টোর করুন।",
+  "backupRestoreWarning": "রিস্টোর করলে ডিভাইসে থাকা বর্তমান সমস্ত চালান, ক্লায়েন্ট ও আইটেম প্রতিস্থাপিত হবে।",
+  "backupRestoreButton": "ব্যাকআপ ফাইল নির্বাচন করুন",
+  "backupConfirmRestoreTitle": "ডেটা রিস্টোর করবেন?",
+  "backupConfirmWarning": "সতর্কতা: ব্যাকআপ ফাইলের ডেটা দিয়ে ডিভাইসের সমস্ত বর্তমান ডেটা প্রতিস্থাপিত হবে। এটি পুনরায় ফিরিয়ে আনা যাবে না।",
+  "backupMetadataDate": "ব্যাকআপের তারিখ: {date}",
+  "@backupMetadataDate": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "backupMetadataInvoices": "চালান: {count}টি",
+  "@backupMetadataInvoices": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "backupMetadataClients": "ক্লায়েন্ট: {count} জন",
+  "@backupMetadataClients": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "backupMetadataItems": "আইটেম: {count}টি",
+  "@backupMetadataItems": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "backupMetadataSchema": "স্কিমা সংস্করণ: {version}",
+  "@backupMetadataSchema": {
+    "placeholders": {
+      "version": {"type": "int"}
+    }
+  },
+  "backupConfirmButton": "ডেটা রিস্টোর করুন",
+  "backupExportSuccess": "ব্যাকআপ সফলভাবে এক্সপোর্ট করা হয়েছে",
+  "backupRestoreSuccess": "ডেটা সফলভাবে রিস্টোর করা হয়েছে"
 }

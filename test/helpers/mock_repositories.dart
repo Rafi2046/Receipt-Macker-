@@ -1,5 +1,6 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:receipt_maker/core/utils/calendar_date.dart';
+import 'package:receipt_maker/features/backup/domain/repositories/backup_repository.dart';
 import 'package:receipt_maker/features/business_profile/domain/repositories/business_profile_repository.dart';
 import 'package:receipt_maker/features/clients/domain/models/client.dart';
 import 'package:receipt_maker/features/clients/domain/repositories/client_repository.dart';
@@ -19,6 +20,8 @@ class MockItemRepository extends Mock implements ItemRepository {}
 class MockInvoiceRepository extends Mock implements InvoiceRepository {}
 
 class MockPaymentRepository extends Mock implements PaymentRepository {}
+
+class MockBackupRepository extends Mock implements BackupRepository {}
 
 class MockBusinessProfileRepository extends Mock
     implements BusinessProfileRepository {}

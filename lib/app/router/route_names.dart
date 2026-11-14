@@ -10,6 +10,8 @@ abstract final class RouteNames {
   static const String businessProfilePath = '/business-profile';
   static const String settings = 'settings';
   static const String settingsPath = '/settings';
+  static const String backup = 'backup';
+  static const String backupPath = '/backup';
   static const String paywall = 'paywall';
   static const String paywallPath = '/paywall';
   static const String proWelcome = 'proWelcome';
