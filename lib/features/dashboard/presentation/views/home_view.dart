@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../../app/shell/app_shell.dart';
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
@@ -57,6 +59,11 @@ class _HomeBody extends StatelessWidget {
       children: [
         Row(
           children: [
+            IconButton(
+              tooltip: l10n.menuOpen,
+              onPressed: openAppMenuDrawer,
+              icon: Icon(AppIcons.menu, color: context.appColors.textPrimary),
+            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

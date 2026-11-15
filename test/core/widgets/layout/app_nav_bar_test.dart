@@ -52,18 +52,22 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('the dock hugs its items and switches without overflow', (
+  testWidgets('the dock spans the page and switches without overflow', (
     tester,
   ) async {
     await tester.pumpApp(bar(), surface: const Size(411, 800));
-    final create = tester.getRect(find.byTooltip('New invoice'));
-    final more = tester.getRect(find.byTooltip('More'));
-    final home = tester.getRect(find.text('Home'));
-    // No empty stretch before the create button, and the pill hugs its
-    // label instead of filling the screen.
-    expect(create.left - more.right, lessThan(12));
-    final invoices = tester.getRect(find.byTooltip('Invoices'));
-    expect(invoices.left - home.right, lessThan(40));
+    final dock = tester.getRect(
+      find
+          .descendant(
+            of: find.byType(AppNavBar),
+            matching: find.byType(Container),
+          )
+          .first,
+    );
+    // Matches page content inset (16) on a 411-wide phone.
+    expect(dock.left, closeTo(16, 1));
+    expect(dock.right, closeTo(411 - 16, 1));
+    expect(tester.getSize(find.text('Home')).width, greaterThan(40));
 
     await tester.pumpApp(
       bar(index: 3),

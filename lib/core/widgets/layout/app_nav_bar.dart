@@ -8,10 +8,9 @@ import '../../constants/app_spacing.dart';
 import 'nav_bar_create_button.dart';
 import 'nav_bar_tab.dart';
 
-/// Floating pill dock, centered and as wide as its items: four tab
-/// circles, the selected one stretched into a labelled pill, and a create
-/// button for a new invoice at the end. Its width never changes with the
-/// selection.
+/// Floating pill dock that spans the page width: four tab circles, the
+/// selected one stretched into a labelled pill, and a create button at the
+/// end. Tabs are spaced evenly so left and right stay balanced.
 class AppNavBar extends StatelessWidget {
   const AppNavBar({
     required this.index,
@@ -41,9 +40,9 @@ class AppNavBar extends StatelessWidget {
       top: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
-          AppSpacing.md,
+          AppSpacing.pagePadding,
           AppSpacing.xs,
-          AppSpacing.md,
+          AppSpacing.pagePadding,
           AppSpacing.md,
         ),
         child: MediaQuery.withClampedTextScaling(
@@ -57,19 +56,22 @@ class AppNavBar extends StatelessWidget {
   /// Every pill is as wide as the longest label (capped to the screen),
   /// so the dock keeps one width and only the selection moves.
   Widget _buildDock(BuildContext context, BoxConstraints constraints) {
-    const slot = AppSizes.minTapTarget + AppSpacing.xs;
+    const slot = AppSizes.minTapTarget;
     const rim = AppSpacing.xs * 2 + AppSizes.borderWidth * 2;
-    final room = constraints.maxWidth - rim - slot * _icons.length;
+    // Four unselected circles + create leave the rest for the selected pill.
+    final room = constraints.maxWidth - rim - slot * (_icons.length + 1);
+    final pillCap = room < AppSizes.minTapTarget ? AppSizes.minTapTarget : room;
     final pill = NavBarTab.pillWidthFor(
       context,
       labels,
-    ).clamp(AppSizes.minTapTarget, room);
-    return Center(
+    ).clamp(AppSizes.minTapTarget, pillCap);
+    return SizedBox(
+      width: double.infinity,
       child: _Dock(
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            for (var i = 0; i < _icons.length; i++) ...[
+            for (var i = 0; i < _icons.length; i++)
               NavBarTab(
                 icon: _icons[i].$1,
                 selectedIcon: _icons[i].$2,
@@ -78,8 +80,6 @@ class AppNavBar extends StatelessWidget {
                 width: pill,
                 onTap: () => onSelected(i),
               ),
-              const SizedBox(width: AppSpacing.xs),
-            ],
             NavBarCreateButton(tooltip: createLabel, onPressed: onCreate),
           ],
         ),

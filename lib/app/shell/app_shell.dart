@@ -4,7 +4,13 @@ import 'package:go_router/go_router.dart';
 import '../../core/services/ads/list_ad_banner.dart';
 import '../../core/utils/extensions/l10n_extension.dart';
 import '../../core/widgets/layout/app_nav_bar.dart';
+import '../../features/dashboard/presentation/widgets/app_menu_drawer.dart';
 import '../router/route_names.dart';
+
+/// Opens the shell side menu from nested tab screens.
+final GlobalKey<ScaffoldState> appShellScaffoldKey = GlobalKey<ScaffoldState>();
+
+void openAppMenuDrawer() => appShellScaffoldKey.currentState?.openDrawer();
 
 /// The four tabs that stay on screen: Home, Invoices, Clients, More.
 /// Nested screens (an invoice, an editor) cover the bar.
@@ -27,6 +33,8 @@ class AppShell extends StatelessWidget {
     final l10n = context.l10n;
     final show = showsTabBar(path);
     return Scaffold(
+      key: appShellScaffoldKey,
+      drawer: const AppMenuDrawer(),
       // Pages show their own snackbars. Without this messenger the shell
       // scaffold would draw them over a Save bar.
       body: Column(
