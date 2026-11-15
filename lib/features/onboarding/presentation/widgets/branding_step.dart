@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_spacing.dart';
-import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../business_profile/business_profile.dart';
-import 'step_intro.dart';
 
-/// Step 3: optional logo and signature.
+/// Step 3: optional logo and signature. Title is in the coral hero.
 class BrandingStep extends StatelessWidget {
   const BrandingStep({required this.form, super.key});
 
@@ -13,17 +11,14 @@ class BrandingStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     return ListView(
-      padding: const EdgeInsets.all(AppSpacing.pagePadding),
-      children: [
-        StepIntro(
-          title: l10n.onboardingBrandingTitle,
-          body: l10n.onboardingBrandingBody,
-        ),
-        const SizedBox(height: AppSpacing.xl),
-        ProfileImagesSection(form: form),
-      ],
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.xl,
+        AppSpacing.xxl,
+        AppSpacing.xl,
+        AppSpacing.lg,
+      ),
+      children: [ProfileImagesSection(form: form)],
     );
   }
 }

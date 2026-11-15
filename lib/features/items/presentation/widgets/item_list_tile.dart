@@ -1,106 +1,112 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_icons.dart';
+import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/display/amount_text.dart';
+import '../../../../core/widgets/display/avatar_initials.dart';
+import '../../../../core/widgets/layout/app_card.dart';
 import '../../domain/models/item.dart';
 
-/// One item row: name, description and default tax on the left; price and
-/// unit on the right.
+/// One item as a card: initials, name, muted details, and the price.
 class ItemListTile extends StatelessWidget {
   const ItemListTile({required this.item, required this.onTap, super.key});
 
   final Item item;
   final VoidCallback onTap;
 
-  static const int _detailsFlex = 3;
-  static const int _priceFlex = 2;
-
   @override
   Widget build(BuildContext context) {
-    final secondary = context.textStyles.bodySmall?.copyWith(
-      color: context.appColors.textSecondary,
-    );
-    return InkWell(
+    return AppCard(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.pagePadding,
-          vertical: AppSpacing.md,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: AppSpacing.md,
-          children: [
-            Expanded(
-              flex: _detailsFlex,
-              child: _ItemDetails(item: item, secondary: secondary),
-            ),
-            // Price hugs the end edge; a very large amount shrinks to fit.
-            Flexible(
-              flex: _priceFlex,
-              child: Align(
-                alignment: AlignmentDirectional.topEnd,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    AmountText(
-                      minor: item.unitPriceMinor,
-                      currencyCode: item.currencyCode,
-                      alignment: AlignmentDirectional.centerEnd,
-                    ),
-                    if (item.unit.isNotEmpty)
-                      Text(
-                        item.unit,
-                        style: secondary,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
+      child: Row(
+        spacing: AppSpacing.md,
+        children: [
+          AvatarInitials(name: item.name),
+          Expanded(child: _ItemDetails(item: item)),
+          _PriceBlock(item: item),
+          Icon(
+            AppIcons.chevronRight,
+            size: AppSizes.iconMd,
+            color: context.appColors.textSecondary,
+          ),
+        ],
       ),
     );
   }
 }
 
 class _ItemDetails extends StatelessWidget {
-  const _ItemDetails({required this.item, required this.secondary});
+  const _ItemDetails({required this.item});
 
   final Item item;
-  final TextStyle? secondary;
 
   @override
   Widget build(BuildContext context) {
+    final muted = context.textStyles.bodySmall?.copyWith(
+      color: context.appColors.textSecondary,
+    );
     final tax = item.defaultTaxBasisPoints;
     final format = AppFormatters(Localizations.localeOf(context).languageCode);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: AppSpacing.xs,
       children: [
         Text(
           item.name,
-          style: context.textStyles.bodyLarge,
-          maxLines: 2,
+          maxLines: 1,
           overflow: TextOverflow.ellipsis,
+          style: context.textStyles.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
         if (item.description.isNotEmpty)
           Text(
             item.description,
-            style: secondary,
+            style: muted,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        if (item.unit.isNotEmpty)
+          Text(
+            item.unit,
+            style: muted,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         if (tax != null)
           Text(
             context.l10n.itemTaxLabel(format.percent(tax)),
-            style: secondary,
+            style: muted,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
       ],
+    );
+  }
+}
+
+class _PriceBlock extends StatelessWidget {
+  const _PriceBlock({required this.item});
+
+  final Item item;
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: AppSizes.avatarLg * 2.5),
+      child: AmountText(
+        minor: item.unitPriceMinor,
+        currencyCode: item.currencyCode,
+        alignment: AlignmentDirectional.centerEnd,
+      ),
     );
   }
 }

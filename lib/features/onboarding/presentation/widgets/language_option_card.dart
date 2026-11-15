@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_icons.dart';
-import '../../../../core/constants/app_radius.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 
@@ -26,9 +25,9 @@ class LanguageOptionCard extends StatelessWidget {
       selected: selected,
       button: true,
       child: Material(
-        color: c.surface,
+        color: selected ? c.primary.withValues(alpha: 0.12) : c.surface,
         shape: RoundedRectangleBorder(
-          borderRadius: AppRadius.card,
+          borderRadius: BorderRadius.circular(AppSpacing.lg),
           side: BorderSide(
             color: selected ? c.primary : c.border,
             width: selected
@@ -37,7 +36,7 @@ class LanguageOptionCard extends StatelessWidget {
           ),
         ),
         child: InkWell(
-          borderRadius: AppRadius.card,
+          borderRadius: BorderRadius.circular(AppSpacing.lg),
           onTap: onTap,
           child: ConstrainedBox(
             constraints: const BoxConstraints(
@@ -48,9 +47,29 @@ class LanguageOptionCard extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Text(label, style: context.textStyles.titleMedium),
+                    child: Text(
+                      label,
+                      style: context.textStyles.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: selected ? c.primary : c.textPrimary,
+                      ),
+                    ),
                   ),
-                  if (selected) Icon(AppIcons.check, color: c.primary),
+                  if (selected)
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: c.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(AppSpacing.xs),
+                        child: Icon(
+                          AppIcons.check,
+                          size: AppSizes.iconSm,
+                          color: c.onPrimary,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

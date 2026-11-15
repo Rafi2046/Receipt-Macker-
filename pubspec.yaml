@@ -83,6 +83,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/onboarding/
     - assets/icons/
 
   # Bundled so the app works offline. Licenses: assets/fonts/OFL-*.txt.

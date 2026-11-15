@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../view_models/onboarding_state.dart';
 
-/// Back / Continue, or Skip / Finish on the last step.
+/// Full-width Continue inside the white sheet.
 class OnboardingNavBar extends StatelessWidget {
   const OnboardingNavBar({
     required this.state,
@@ -18,8 +19,8 @@ class OnboardingNavBar extends StatelessWidget {
 
   final OnboardingState state;
 
-  /// On the last step the secondary action reads "Skip for now" until the
-  /// user adds a logo or signature.
+  /// On the last step the forward label is "Skip for now" until a logo or
+  /// signature is added.
   final bool hasImages;
   final VoidCallback onBack;
   final VoidCallback onNext;
@@ -27,43 +28,48 @@ class OnboardingNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final colors = context.appColors;
     final busy = state.isFinishing;
+    final skipLast = state.isLast && !hasImages;
     return SafeArea(
+      top: false,
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.pagePadding),
-        child: Row(
-          spacing: AppSpacing.sm,
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.xl,
+          AppSpacing.sm,
+          AppSpacing.xl,
+          AppSpacing.lg,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (!state.isFirst)
-              AppButton(
-                label: l10n.back,
-                variant: AppButtonVariant.text,
-                onPressed: busy ? null : onBack,
-              ),
-            // The forward action takes the rest of the row and wraps its
-            // label at large font sizes instead of overflowing.
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Flexible(
-                    child: state.isLast && !hasImages
-                        ? AppButton(
-                            label: l10n.skipForNow,
-                            variant: AppButtonVariant.text,
-                            onPressed: busy ? null : onNext,
-                          )
-                        : AppButton(
-                            label: state.isLast ? l10n.finishSetup : l10n.next,
-                            icon: state.isLast
-                                ? AppIcons.check
-                                : AppIcons.forward,
-                            isLoading: busy,
-                            onPressed: onNext,
-                          ),
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: TextButton(
+                  onPressed: busy ? null : onBack,
+                  child: Text(
+                    l10n.back,
+                    style: context.textStyles.titleSmall?.copyWith(
+                      color: colors.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ],
+                ),
               ),
+            AppButton(
+              label: state.isLast
+                  ? (skipLast ? l10n.skipForNow : l10n.finishSetup)
+                  : l10n.next,
+              icon: state.isLast && !skipLast
+                  ? AppIcons.check
+                  : AppIcons.forward,
+              expand: true,
+              isLoading: busy,
+              variant: skipLast
+                  ? AppButtonVariant.secondary
+                  : AppButtonVariant.primary,
+              onPressed: onNext,
             ),
           ],
         ),

@@ -8,6 +8,7 @@ import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/extensions/validation_message_extension.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/inputs/app_text_field.dart';
+import '../../../../core/widgets/inputs/currency_picker_field.dart';
 import '../../../../core/widgets/inputs/date_field.dart';
 import '../../../../core/widgets/inputs/dropdown_field.dart';
 import '../../../../l10n/gen/app_localizations.dart';
@@ -61,13 +62,10 @@ class InvoiceHeaderSection extends StatelessWidget {
           ),
           onChanged: (d) => vm.setDueDate(CalendarDate.fromLocal(d)),
         ),
-        DropdownField<String>(
+        CurrencyPickerField(
           label: l10n.fieldCurrency,
           value: draft.currencyCode,
-          options: [
-            for (final code in {...AppCurrencies.common, draft.currencyCode})
-              (code, '$code  ${AppFormatters.currencySymbol(code)}'),
-          ],
+          codes: {...AppCurrencies.common, draft.currencyCode}.toList(),
           onChanged: vm.setCurrency,
         ),
       ],

@@ -21,8 +21,15 @@ class OnboardingViewModel extends _$OnboardingViewModel {
 
   void setCurrency(String code) => state = state.copyWith(currencyCode: code);
 
+  /// Leaves the marketing tour and starts language / business setup.
+  void finishTour() => state = state.copyWith(showingTour: false);
+
   /// Moves forward. The details step only continues once the name is valid.
   Future<void> next() async {
+    if (state.showingTour) {
+      finishTour();
+      return;
+    }
     switch (state.step) {
       case OnboardingStep.welcome:
         state = state.copyWith(step: OnboardingStep.details);
@@ -36,7 +43,7 @@ class OnboardingViewModel extends _$OnboardingViewModel {
   }
 
   void back() {
-    if (state.isFirst) return;
+    if (state.showingTour || state.isFirst) return;
     state = state.copyWith(step: OnboardingStep.values[state.step.index - 1]);
   }
 

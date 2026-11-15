@@ -30,7 +30,15 @@ void main() {
     await env.dispose();
   });
 
+  test('tour finishes before the language step', () {
+    expect(state().showingTour, isTrue);
+    vm().finishTour();
+    expect(state().showingTour, isFalse);
+    expect(state().step, OnboardingStep.welcome);
+  });
+
   test('details step needs a business name before continuing', () async {
+    vm().finishTour();
     await vm().next();
     expect(state().step, OnboardingStep.details);
 
@@ -45,6 +53,7 @@ void main() {
   });
 
   test('back walks to the previous step and stops at the first', () async {
+    vm().finishTour();
     await vm().next();
     vm()
       ..back()
@@ -55,6 +64,7 @@ void main() {
   test(
     'finish saves profile and currency, and marks onboarding done',
     () async {
+      vm().finishTour();
       container
           .read(profileFormViewModelProvider.notifier)
           .updateField(ProfileField.name, 'রহমান ট্রেডার্স');

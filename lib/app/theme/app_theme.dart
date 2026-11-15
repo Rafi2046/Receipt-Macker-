@@ -119,6 +119,14 @@ abstract final class AppTheme {
         ),
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(color: c.primary),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: c.primary,
+        foregroundColor: c.onPrimary,
+        extendedTextStyle: label,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(AppRadius.pill)),
+        ),
+      ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: c.surface,
         indicatorColor: c.primary.withValues(alpha: 0.16),

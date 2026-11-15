@@ -5,10 +5,9 @@ import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/extensions/validation_message_extension.dart';
-import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/inputs/amount_field.dart';
 import '../../../../core/widgets/inputs/app_text_field.dart';
-import '../../../../core/widgets/inputs/dropdown_field.dart';
+import '../../../../core/widgets/inputs/currency_picker_field.dart';
 import '../../../../core/widgets/inputs/percent_field.dart';
 import '../../domain/models/item_field.dart';
 import '../view_models/item_editor_state.dart';
@@ -60,13 +59,10 @@ class ItemFormFields extends StatelessWidget {
           onChanged: vm.setUnitPrice,
         ),
         const SizedBox(height: AppSpacing.md),
-        DropdownField<String>(
+        CurrencyPickerField(
           label: l10n.fieldCurrency,
           value: draft.currencyCode,
-          options: [
-            for (final code in {...AppCurrencies.common, draft.currencyCode})
-              (code, '$code  ${AppFormatters.currencySymbol(code)}'),
-          ],
+          codes: {...AppCurrencies.common, draft.currencyCode}.toList(),
           onChanged: vm.setCurrency,
         ),
         const SizedBox(height: AppSpacing.md),

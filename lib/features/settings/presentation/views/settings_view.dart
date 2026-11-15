@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/constants/app_currencies.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
@@ -18,6 +17,7 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/feedback/app_snackbar.dart';
 import '../../../../core/widgets/inputs/app_text_field.dart';
+import '../../../../core/widgets/inputs/currency_picker_field.dart';
 import '../../../../core/widgets/inputs/dropdown_field.dart';
 import '../../../../core/widgets/inputs/percent_field.dart';
 import '../../../../core/widgets/layout/app_card.dart';
@@ -177,13 +177,9 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                DropdownField<String>(
+                CurrencyPickerField(
                   label: l10n.studioDefaultCurrency,
                   value: state.defaultCurrency,
-                  options: [
-                    for (final code in AppCurrencies.common)
-                      (code, '$code  ${AppFormatters.currencySymbol(code)}'),
-                  ],
                   onChanged: vm.setDefaultCurrency,
                 ),
                 const SizedBox(height: AppSpacing.md),

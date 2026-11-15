@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_icons.dart';
-import '../../../../core/services/ads/list_ad_banner.dart';
 import '../../../../core/services/purchases/free_plan.dart';
 import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
@@ -38,8 +37,9 @@ class ItemListView extends ConsumerWidget {
               onPressed: () => _openNewItem(context, ref),
             )
           : null,
-      bottomBar: const ListAdBanner(),
       // Keep the list (and the search box) on screen while a new search runs.
+      // Banner ads stay on the shell tab lists for now: an AdWidget on this
+      // pushed route blanked the Flutter surface on Android 14.
       body: items.when(
         skipLoadingOnReload: true,
         data: (state) => _ItemList(state: state),
@@ -73,6 +73,7 @@ class _ItemList extends ConsumerWidget {
         actionLabel: l10n.itemsEmptyAction,
         onAction: () => _openNewItem(context, ref),
       ),
+      cards: true,
       itemCount: state.items.length,
       itemBuilder: (context, i) {
         final item = state.items[i];

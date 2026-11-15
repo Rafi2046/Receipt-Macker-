@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/failure_message_extension.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/feedback/app_snackbar.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
-import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../business_profile/business_profile.dart';
 import '../view_models/onboarding_state.dart';
 import '../view_models/onboarding_view_model.dart';
 import '../widgets/branding_step.dart';
 import '../widgets/details_step.dart';
+import '../widgets/intro_tour_view.dart';
 import '../widgets/onboarding_nav_bar.dart';
+import '../widgets/onboarding_setup_frame.dart';
+import '../widgets/step_intro.dart';
 import '../widgets/step_progress.dart';
 import '../widgets/welcome_step.dart';
 
-/// First-run setup. Android back goes to the previous step.
+/// First-run flow: marketing tour, then language / business setup.
+/// Android back goes to the previous setup step.
 class OnboardingView extends ConsumerWidget {
   const OnboardingView({super.key});
 
@@ -37,58 +39,72 @@ class OnboardingView extends ConsumerWidget {
     });
     final state = ref.watch(onboardingViewModelProvider);
     final vm = ref.read(onboardingViewModelProvider.notifier);
+    if (state.showingTour) {
+      return IntroTourView(onFinished: vm.finishTour);
+    }
     final formAsync = ref.watch(profileFormViewModelProvider);
     final form = formAsync.value;
+    final l10n = context.l10n;
     return PopScope(
       canPop: state.isFirst,
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) vm.back();
       },
-      child: AppScaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.pagePadding,
-                AppSpacing.lg,
-                AppSpacing.pagePadding,
-                0,
-              ),
-              child: StepProgress(
-                current: state.step.index + 1,
-                total: OnboardingStep.values.length,
-              ),
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: OnboardingSetupFrame(
+          progress: StepProgress(
+            current: state.step.index + 1,
+            total: OnboardingStep.values.length,
+          ),
+          hero: switch (state.step) {
+            OnboardingStep.welcome => const WelcomeHero(),
+            OnboardingStep.details => _CoralTitle(
+              title: l10n.onboardingDetailsTitle,
+              body: l10n.onboardingDetailsBody,
             ),
-            Expanded(
-              child: formAsync.when(
-                data: (form) => _StepContent(
+            OnboardingStep.branding => _CoralTitle(
+              title: l10n.onboardingBrandingTitle,
+              body: l10n.onboardingBrandingBody,
+            ),
+          },
+          body: formAsync.when(
+            data: (form) => _StepContent(
+              state: state,
+              form: form,
+              onCurrencyChanged: vm.setCurrency,
+            ),
+            loading: () => const LoadingView(),
+            error: (e, _) => ErrorView.fromError(
+              e,
+              onRetry: () => ref.invalidate(profileFormViewModelProvider),
+            ),
+          ),
+          bottomBar: form == null
+              ? null
+              : OnboardingNavBar(
                   state: state,
-                  form: form,
-                  onCurrencyChanged: vm.setCurrency,
+                  hasImages:
+                      form.draft.logoPath != null ||
+                      form.draft.signaturePath != null,
+                  onBack: vm.back,
+                  onNext: vm.next,
                 ),
-                loading: () => const LoadingView(),
-                error: (e, _) => ErrorView.fromError(
-                  e,
-                  onRetry: () => ref.invalidate(profileFormViewModelProvider),
-                ),
-              ),
-            ),
-          ],
         ),
-        bottomBarAboveKeyboard: true,
-        bottomBar: form == null
-            ? null
-            : OnboardingNavBar(
-                state: state,
-                hasImages:
-                    form.draft.logoPath != null ||
-                    form.draft.signaturePath != null,
-                onBack: vm.back,
-                onNext: vm.next,
-              ),
       ),
     );
+  }
+}
+
+class _CoralTitle extends StatelessWidget {
+  const _CoralTitle({required this.title, required this.body});
+
+  final String title;
+  final String body;
+
+  @override
+  Widget build(BuildContext context) {
+    return StepIntro(title: title, body: body, onCoral: true);
   }
 }
 

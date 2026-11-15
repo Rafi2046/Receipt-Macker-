@@ -75,13 +75,19 @@ class _ListAdBannerState extends ConsumerState<ListAdBanner> {
     if (ref.watch(proStatusProvider) || ad == null || !_loaded) {
       return const SizedBox.shrink();
     }
-    return ColoredBox(
+    // Align(heightFactor: 1) sizes to the ad. A plain Center expands and
+    // would swallow the Items page when this sits in bottomNavigationBar.
+    return Material(
       color: Theme.of(context).colorScheme.surface,
-      child: Center(
-        child: SizedBox(
-          width: ad.size.width.toDouble(),
-          height: ad.size.height.toDouble(),
-          child: AdWidget(ad: ad),
+      child: SafeArea(
+        top: false,
+        child: Align(
+          heightFactor: 1,
+          child: SizedBox(
+            width: ad.size.width.toDouble(),
+            height: ad.size.height.toDouble(),
+            child: AdWidget(ad: ad),
+          ),
         ),
       ),
     );
