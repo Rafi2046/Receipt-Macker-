@@ -5,10 +5,8 @@ import '../../constants/app_durations.dart';
 import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 
-/// One destination in [AppNavBar]. Unselected it is an icon in a circle;
-/// selected it grows to [width] as a pill with a filled brand circle and
-/// its label. Give every tab the same pill width ([pillWidthFor]) so the
-/// dock never changes size when the selection moves.
+/// One destination in [AppNavBar]. Unselected it is a compact icon;
+/// selected it grows to [width] as a pill with a brand circle and label.
 class NavBarTab extends StatelessWidget {
   const NavBarTab({
     required this.icon,
@@ -25,17 +23,17 @@ class NavBarTab extends StatelessWidget {
   final String label;
   final bool selected;
 
-  /// Pill width when selected; a circle ignores it.
+  /// Pill width when selected; unselected uses a compact tap slot.
   final double width;
   final VoidCallback onTap;
 
   static const _labelPadding = EdgeInsetsDirectional.only(
-    start: AppSpacing.md,
-    end: AppSpacing.xl,
+    start: AppSpacing.sm,
+    end: AppSpacing.md,
   );
 
   static TextStyle? _labelStyle(BuildContext context) =>
-      context.textStyles.labelLarge?.copyWith(
+      context.textStyles.labelMedium?.copyWith(
         color: context.appColors.textPrimary,
         fontWeight: FontWeight.w600,
       );
@@ -55,12 +53,13 @@ class NavBarTab extends StatelessWidget {
       if (painter.width > widest) widest = painter.width;
       painter.dispose();
     }
-    return AppSizes.minTapTarget + _labelPadding.horizontal + widest.ceil();
+    return AppSizes.navItemSize + _labelPadding.horizontal + widest.ceil();
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final slot = selected ? width : AppSizes.navItemSize;
     return Semantics(
       selected: selected,
       button: true,
@@ -69,22 +68,24 @@ class NavBarTab extends StatelessWidget {
       child: Tooltip(
         message: selected ? '' : label,
         child: Material(
-          color: colors.surfaceAlt,
+          color: selected
+              ? colors.surfaceAlt
+              : colors.surface.withValues(alpha: 0),
           shape: const StadiumBorder(),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: onTap,
+            customBorder: const StadiumBorder(),
             child: AnimatedContainer(
               duration: AppDurations.medium,
               curve: Curves.easeOutCubic,
-              width: selected ? width : AppSizes.minTapTarget,
-              // Lay out at the final width and clip while the pill grows,
-              // so the label never overflows mid-animation.
+              width: slot,
+              height: AppSizes.navItemSize,
               child: ClipRect(
                 child: OverflowBox(
                   alignment: AlignmentDirectional.centerStart,
-                  minWidth: selected ? width : AppSizes.minTapTarget,
-                  maxWidth: selected ? width : AppSizes.minTapTarget,
+                  minWidth: slot,
+                  maxWidth: slot,
                   child: Row(
                     children: [
                       _IconCircle(
@@ -116,15 +117,15 @@ class _IconCircle extends StatelessWidget {
     return AnimatedContainer(
       duration: AppDurations.medium,
       curve: Curves.easeOutCubic,
-      width: AppSizes.minTapTarget,
-      height: AppSizes.minTapTarget,
+      width: AppSizes.navItemSize,
+      height: AppSizes.navItemSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: selected ? colors.primary : colors.surfaceAlt,
+        color: selected ? colors.primary : colors.surface.withValues(alpha: 0),
       ),
       child: Icon(
         icon,
-        size: AppSizes.iconMd,
+        size: AppSizes.navIconSize,
         color: selected ? colors.onPrimary : colors.textSecondary,
       ),
     );

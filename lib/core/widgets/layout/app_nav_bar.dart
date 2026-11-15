@@ -8,9 +8,8 @@ import '../../constants/app_spacing.dart';
 import 'nav_bar_create_button.dart';
 import 'nav_bar_tab.dart';
 
-/// Floating pill dock that spans the page width: four tab circles, the
-/// selected one stretched into a labelled pill, and a create button at the
-/// end. Tabs are spaced evenly so left and right stay balanced.
+/// Floating pill dock: compact icons, selected labelled pill, create button.
+/// Fixed gaps keep items from stacking; leftover width stays evenly shared.
 class AppNavBar extends StatelessWidget {
   const AppNavBar({
     required this.index,
@@ -53,25 +52,23 @@ class AppNavBar extends StatelessWidget {
     );
   }
 
-  /// Every pill is as wide as the longest label (capped to the screen),
-  /// so the dock keeps one width and only the selection moves.
   Widget _buildDock(BuildContext context, BoxConstraints constraints) {
-    const slot = AppSizes.minTapTarget;
-    const rim = AppSpacing.xs * 2 + AppSizes.borderWidth * 2;
-    // Four unselected circles + create leave the rest for the selected pill.
-    final room = constraints.maxWidth - rim - slot * (_icons.length + 1);
-    final pillCap = room < AppSizes.minTapTarget ? AppSizes.minTapTarget : room;
-    final pill = NavBarTab.pillWidthFor(
-      context,
-      labels,
-    ).clamp(AppSizes.minTapTarget, pillCap);
+    const slot = AppSizes.navItemSize;
+    const gap = AppSpacing.sm;
+    const rim = AppSpacing.sm * 2 + AppSizes.borderWidth * 2;
+    // 3 unselected + create + 4 fixed gaps between 5 items.
+    final reserved = slot * _icons.length + gap * _icons.length;
+    final room = constraints.maxWidth - rim - reserved;
+    final needed = NavBarTab.pillWidthFor(context, labels);
+    final pillCap = room < slot ? slot.toDouble() : room;
+    final pill = needed.clamp(slot.toDouble(), pillCap);
     return SizedBox(
       width: double.infinity,
       child: _Dock(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            for (var i = 0; i < _icons.length; i++)
+            for (var i = 0; i < _icons.length; i++) ...[
+              if (i > 0) ...[const SizedBox(width: gap), const Spacer()],
               NavBarTab(
                 icon: _icons[i].$1,
                 selectedIcon: _icons[i].$2,
@@ -80,6 +77,9 @@ class AppNavBar extends StatelessWidget {
                 width: pill,
                 onTap: () => onSelected(i),
               ),
+            ],
+            const SizedBox(width: gap),
+            const Spacer(),
             NavBarCreateButton(tooltip: createLabel, onPressed: onCreate),
           ],
         ),
@@ -98,7 +98,12 @@ class _Dock extends StatelessWidget {
     final colors = context.appColors;
     return Container(
       height: AppSizes.navDockHeight,
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.sm,
+      ),
+      alignment: Alignment.center,
       decoration: ShapeDecoration(
         color: colors.surface.withValues(alpha: 0.94),
         shape: StadiumBorder(

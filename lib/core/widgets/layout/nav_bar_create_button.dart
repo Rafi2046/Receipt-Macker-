@@ -4,8 +4,7 @@ import '../../../app/theme/app_colors.dart';
 import '../../constants/app_icons.dart';
 import '../../constants/app_sizes.dart';
 
-/// The gold "new invoice" circle at the end of [AppNavBar]. Gold keeps it
-/// apart from the green selected tab, so it reads as an action.
+/// Compact create-invoice circle at the end of [AppNavBar].
 class NavBarCreateButton extends StatelessWidget {
   const NavBarCreateButton({
     required this.tooltip,
@@ -27,12 +26,13 @@ class NavBarCreateButton extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onPressed,
+          customBorder: const CircleBorder(),
           child: SizedBox.square(
-            dimension: AppSizes.minTapTarget,
+            dimension: AppSizes.navItemSize,
             child: Icon(
               AppIcons.addRounded,
               color: colors.onPrimary,
-              size: AppSizes.iconMd,
+              size: AppSizes.navIconSize,
             ),
           ),
         ),

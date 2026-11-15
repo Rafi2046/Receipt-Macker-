@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/services/ads/list_ad_banner.dart';
 import '../../core/utils/extensions/l10n_extension.dart';
+import '../../core/widgets/layout/app_menu_host.dart';
 import '../../core/widgets/layout/app_nav_bar.dart';
 import '../../features/dashboard/presentation/widgets/app_menu_drawer.dart';
 import '../router/route_names.dart';
@@ -32,33 +33,37 @@ class AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final show = showsTabBar(path);
-    return Scaffold(
-      key: appShellScaffoldKey,
-      drawer: const AppMenuDrawer(),
-      // Pages show their own snackbars. Without this messenger the shell
-      // scaffold would draw them over a Save bar.
-      body: Column(
-        children: [
-          Expanded(child: ScaffoldMessenger(child: shell)),
-          if (path == RouteNames.invoicesPath || path == RouteNames.clientsPath)
-            const ListAdBanner(),
-          if (show)
-            AppNavBar(
-              index: shell.currentIndex,
-              labels: [
-                l10n.navHome,
-                l10n.invoicesTitle,
-                l10n.clientsTitle,
-                l10n.navMore,
-              ],
-              createLabel: l10n.invoiceNewTitle,
-              onSelected: (index) => shell.goBranch(
-                index,
-                initialLocation: index == shell.currentIndex,
+    return AppMenuHost(
+      openMenu: openAppMenuDrawer,
+      child: Scaffold(
+        key: appShellScaffoldKey,
+        drawer: const AppMenuDrawer(),
+        // Pages show their own snackbars. Without this messenger the shell
+        // scaffold would draw them over a Save bar.
+        body: Column(
+          children: [
+            Expanded(child: ScaffoldMessenger(child: shell)),
+            if (path == RouteNames.invoicesPath ||
+                path == RouteNames.clientsPath)
+              const ListAdBanner(),
+            if (show)
+              AppNavBar(
+                index: shell.currentIndex,
+                labels: [
+                  l10n.navHome,
+                  l10n.invoicesTitle,
+                  l10n.clientsTitle,
+                  l10n.navMore,
+                ],
+                createLabel: l10n.invoiceNewTitle,
+                onSelected: (index) => shell.goBranch(
+                  index,
+                  initialLocation: index == shell.currentIndex,
+                ),
+                onCreate: () => context.pushNamed(RouteNames.invoiceNew),
               ),
-              onCreate: () => context.pushNamed(RouteNames.invoiceNew),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

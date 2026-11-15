@@ -3,25 +3,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
-import '../../../../app/shell/app_shell.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
-import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/display/avatar_initials.dart';
+import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/layout/app_menu_host.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
-import '../../../../l10n/gen/app_localizations.dart';
 import '../home_snapshot.dart';
 import '../view_models/home_view_model.dart';
 import '../widgets/home_hero_card.dart';
 import '../widgets/home_invoice_row.dart';
 import '../widgets/home_templates_carousel.dart';
 
-/// Home tab: what is owed, this month, and the newest invoices.
+/// Home tab: what is owed, templates, and recent invoices (or empty state).
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});
 
@@ -52,7 +51,7 @@ class _HomeBody extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.pagePadding,
-        AppSpacing.lg,
+        AppSpacing.sm,
         AppSpacing.pagePadding,
         AppSizes.fabClearance,
       ),
@@ -61,36 +60,21 @@ class _HomeBody extends StatelessWidget {
           children: [
             IconButton(
               tooltip: l10n.menuOpen,
-              onPressed: openAppMenuDrawer,
+              onPressed: AppMenuHost.maybeOf(context),
               icon: Icon(AppIcons.menu, color: context.appColors.textPrimary),
             ),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _greeting(l10n, snapshot.hour),
-                    style: context.textStyles.bodyMedium?.copyWith(
-                      color: context.appColors.textSecondary,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    snapshot.businessName,
-                    style: context.textStyles.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+              child: Text(
+                l10n.navHome,
+                style: context.textStyles.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-            const SizedBox(width: AppSpacing.sm),
             Tooltip(
               message: l10n.homeEditProfile,
               child: Material(
-                color: Colors.transparent,
+                color: context.appColors.surface.withValues(alpha: 0),
                 shape: const CircleBorder(),
                 clipBehavior: Clip.antiAlias,
                 child: InkWell(
@@ -117,7 +101,7 @@ class _HomeBody extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: AppSpacing.md),
         HomeHeroCard(snapshot: snapshot),
         const SizedBox(height: AppSpacing.lg),
         const HomeTemplatesCarousel(),
@@ -125,10 +109,12 @@ class _HomeBody extends StatelessWidget {
         if (snapshot.hasInvoices)
           _Recent(snapshot: snapshot)
         else
-          AppButton(
-            label: l10n.invoicesEmptyAction,
-            expand: true,
-            onPressed: () => context.pushNamed(RouteNames.invoiceNew),
+          EmptyState(
+            icon: AppIcons.invoice,
+            title: l10n.invoicesEmptyTitle,
+            message: l10n.invoicesEmptyBody,
+            actionLabel: l10n.invoicesEmptyAction,
+            onAction: () => context.pushNamed(RouteNames.invoiceNew),
           ),
       ],
     );
@@ -172,10 +158,4 @@ class _Recent extends StatelessWidget {
       ],
     );
   }
-}
-
-String _greeting(AppLocalizations l10n, int hour) {
-  if (hour < 12) return l10n.greetingMorning;
-  if (hour < 17) return l10n.greetingAfternoon;
-  return l10n.greetingEvening;
 }

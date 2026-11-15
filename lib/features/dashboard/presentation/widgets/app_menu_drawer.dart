@@ -9,10 +9,10 @@ class AppMenuDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width * 0.86;
+    final width = MediaQuery.sizeOf(context).width * 0.78;
     return Drawer(
       backgroundColor: context.appColors.background,
-      width: width.clamp(280.0, 360.0),
+      width: width.clamp(280.0, 340.0),
       child: SafeArea(
         child: AppMenuBody(onNavigate: () => Navigator.of(context).maybePop()),
       ),
