@@ -19,14 +19,27 @@ import '../../domain/models/quote_list_filter.dart';
 import '../../domain/models/quote_status.dart';
 import '../../domain/models/quote_summary.dart';
 import '../view_models/quote_list_view_model.dart';
+import '../widgets/quote_filter_sheet.dart';
 
 class QuoteListView extends ConsumerWidget {
   const QuoteListView({super.key});
+
+  Future<void> _openFilters(BuildContext context, WidgetRef ref) async {
+    final state = ref.read(quoteListViewModelProvider).value;
+    if (state == null) return;
+    final result = await QuoteFilterSheet.show(
+      context,
+      initial: state.advanced,
+    );
+    if (result == null) return;
+    ref.read(quoteListViewModelProvider.notifier).setAdvancedFilters(result);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final async = ref.watch(quoteListViewModelProvider);
+    final hasAdvanced = async.value?.hasAdvancedFilters ?? false;
     return AppScaffold(
       title: l10n.quotesTitle,
       floatingActionButton: FloatingActionButton(
@@ -51,15 +64,21 @@ class QuoteListView extends ConsumerWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
+                  _FilterIconButton(
+                    active: hasAdvanced,
+                    onTap: () => _openFilters(context, ref),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
                   for (final filter in QuoteListFilter.values) ...[
                     if (filter != QuoteListFilter.values.first)
                       const SizedBox(width: AppSpacing.xs),
-                    _FilterChip(
+                    _StatusChip(
                       label: switch (filter) {
                         QuoteListFilter.all => l10n.filterAll,
                         QuoteListFilter.pending => l10n.quoteStatusPending,
                         QuoteListFilter.approved => l10n.quoteStatusApproved,
                         QuoteListFilter.overdue => l10n.filterOverdue,
+                        QuoteListFilter.cancelled => l10n.quoteStatusCancelled,
                       },
                       selected: state.filter == filter,
                       onTap: () => ref
@@ -97,8 +116,37 @@ class QuoteListView extends ConsumerWidget {
   }
 }
 
-class _FilterChip extends StatelessWidget {
-  const _FilterChip({
+class _FilterIconButton extends StatelessWidget {
+  const _FilterIconButton({required this.active, required this.onTap});
+
+  final bool active;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Material(
+      color: active
+          ? colors.primary.withValues(alpha: 0.15)
+          : colors.surfaceAlt,
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.sm),
+          child: Icon(
+            AppIcons.filter,
+            color: active ? colors.primary : colors.textSecondary,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusChip extends StatelessWidget {
+  const _StatusChip({
     required this.label,
     required this.selected,
     required this.onTap,
@@ -148,7 +196,7 @@ class _QuoteTile extends StatelessWidget {
         : switch (summary.status) {
             QuoteStatus.pending => l10n.quoteStatusPending,
             QuoteStatus.approved => l10n.quoteStatusApproved,
-            QuoteStatus.rejected => l10n.quoteStatusRejected,
+            QuoteStatus.rejected => l10n.quoteStatusCancelled,
           };
     final statusColor = overdue
         ? colors.danger

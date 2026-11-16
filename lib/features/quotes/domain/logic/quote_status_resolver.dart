@@ -28,6 +28,7 @@ abstract final class QuoteStatusResolver {
         summary.status == QuoteStatus.pending && !overdue,
       QuoteListFilter.approved => summary.status == QuoteStatus.approved,
       QuoteListFilter.overdue => overdue,
+      QuoteListFilter.cancelled => summary.status == QuoteStatus.rejected,
     };
   }
 
@@ -43,6 +44,7 @@ abstract final class QuoteStatusResolver {
         quote.status == QuoteStatus.pending && !overdue,
       QuoteListFilter.approved => quote.status == QuoteStatus.approved,
       QuoteListFilter.overdue => overdue,
+      QuoteListFilter.cancelled => quote.status == QuoteStatus.rejected,
     };
   }
 }

@@ -15,6 +15,7 @@ abstract class QuoteSummary with _$QuoteSummary {
     required CalendarDate validUntil,
     required QuoteStatus status,
     required int totalMinor,
+    String? clientId,
     String? clientName,
     String? convertedInvoiceId,
   }) = _QuoteSummary;

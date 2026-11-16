@@ -28,6 +28,7 @@ abstract final class AppIcons {
   static const IconData share = Icons.share_outlined;
   static const IconData print = Icons.print_outlined;
   static const IconData search = Icons.search;
+  static const IconData filter = Icons.filter_list_rounded;
   static const IconData language = Icons.translate;
   static const IconData themeLight = Icons.light_mode_outlined;
   static const IconData themeDark = Icons.dark_mode_outlined;

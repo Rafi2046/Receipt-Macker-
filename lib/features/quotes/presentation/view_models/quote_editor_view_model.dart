@@ -2,12 +2,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/errors/result.dart';
+import '../../../../core/services/service_providers.dart';
 import '../../../../core/utils/calendar_date.dart';
 import '../../../../core/utils/id_generator.dart';
+import '../../../business_profile/business_profile.dart';
 import '../../../clients/domain/models/client.dart';
 import '../../../invoices/domain/logic/invoice_calculator.dart';
 import '../../../invoices/domain/logic/invoice_number_generator.dart';
 import '../../../invoices/domain/models/bill_to.dart';
+import '../../../invoices/domain/models/discount.dart';
 import '../../../invoices/domain/models/line_item.dart';
 import '../../../invoices/providers.dart';
 import '../../../items/domain/models/item.dart';
@@ -38,12 +41,21 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
         ),
         Err() => 'QUO-0001',
       };
+      final prefs = ref.read(appPreferencesProvider);
+      final profile =
+          (await ref.read(businessProfileRepositoryProvider).load()).valueOrNull;
       final blank = Quote(
         id: IdGenerator.next(),
         number: number,
-        currencyCode: 'BDT',
+        currencyCode:
+            prefs.defaultCurrency ?? AppConstants.defaultCurrencyCode,
         issueDate: today,
-        validUntil: today.addDays(15),
+        validUntil: today.addDays(prefs.defaultDueDays),
+        taxRateBasisPoints: prefs.defaultTaxRateBasisPoints,
+        taxInclusive: prefs.defaultTaxInclusive,
+        notes: profile?.defaultNotes ?? '',
+        terms: profile?.defaultTerms ?? '',
+        paymentInstructions: profile?.paymentInstructions ?? '',
         createdAt: now,
         updatedAt: now,
       );
@@ -64,7 +76,21 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
     if (form != null) state = AsyncData(update(form));
   }
 
+  void _edit(Quote Function(Quote draft) edit) =>
+      _set((f) => f.copyWith(draft: edit(f.draft)));
+
   void clearFailure() => _set((f) => f.copyWith(failure: null));
+
+  void setNumber(String value) => _edit((d) => d.copyWith(number: value));
+
+  void setIssueDate(CalendarDate date) =>
+      _edit((d) => d.copyWith(issueDate: date));
+
+  void setValidUntil(CalendarDate date) =>
+      _edit((d) => d.copyWith(validUntil: date));
+
+  void setCurrency(String code) =>
+      _edit((d) => d.copyWith(currencyCode: code));
 
   void setClient(Client client) => _set((f) {
     final draft = f.draft.copyWith(
@@ -86,6 +112,25 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
     (f) => f.copyWith(draft: f.draft.copyWith(clientId: null, billTo: null)),
   );
 
+  void setDiscount(Discount? discount) =>
+      _edit((d) => d.copyWith(discount: discount));
+
+  void setTaxRate(int? basisPoints) =>
+      _edit((d) => d.copyWith(taxRateBasisPoints: basisPoints));
+
+  void setTaxInclusive({required bool inclusive}) =>
+      _edit((d) => d.copyWith(taxInclusive: inclusive));
+
+  void setShipping(int? minor) =>
+      _edit((d) => d.copyWith(shippingMinor: minor ?? 0));
+
+  void setNotes(String value) => _edit((d) => d.copyWith(notes: value));
+
+  void setTerms(String value) => _edit((d) => d.copyWith(terms: value));
+
+  void setPaymentInstructions(String value) =>
+      _edit((d) => d.copyWith(paymentInstructions: value));
+
   void addItem(Item item) => _set((f) {
     final line = LineItem(
       id: IdGenerator.next(),
@@ -98,7 +143,29 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
     return f.copyWith(
       draft: f.draft.copyWith(
         lines: [...f.draft.lines, line],
-        currencyCode: item.currencyCode,
+        currencyCode: f.draft.lines.isEmpty
+            ? item.currencyCode
+            : f.draft.currencyCode,
+      ),
+    );
+  });
+
+  String addBlankLine() {
+    final id = IdGenerator.next();
+    _set((f) {
+      final line = LineItem(id: id, name: '');
+      return f.copyWith(draft: f.draft.copyWith(lines: [...f.draft.lines, line]));
+    });
+    return id;
+  }
+
+  void updateLine(LineItem line) => _set((f) {
+    return f.copyWith(
+      draft: f.draft.copyWith(
+        lines: [
+          for (final l in f.draft.lines)
+            if (l.id == line.id) line else l,
+        ],
       ),
     );
   });
@@ -116,6 +183,13 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
 
   void setStatus(QuoteStatus status) =>
       _set((f) => f.copyWith(draft: f.draft.copyWith(status: status)));
+
+  int subtotalMinor() {
+    final form = _form;
+    if (form == null) return 0;
+    return InvoiceCalculator.calculate(QuoteToInvoice.asInvoice(form.draft))
+        .subtotal;
+  }
 
   int totalMinor() {
     final form = _form;
@@ -148,7 +222,6 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
     }
   }
 
-  /// Saves the quote (if needed) then creates a draft invoice from it.
   Future<String?> convertToInvoice() async {
     final form = _form;
     if (form == null || form.isBusy) return null;

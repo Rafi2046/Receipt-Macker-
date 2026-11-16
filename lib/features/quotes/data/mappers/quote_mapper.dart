@@ -47,6 +47,7 @@ extension QuoteRowMapper on QuoteRow {
     validUntil: CalendarDate.fromKey(validUntil),
     status: _status(status),
     totalMinor: totalMinor,
+    clientId: clientId,
     clientName: billToName,
     convertedInvoiceId: convertedInvoiceId,
   );
