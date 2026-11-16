@@ -118,13 +118,17 @@ void main() {
   });
 
   test('template ids are stable and unknown ids fall back', () {
-    expect(PdfTemplate.values, hasLength(8));
+    expect(PdfTemplate.values, hasLength(12));
     expect(PdfTemplate.fromId('modern'), PdfTemplate.modern);
     expect(PdfTemplate.fromId('executive'), PdfTemplate.executive);
     expect(PdfTemplate.fromId('studio'), PdfTemplate.studio);
     expect(PdfTemplate.fromId('editorial'), PdfTemplate.editorial);
     expect(PdfTemplate.fromId('compact'), PdfTemplate.compact);
     expect(PdfTemplate.fromId('ledger'), PdfTemplate.ledger);
+    expect(PdfTemplate.fromId('nordic'), PdfTemplate.nordic);
+    expect(PdfTemplate.fromId('folio'), PdfTemplate.folio);
+    expect(PdfTemplate.fromId('atelier'), PdfTemplate.atelier);
+    expect(PdfTemplate.fromId('lumen'), PdfTemplate.lumen);
     expect(PdfTemplate.fromId('gone'), PdfTemplate.classic);
     expect(PdfTemplate.fromId(null), PdfTemplate.classic);
   });

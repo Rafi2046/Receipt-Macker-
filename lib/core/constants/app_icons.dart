@@ -12,6 +12,7 @@ abstract final class AppIcons {
   static const IconData clientFilled = Icons.people_rounded;
   static const IconData addRounded = Icons.add_rounded;
   static const IconData invoice = Icons.receipt_long_outlined;
+  static const IconData quote = Icons.request_quote_outlined;
   static const IconData receipt = Icons.receipt_outlined;
   static const IconData client = Icons.person_outline;
   static const IconData clientAdd = Icons.person_add_alt_1_outlined;

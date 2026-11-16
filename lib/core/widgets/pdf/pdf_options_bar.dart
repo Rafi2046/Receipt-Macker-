@@ -40,6 +40,10 @@ class PdfOptionsBar extends StatelessWidget {
       PdfTemplate.editorial => l10n.templateEditorial,
       PdfTemplate.compact => l10n.templateCompact,
       PdfTemplate.ledger => l10n.templateLedger,
+      PdfTemplate.nordic => l10n.templateNordic,
+      PdfTemplate.folio => l10n.templateFolio,
+      PdfTemplate.atelier => l10n.templateAtelier,
+      PdfTemplate.lumen => l10n.templateLumen,
     };
     if (!template.requiresPro) return name;
     return '$name · ${l10n.templateProBadge}';

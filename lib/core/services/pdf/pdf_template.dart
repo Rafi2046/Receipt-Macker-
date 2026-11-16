@@ -7,13 +7,17 @@ enum PdfTemplate {
   studio('studio'),
   editorial('editorial'),
   compact('compact'),
-  ledger('ledger');
+  ledger('ledger'),
+  nordic('nordic'),
+  folio('folio'),
+  atelier('atelier'),
+  lumen('lumen');
 
   const PdfTemplate(this.id);
 
   final String id;
 
-  /// Classic is free. All 7 other designs are Pro.
+  /// Classic is free. All other designs are Pro.
   bool get requiresPro => this != PdfTemplate.classic;
 
   static PdfTemplate fromId(String? id) =>

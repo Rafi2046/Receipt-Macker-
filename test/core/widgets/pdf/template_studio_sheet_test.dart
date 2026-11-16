@@ -7,11 +7,13 @@ import 'package:receipt_maker/core/widgets/pdf/template_studio_sheet.dart';
 import '../../../helpers/pump_app.dart';
 
 void main() {
-  testWidgets('TemplateStudioSheet renders all 8 templates and 8 swatches', (
+  testWidgets('TemplateStudioSheet renders all templates and swatches', (
     tester,
   ) async {
     PdfTemplate? selected;
     String? selectedColor;
+    final total = PdfTemplate.values.length;
+    final proCount = PdfTemplate.values.where((t) => t.requiresPro).length;
 
     await tester.pumpApp(
       TemplateStudioSheet(
@@ -29,9 +31,9 @@ void main() {
     expect(find.text('Brand Accent Color'), findsOneWidget);
 
     // Filter chips
-    expect(find.text('All (8)'), findsOneWidget);
+    expect(find.text('All ($total)'), findsOneWidget);
     expect(find.text('Free (1)'), findsOneWidget);
-    expect(find.text('Pro (7)'), findsOneWidget);
+    expect(find.text('Pro ($proCount)'), findsOneWidget);
 
     // Swatches exist
     expect(find.text('Emerald'), findsOneWidget);
@@ -76,7 +78,8 @@ void main() {
     expect(find.text('Modern'), findsNothing);
 
     // Tap Pro tab
-    await tester.tap(find.text('Pro (7)'));
+    final proCount = PdfTemplate.values.where((t) => t.requiresPro).length;
+    await tester.tap(find.text('Pro ($proCount)'));
     await tester.pumpAndSettle();
 
     expect(find.text('Classic'), findsNothing);
@@ -98,7 +101,7 @@ void main() {
         surface: const Size(500, 1500),
       );
 
-      final bannerFinder = find.text('Unlock All 8 Premium Templates');
+      final bannerFinder = find.text('Unlock All Premium Templates');
       expect(bannerFinder, findsOneWidget);
       expect(find.text('Upgrade to Pro'), findsOneWidget);
     },

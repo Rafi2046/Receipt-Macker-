@@ -131,7 +131,7 @@ void main() {
       final manifest = await repository.validateBackup(zipBytes);
 
       expect(manifest.version, 1);
-      expect(manifest.schemaVersion, 6);
+      expect(manifest.schemaVersion, 7);
       expect(manifest.clientCount, 1);
       expect(manifest.itemCount, 1);
       expect(manifest.invoiceCount, 1);

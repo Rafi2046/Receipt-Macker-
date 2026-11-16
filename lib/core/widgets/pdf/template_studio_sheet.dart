@@ -11,11 +11,14 @@ import '../../services/pdf/pdf_template.dart';
 import '../../utils/extensions/l10n_extension.dart';
 import '../buttons/app_button.dart';
 import 'mini_layout_thumbnail.dart';
+import 'template_catalog_picker.dart';
 
 enum _TemplateFilter { all, free, pro }
 
 /// Modal bottom sheet for browsing, filtering, and customizing PDF templates
 /// and brand accent colors.
+///
+/// Prefer [show], which opens the full catalog picker (layout × accent).
 class TemplateStudioSheet extends StatefulWidget {
   const TemplateStudioSheet({
     required this.selectedTemplate,
@@ -32,6 +35,7 @@ class TemplateStudioSheet extends StatefulWidget {
   final ValueChanged<PdfTemplate> onSelectTemplate;
   final ValueChanged<String> onSelectAccentHex;
 
+  /// Opens the category catalog. Applies layout + accent when the user saves.
   static Future<void> show(
     BuildContext context, {
     required PdfTemplate selectedTemplate,
@@ -39,22 +43,17 @@ class TemplateStudioSheet extends StatefulWidget {
     required bool isPro,
     required ValueChanged<PdfTemplate> onSelectTemplate,
     required ValueChanged<String> onSelectAccentHex,
-  }) => showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    backgroundColor: context.appColors.surface,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
-    builder: (ctx) => TemplateStudioSheet(
-      selectedTemplate: selectedTemplate,
+  }) async {
+    final entry = await TemplateCatalogPicker.open(
+      context,
+      selectedLayout: selectedTemplate,
       selectedAccentHex: selectedAccentHex,
       isPro: isPro,
-      onSelectTemplate: onSelectTemplate,
-      onSelectAccentHex: onSelectAccentHex,
-    ),
-  );
+    );
+    if (entry == null || !context.mounted) return;
+    onSelectTemplate(entry.layout);
+    onSelectAccentHex(entry.accentHex);
+  }
 
   @override
   State<TemplateStudioSheet> createState() => _TemplateStudioSheetState();
@@ -85,6 +84,10 @@ class _TemplateStudioSheetState extends State<TemplateStudioSheet> {
     PdfTemplate.editorial => l10n.templateEditorial,
     PdfTemplate.compact => l10n.templateCompact,
     PdfTemplate.ledger => l10n.templateLedger,
+    PdfTemplate.nordic => l10n.templateNordic,
+    PdfTemplate.folio => l10n.templateFolio,
+    PdfTemplate.atelier => l10n.templateAtelier,
+    PdfTemplate.lumen => l10n.templateLumen,
   };
 
   String _templateDesc(AppLocalizations l10n, PdfTemplate t) => switch (t) {
@@ -96,6 +99,10 @@ class _TemplateStudioSheetState extends State<TemplateStudioSheet> {
     PdfTemplate.editorial => l10n.templateEditorialDesc,
     PdfTemplate.compact => l10n.templateCompactDesc,
     PdfTemplate.ledger => l10n.templateLedgerDesc,
+    PdfTemplate.nordic => l10n.templateNordicDesc,
+    PdfTemplate.folio => l10n.templateFolioDesc,
+    PdfTemplate.atelier => l10n.templateAtelierDesc,
+    PdfTemplate.lumen => l10n.templateLumenDesc,
   };
 
   String _swatchName(AppLocalizations l10n, String id) => switch (id) {
@@ -108,6 +115,7 @@ class _TemplateStudioSheetState extends State<TemplateStudioSheet> {
     'teal' => l10n.swatchTeal,
     'indigo' => l10n.swatchIndigo,
     'charcoal' => l10n.swatchCharcoal,
+    'stone' => l10n.swatchStone,
     _ => id,
   };
 
@@ -288,31 +296,46 @@ class _TemplateStudioSheetState extends State<TemplateStudioSheet> {
                   const SizedBox(height: AppSpacing.md),
 
                   // Filter Segmented Chips
-                  Row(
-                    children: [
-                      _FilterChip(
-                        label: '${l10n.templateFilterAll} (8)',
-                        selected: _filter == _TemplateFilter.all,
-                        onTap: () =>
-                            setState(() => _filter = _TemplateFilter.all),
-                      ),
-                      const SizedBox(width: AppSpacing.xs),
-                      _FilterChip(
-                        label: '${l10n.templateFilterFree} (1)',
-                        selected: _filter == _TemplateFilter.free,
-                        onTap: () =>
-                            setState(() => _filter = _TemplateFilter.free),
-                      ),
-                      const SizedBox(width: AppSpacing.xs),
-                      _FilterChip(
-                        label: '${l10n.templateFilterPro} (7)',
-                        selected: _filter == _TemplateFilter.pro,
-                        onTap: () =>
-                            setState(() => _filter = _TemplateFilter.pro),
-                      ),
-                    ],
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        _FilterChip(
+                          label:
+                              '${l10n.templateFilterAll} (${PdfTemplate.values.length})',
+                          selected: _filter == _TemplateFilter.all,
+                          onTap: () =>
+                              setState(() => _filter = _TemplateFilter.all),
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        _FilterChip(
+                          label: '${l10n.templateFilterFree} (1)',
+                          selected: _filter == _TemplateFilter.free,
+                          onTap: () =>
+                              setState(() => _filter = _TemplateFilter.free),
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        _FilterChip(
+                          label:
+                              '${l10n.templateFilterPro} (${PdfTemplate.values.where((t) => t.requiresPro).length})',
+                          selected: _filter == _TemplateFilter.pro,
+                          onTap: () =>
+                              setState(() => _filter = _TemplateFilter.pro),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.md),
+
+                  if (!widget.isPro) ...[
+                    _ProUnlockBanner(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        context.pushNamed(RouteNames.paywall);
+                      },
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
 
                   // Template Cards Grid / List
                   for (final t in _filteredTemplates) ...[
@@ -326,16 +349,6 @@ class _TemplateStudioSheetState extends State<TemplateStudioSheet> {
                       onTap: () => _onTemplateTapped(t),
                     ),
                     const SizedBox(height: AppSpacing.sm),
-                  ],
-
-                  if (!widget.isPro) ...[
-                    const SizedBox(height: AppSpacing.md),
-                    _ProUnlockBanner(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        context.pushNamed(RouteNames.paywall);
-                      },
-                    ),
                   ],
                 ],
               ),

@@ -69,6 +69,11 @@ class AppMenuBody extends ConsumerWidget {
               onTap: () => _go(context, RouteNames.businessProfile),
             ),
             MenuLinkRow(
+              icon: AppIcons.quote,
+              label: l10n.quotesTitle,
+              onTap: () => _go(context, RouteNames.quotes),
+            ),
+            MenuLinkRow(
               icon: AppIcons.item,
               label: l10n.itemsTitle,
               onTap: () => _go(context, RouteNames.items),

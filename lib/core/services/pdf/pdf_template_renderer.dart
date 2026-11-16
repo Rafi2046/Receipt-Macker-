@@ -5,13 +5,17 @@ import 'models/pdf_document.dart';
 import 'pdf_page_size.dart';
 import 'pdf_palette.dart';
 import 'pdf_template.dart';
+import 'templates/atelier_template.dart';
 import 'templates/classic_template.dart';
 import 'templates/compact_template.dart';
 import 'templates/editorial_template.dart';
 import 'templates/executive_template.dart';
+import 'templates/folio_template.dart';
 import 'templates/ledger_template.dart';
+import 'templates/lumen_template.dart';
 import 'templates/minimal_template.dart';
 import 'templates/modern_template.dart';
+import 'templates/nordic_template.dart';
 import 'templates/studio_template.dart';
 
 /// Turns a [PdfDocument] into HTML with the chosen template and accent color.
@@ -78,6 +82,34 @@ abstract final class PdfTemplateRenderer {
         accentSoftColor: soft,
       ),
       PdfTemplate.ledger => LedgerTemplate.render(
+        doc,
+        fontsCss: fontsCss,
+        size: size,
+        accentColor: hex,
+        accentSoftColor: soft,
+      ),
+      PdfTemplate.nordic => NordicTemplate.render(
+        doc,
+        fontsCss: fontsCss,
+        size: size,
+        accentColor: hex,
+        accentSoftColor: soft,
+      ),
+      PdfTemplate.folio => FolioTemplate.render(
+        doc,
+        fontsCss: fontsCss,
+        size: size,
+        accentColor: hex,
+        accentSoftColor: soft,
+      ),
+      PdfTemplate.atelier => AtelierTemplate.render(
+        doc,
+        fontsCss: fontsCss,
+        size: size,
+        accentColor: hex,
+        accentSoftColor: soft,
+      ),
+      PdfTemplate.lumen => LumenTemplate.render(
         doc,
         fontsCss: fontsCss,
         size: size,

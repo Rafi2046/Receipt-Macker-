@@ -31,7 +31,7 @@ Future<void> bootstrap() async {
   }
   await initializeDateFormatting();
   final prefs = await SharedAppPreferences.create();
-  // Auto-unlock Pro in debug mode so all 8 premium templates are available for testing.
+  // Auto-unlock Pro in debug mode so all premium templates are available for testing.
   if (kDebugMode && !prefs.isPro) {
     await prefs.setPro(value: true);
   }

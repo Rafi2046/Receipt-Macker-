@@ -11,6 +11,7 @@ import 'daos/client_dao.dart';
 import 'daos/invoice_dao.dart';
 import 'daos/item_dao.dart';
 import 'daos/payment_dao.dart';
+import 'daos/quote_dao.dart';
 import 'tables/business_profiles_table.dart';
 import 'tables/clients_table.dart';
 import 'tables/invoice_lines_table.dart';
@@ -18,6 +19,9 @@ import 'tables/invoice_numbering_table.dart';
 import 'tables/invoices_table.dart';
 import 'tables/items_table.dart';
 import 'tables/payments_table.dart';
+import 'tables/quote_lines_table.dart';
+import 'tables/quote_numbering_table.dart';
+import 'tables/quotes_table.dart';
 import 'tables/receipt_numbering_table.dart';
 
 part 'app_database.g.dart';
@@ -36,8 +40,18 @@ part 'app_database.g.dart';
     InvoiceNumberingTable,
     PaymentsTable,
     ReceiptNumberingTable,
+    QuotesTable,
+    QuoteLinesTable,
+    QuoteNumberingTable,
   ],
-  daos: [BusinessProfileDao, ClientDao, ItemDao, InvoiceDao, PaymentDao],
+  daos: [
+    BusinessProfileDao,
+    ClientDao,
+    ItemDao,
+    InvoiceDao,
+    PaymentDao,
+    QuoteDao,
+  ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
@@ -54,7 +68,7 @@ class AppDatabase extends _$AppDatabase {
   );
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -84,6 +98,11 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(schema.clients, schema.clients.taxRegistrationName);
         await m.addColumn(schema.clients, schema.clients.taxRegistrationNumber);
         await m.addColumn(schema.clients, schema.clients.licenseNumber);
+      },
+      from6To7: (m, schema) async {
+        await m.createTable(schema.quotes);
+        await m.createTable(schema.quoteLines);
+        await m.createTable(schema.quoteNumbering);
       },
     ),
     beforeOpen: (details) async {

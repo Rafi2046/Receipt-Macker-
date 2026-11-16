@@ -77,6 +77,14 @@ class BrandSwatch {
     softHex: '#F4F4F5',
   );
 
+  /// Quiet warm grey for clean / premium catalogs.
+  static const BrandSwatch stone = BrandSwatch(
+    id: 'stone',
+    name: 'Stone',
+    hex: '#57534E',
+    softHex: '#F5F5F4',
+  );
+
   static const List<BrandSwatch> values = [
     coral,
     navy,
@@ -87,6 +95,7 @@ class BrandSwatch {
     teal,
     indigo,
     charcoal,
+    stone,
   ];
 
   static BrandSwatch fromHex(String? hex) {

@@ -419,7 +419,7 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                           ),
                         ),
                         Text(
-                          'Unlocks all 8 templates, removes watermark and ads',
+                          'Unlocks all templates, removes watermark and ads',
                           style: context.textStyles.bodySmall?.copyWith(
                             color: context.appColors.textSecondary,
                           ),

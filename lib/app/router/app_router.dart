@@ -23,6 +23,7 @@ import '../../features/settings/presentation/views/settings_view.dart';
 import '../../features/settings/presentation/views/terms_view.dart';
 import '../shell/app_shell.dart';
 import 'invoice_routes.dart';
+import 'quote_routes.dart';
 import 'route_names.dart';
 
 part 'app_router.g.dart';
@@ -112,6 +113,7 @@ GoRouter appRouter(Ref ref) {
         builder: (_, _) => const TermsView(),
       ),
       _itemRoutes,
+      quoteRoutes,
       if (kDebugMode) ..._debugRoutes,
     ],
   );

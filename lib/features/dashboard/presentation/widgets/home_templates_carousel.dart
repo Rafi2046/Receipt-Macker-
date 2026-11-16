@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/services/pdf/brand_swatch.dart';
 import '../../../../core/services/pdf/pdf_template.dart';
+import '../../../../core/services/pdf/pdf_template_catalog.dart';
 import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/services/service_providers.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
@@ -16,6 +18,8 @@ import '../../../../l10n/gen/app_localizations.dart';
 class HomeTemplatesCarousel extends ConsumerWidget {
   const HomeTemplatesCarousel({super.key});
 
+  static const int _carouselCount = 8;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
@@ -23,9 +27,9 @@ class HomeTemplatesCarousel extends ConsumerWidget {
     final isPro = ref.watch(proStatusProvider);
     final prefs = ref.watch(appPreferencesProvider);
     final accentHex = prefs.brandAccentColor ?? BrandSwatch.coral.hex;
-    final cleanHex = accentHex.replaceAll('#', '');
-    final val = int.tryParse(cleanHex, radix: 16) ?? 0xFF5738;
-    final accentColor = Color(0xFF000000 | val);
+    final carousel = PdfTemplateCatalog.byCategory(
+      PdfTemplateCatalog.entries.first.category,
+    ).take(_carouselCount).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,12 +52,11 @@ class HomeTemplatesCarousel extends ConsumerWidget {
                 children: [
                   Text(
                     l10n.homeViewAll,
-                    style: TextStyle(
+                    style: context.textStyles.labelLarge?.copyWith(
                       color: colors.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(width: 4),
                   Icon(Icons.chevron_right, size: 16, color: colors.primary),
                 ],
               ),
@@ -62,18 +65,20 @@ class HomeTemplatesCarousel extends ConsumerWidget {
         ),
         const SizedBox(height: AppSpacing.xs),
         SizedBox(
-          height: 124,
+          height: 148,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: PdfTemplate.values.length,
+            itemCount: carousel.length,
             separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.md),
             itemBuilder: (context, index) {
-              final template = PdfTemplate.values[index];
+              final entry = carousel[index];
+              final accent = _colorFromHex(entry.accentHex);
               return _CarouselCard(
-                template: template,
-                name: _templateName(l10n, template),
+                template: entry.layout,
+                name: _templateName(l10n, entry.layout),
                 isPro: isPro,
-                accentColor: accentColor,
+                accentColor: accent,
+                showPro: entry.requiresPro,
                 onTap: () => _openStudio(context, ref, isPro, accentHex),
               );
             },
@@ -83,21 +88,28 @@ class HomeTemplatesCarousel extends ConsumerWidget {
     );
   }
 
+  static Color _colorFromHex(String hex) {
+    final clean = hex.replaceAll('#', '');
+    final val = int.tryParse(clean, radix: 16) ?? 0xFF5738;
+    return Color(0xFF000000 | val);
+  }
+
   void _openStudio(
     BuildContext context,
     WidgetRef ref,
     bool isPro,
     String? accentHex,
   ) {
+    final prefs = ref.read(appPreferencesProvider);
     TemplateStudioSheet.show(
       context,
-      selectedTemplate: PdfTemplate.classic,
+      selectedTemplate: PdfTemplate.fromId(prefs.pdfTemplate),
       isPro: isPro,
       selectedAccentHex: accentHex,
-      onSelectTemplate: (_) {},
-      onSelectAccentHex: (hex) {
-        ref.read(appPreferencesProvider).setBrandAccentColor(hex);
+      onSelectTemplate: (template) {
+        prefs.setPdfTemplate(template.id);
       },
+      onSelectAccentHex: prefs.setBrandAccentColor,
     );
   }
 
@@ -110,6 +122,10 @@ class HomeTemplatesCarousel extends ConsumerWidget {
     PdfTemplate.editorial => l10n.templateEditorial,
     PdfTemplate.compact => l10n.templateCompact,
     PdfTemplate.ledger => l10n.templateLedger,
+    PdfTemplate.nordic => l10n.templateNordic,
+    PdfTemplate.folio => l10n.templateFolio,
+    PdfTemplate.atelier => l10n.templateAtelier,
+    PdfTemplate.lumen => l10n.templateLumen,
   };
 }
 
@@ -119,6 +135,7 @@ class _CarouselCard extends StatelessWidget {
     required this.name,
     required this.isPro,
     required this.accentColor,
+    required this.showPro,
     required this.onTap,
   });
 
@@ -126,30 +143,24 @@ class _CarouselCard extends StatelessWidget {
   final String name;
   final bool isPro;
   final Color accentColor;
+  final bool showPro;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final isLocked = template.requiresPro && !isPro;
+    final isLocked = showPro && !isPro;
 
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
-        width: 104,
+        width: 120,
         padding: const EdgeInsets.all(AppSpacing.sm),
         decoration: BoxDecoration(
           color: colors.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: colors.border),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
         ),
         child: Stack(
           children: [
@@ -160,8 +171,8 @@ class _CarouselCard extends StatelessWidget {
                     child: MiniLayoutThumbnail(
                       template: template,
                       accentColor: accentColor,
-                      width: 44,
-                      height: 58,
+                      width: 72,
+                      height: 102,
                     ),
                   ),
                 ),
@@ -173,51 +184,18 @@ class _CarouselCard extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: context.textStyles.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
-                    fontSize: 11,
                   ),
                 ),
               ],
             ),
-            if (template.requiresPro)
+            if (showPro)
               Positioned(
                 top: 0,
                 right: 0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 4,
-                    vertical: 1.5,
-                  ),
-                  decoration: ShapeDecoration(
-                    color: const Color(0xFFFEF3C7),
-                    shape: const StadiumBorder(),
-                    shadows: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.06),
-                        blurRadius: 2,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        isLocked ? Icons.lock : Icons.auto_awesome,
-                        size: 9,
-                        color: const Color(0xFFD97706),
-                      ),
-                      const SizedBox(width: 2),
-                      const Text(
-                        'PRO',
-                        style: TextStyle(
-                          fontSize: 8,
-                          fontWeight: FontWeight.w800,
-                          color: Color(0xFFB45309),
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ],
-                  ),
+                child: Icon(
+                  isLocked ? AppIcons.lock : AppIcons.proBadge,
+                  size: 14,
+                  color: colors.secondary,
                 ),
               ),
           ],

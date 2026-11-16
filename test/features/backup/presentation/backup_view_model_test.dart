@@ -17,7 +17,7 @@ void main() {
 
   final sampleManifest = BackupManifest(
     version: 1,
-    schemaVersion: 6,
+    schemaVersion: 7,
     createdAt: DateTime.utc(2026, 11, 14, 20),
     invoiceCount: 10,
     clientCount: 4,

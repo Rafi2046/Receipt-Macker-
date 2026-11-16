@@ -59,6 +59,15 @@ abstract final class RouteNames {
   /// Query parameter of [invoiceNew]: the invoice to copy.
   static const String copyOfParam = 'copyOf';
 
+  static const String quotes = 'quotes';
+  static const String quotesPath = '/quotes';
+  static const String quoteNew = 'quoteNew';
+  static const String quoteNewPath = _newPath;
+  static const String quoteEdit = 'quoteEdit';
+  static const String quoteEditPath = _editPath;
+  static const String quotePdf = 'quotePdf';
+  static const String quotePdfPath = 'pdf';
+
   // Debug builds only.
   static const String themePreview = 'themePreview';
   static const String themePreviewPath = '/debug/theme';

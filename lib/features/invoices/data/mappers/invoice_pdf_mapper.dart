@@ -28,13 +28,14 @@ class InvoicePdfMapper {
     required BusinessProfile seller,
     String? logoDataUri,
     String? signatureDataUri,
+    String? documentTitle,
   }) {
     final currency = invoice.currencyCode;
     String money(int minor) => format.currency(minor, currency);
     final bill = invoice.billTo;
     return PdfDocument(
       languageCode: format.languageCode,
-      title: l10n.pdfInvoiceTitle,
+      title: documentTitle ?? l10n.pdfInvoiceTitle,
       number: format.localizeDigits(invoice.number),
       seller: PdfParty(
         name: seller.name,
