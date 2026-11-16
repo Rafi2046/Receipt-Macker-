@@ -53,6 +53,7 @@ class AppMenuBody extends ConsumerWidget {
       children: [
         AppMenuHeader(
           name: name,
+          logoPath: profile?.logoPath,
           onEdit: () => _go(context, RouteNames.businessProfile),
         ),
         const SizedBox(height: AppSpacing.lg),

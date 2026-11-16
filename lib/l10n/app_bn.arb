@@ -122,6 +122,7 @@
   "validationEmail": "সঠিক ইমেইল লিখুন, যেমন name@example.com",
   "validationPhone": "সঠিক ফোন নম্বর লিখুন",
   "validationUrl": "সঠিক ওয়েবসাইট লিখুন, যেমন example.com",
+  "fieldOptional": "ঐচ্ছিক",
   "logoTitle": "লোগো",
   "logoHint": "PNG বা JPG, ইনভয়েসে দেখাবে",
   "addLogo": "লোগো যোগ করুন",

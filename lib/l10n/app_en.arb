@@ -144,6 +144,7 @@
   "validationEmail": "Enter a valid email, like name@example.com",
   "validationPhone": "Enter a valid phone number",
   "validationUrl": "Enter a valid website, like example.com",
+  "fieldOptional": "Optional",
   "logoTitle": "Logo",
   "logoHint": "PNG or JPG, shown on invoices",
   "addLogo": "Add logo",

@@ -14,16 +14,26 @@ import '../view_models/profile_form_state.dart';
 import '../view_models/profile_form_view_model.dart';
 
 /// Text fields of the business profile. Onboarding shows the basics;
-/// the profile screen passes [extended] for tax id and invoice defaults.
+/// the profile screen passes [fields] or [extended] for the full form.
 class ProfileDetailsFields extends ConsumerWidget {
   const ProfileDetailsFields({
     required this.form,
     this.extended = false,
+    this.fields,
+    this.showIcons = true,
+    this.optionalHint = false,
     super.key,
   });
 
   final ProfileFormState form;
   final bool extended;
+
+  /// When set, only these fields are built (card groups on the profile screen).
+  final List<ProfileField>? fields;
+  final bool showIcons;
+
+  /// Use the shared "Optional" hint for empty optional fields.
+  final bool optionalHint;
 
   static const List<ProfileField> _basic = [
     ProfileField.name,
@@ -44,8 +54,21 @@ class ProfileDetailsFields extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.read(profileFormViewModelProvider.notifier);
-    Widget field(ProfileField f) =>
-        _ProfileTextField(form: form, field: f, onChanged: vm.updateField);
+    Widget field(ProfileField f) => _ProfileTextField(
+      form: form,
+      field: f,
+      showIcon: showIcons,
+      optionalHint: optionalHint,
+      onChanged: vm.updateField,
+    );
+    final custom = fields;
+    if (custom != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: AppSpacing.md,
+        children: custom.map(field).toList(),
+      );
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: AppSpacing.md,
@@ -67,11 +90,15 @@ class _ProfileTextField extends StatelessWidget {
     required this.form,
     required this.field,
     required this.onChanged,
+    required this.showIcon,
+    required this.optionalHint,
   });
 
   final ProfileFormState form;
   final ProfileField field;
   final void Function(ProfileField field, String value) onChanged;
+  final bool showIcon;
+  final bool optionalHint;
 
   static const int _multiLines = 3;
 
@@ -83,6 +110,8 @@ class _ProfileTextField extends StatelessWidget {
     _ => false,
   };
 
+  bool get _required => field == ProfileField.name;
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -93,7 +122,7 @@ class _ProfileTextField extends StatelessWidget {
       hint: hint,
       initialValue: form.draft.valueOf(field),
       errorText: l10n.validationMessage(form.errorFor(field)),
-      prefixIcon: _icon,
+      prefixIcon: showIcon ? _icon : null,
       maxLines: _multiline ? _multiLines : 1,
       keyboardType: _keyboard,
       textCapitalization: _capitalization,
@@ -104,20 +133,23 @@ class _ProfileTextField extends StatelessWidget {
     );
   }
 
-  (String, String?) _labels(AppLocalizations l10n) => switch (field) {
-    ProfileField.name => (l10n.fieldBusinessName, l10n.fieldBusinessNameHint),
-    ProfileField.phone => (l10n.fieldPhone, null),
-    ProfileField.email => (l10n.fieldEmail, null),
-    ProfileField.website => (l10n.fieldWebsite, null),
-    ProfileField.address => (l10n.fieldAddress, null),
-    ProfileField.taxId => (l10n.fieldTaxId, null),
-    ProfileField.paymentInstructions => (
-      l10n.fieldPaymentInstructions,
-      l10n.fieldPaymentInstructionsHint,
-    ),
-    ProfileField.defaultNotes => (l10n.fieldDefaultNotes, null),
-    ProfileField.defaultTerms => (l10n.fieldDefaultTerms, null),
-  };
+  (String, String?) _labels(AppLocalizations l10n) {
+    final optional = optionalHint && !_required ? l10n.fieldOptional : null;
+    return switch (field) {
+      ProfileField.name => (l10n.fieldBusinessName, l10n.fieldBusinessNameHint),
+      ProfileField.phone => (l10n.fieldPhone, optional),
+      ProfileField.email => (l10n.fieldEmail, optional),
+      ProfileField.website => (l10n.fieldWebsite, optional),
+      ProfileField.address => (l10n.fieldAddress, optional),
+      ProfileField.taxId => (l10n.fieldTaxId, optional),
+      ProfileField.paymentInstructions => (
+        l10n.fieldPaymentInstructions,
+        optional ?? l10n.fieldPaymentInstructionsHint,
+      ),
+      ProfileField.defaultNotes => (l10n.fieldDefaultNotes, optional),
+      ProfileField.defaultTerms => (l10n.fieldDefaultTerms, optional),
+    };
+  }
 
   IconData? get _icon => switch (field) {
     ProfileField.name => AppIcons.business,

@@ -13,6 +13,9 @@ abstract final class AppSizes {
   static const double minTapTarget = 48;
   static const double avatarSm = 32, avatarMd = 40, avatarLg = 56;
   static const double logoMd = 64;
+
+  /// Small dashed logo picker on the business profile screen.
+  static const double logoPicker = 64;
   static const double pageShadowBlur = 6;
   static const double progressSm = 20;
   static const double progressStroke = 2.5;
