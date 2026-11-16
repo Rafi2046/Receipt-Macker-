@@ -32,7 +32,7 @@ void main() {
 
   final sampleManifest = BackupManifest(
     version: 1,
-    schemaVersion: 5,
+    schemaVersion: 6,
     createdAt: DateTime.utc(2026, 11, 14, 20),
     invoiceCount: 12,
     clientCount: 4,
@@ -54,11 +54,11 @@ void main() {
 
     final result = service.readAndValidateZip(
       zipBytes,
-      currentSchemaVersion: 5,
+      currentSchemaVersion: 6,
     );
 
     expect(result.manifest.version, 1);
-    expect(result.manifest.schemaVersion, 5);
+    expect(result.manifest.schemaVersion, 6);
     expect(result.manifest.invoiceCount, 12);
     expect(result.manifest.clientCount, 4);
     expect(result.manifest.itemCount, 8);
@@ -71,7 +71,7 @@ void main() {
   test('throws BackupValidationException on non-zip bytes', () {
     final garbage = Uint8List.fromList([99, 98, 97]);
     expect(
-      () => service.readAndValidateZip(garbage, currentSchemaVersion: 5),
+      () => service.readAndValidateZip(garbage, currentSchemaVersion: 6),
       throwsA(isA<BackupValidationException>()),
     );
   });
@@ -84,7 +84,7 @@ void main() {
     final zip = Uint8List.fromList(ZipEncoder().encode(archive));
 
     expect(
-      () => service.readAndValidateZip(zip, currentSchemaVersion: 5),
+      () => service.readAndValidateZip(zip, currentSchemaVersion: 6),
       throwsA(
         isA<BackupValidationException>().having(
           (e) => e.message,
@@ -104,7 +104,7 @@ void main() {
     final zip = Uint8List.fromList(ZipEncoder().encode(archive));
 
     expect(
-      () => service.readAndValidateZip(zip, currentSchemaVersion: 5),
+      () => service.readAndValidateZip(zip, currentSchemaVersion: 6),
       throwsA(
         isA<BackupValidationException>().having(
           (e) => e.message,
@@ -124,7 +124,7 @@ void main() {
     );
 
     expect(
-      () => service.readAndValidateZip(zip, currentSchemaVersion: 5),
+      () => service.readAndValidateZip(zip, currentSchemaVersion: 6),
       throwsA(
         isA<BackupValidationException>().having(
           (e) => e.message,
@@ -144,7 +144,7 @@ void main() {
     );
 
     expect(
-      () => service.readAndValidateZip(zip, currentSchemaVersion: 5),
+      () => service.readAndValidateZip(zip, currentSchemaVersion: 6),
       throwsA(
         isA<BackupValidationException>().having(
           (e) => e.message,
@@ -164,7 +164,7 @@ void main() {
     final zip = Uint8List.fromList(ZipEncoder().encode(archive));
 
     expect(
-      () => service.readAndValidateZip(zip, currentSchemaVersion: 5),
+      () => service.readAndValidateZip(zip, currentSchemaVersion: 6),
       throwsA(
         isA<BackupValidationException>().having(
           (e) => e.message,
@@ -185,7 +185,7 @@ void main() {
     final zip = Uint8List.fromList(ZipEncoder().encode(archive));
 
     expect(
-      () => service.readAndValidateZip(zip, currentSchemaVersion: 5),
+      () => service.readAndValidateZip(zip, currentSchemaVersion: 6),
       throwsA(
         isA<BackupValidationException>().having(
           (e) => e.message,
@@ -205,7 +205,7 @@ void main() {
     );
 
     expect(
-      () => service.readAndValidateZip(zip, currentSchemaVersion: 5),
+      () => service.readAndValidateZip(zip, currentSchemaVersion: 6),
       throwsA(
         isA<BackupValidationException>().having(
           (e) => e.message,

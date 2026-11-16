@@ -54,7 +54,7 @@ class AppDatabase extends _$AppDatabase {
   );
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -76,6 +76,14 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(schema.invoices, schema.invoices.paidMinor);
         await m.createTable(schema.payments);
         await m.createTable(schema.receiptNumbering);
+      },
+      from5To6: (m, schema) async {
+        await m.addColumn(schema.clients, schema.clients.addressLine2);
+        await m.addColumn(schema.clients, schema.clients.shippingAddress);
+        await m.addColumn(schema.clients, schema.clients.shippingAddressLine2);
+        await m.addColumn(schema.clients, schema.clients.taxRegistrationName);
+        await m.addColumn(schema.clients, schema.clients.taxRegistrationNumber);
+        await m.addColumn(schema.clients, schema.clients.licenseNumber);
       },
     ),
     beforeOpen: (details) async {

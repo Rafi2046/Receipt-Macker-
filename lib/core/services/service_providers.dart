@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'contact_picker_service.dart';
 import 'file_save_service.dart';
 import 'image_picker_service.dart';
 import 'image_storage_service.dart';
@@ -26,6 +27,9 @@ ImageStorageService imageStorageService(Ref ref) =>
 
 @Riverpod(keepAlive: true)
 ImagePickerService imagePickerService(Ref ref) => ImagePickerService();
+
+@Riverpod(keepAlive: true)
+ContactPickerService contactPickerService(Ref ref) => ContactPickerService();
 
 @Riverpod(keepAlive: true)
 HtmlPdfConverter htmlPdfConverter(Ref ref) => HtmlPdfConverter();

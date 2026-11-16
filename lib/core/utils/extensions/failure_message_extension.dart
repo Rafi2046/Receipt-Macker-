@@ -9,6 +9,7 @@ extension FailureMessageX on AppLocalizations {
     NotFoundFailure() => errorNotFound,
     PdfFailure() => errorPdf,
     ValidationFailure() => errorValidation,
+    ContactImportFailure() => clientImportFailed,
     ProRequiredFailure() => proRequired,
     _ => errorGeneric,
   };

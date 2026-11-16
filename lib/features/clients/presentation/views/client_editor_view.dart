@@ -93,6 +93,9 @@ class ClientEditorView extends ConsumerWidget {
         data: (form) => ClientFormFields(
           form: form,
           onChanged: ref.read(provider.notifier).updateField,
+          onImportFromContacts: () =>
+              ref.read(provider.notifier).importFromContacts(),
+          onToggleMoreFields: ref.read(provider.notifier).toggleMoreFields,
         ),
         loading: () => const LoadingView(),
         error: (e, _) =>

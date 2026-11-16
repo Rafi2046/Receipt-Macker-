@@ -97,6 +97,27 @@ void main() {
       expect(await vm(null).delete(), isFalse);
       verifyNever(() => repo.delete(any()));
     });
+
+    test('toggleMoreFields expands and collapses secondary fields', () {
+      expect(form(null).showMoreFields, isFalse);
+      vm(null).toggleMoreFields();
+      expect(form(null).showMoreFields, isTrue);
+      vm(null).toggleMoreFields();
+      expect(form(null).showMoreFields, isFalse);
+    });
+
+    test('applyImportedContact fills name and phone and bumps revision', () {
+      vm(null).applyImportedContact((
+        name: 'Porag',
+        phone: '+8801810038855',
+        email: 'porag@example.com',
+      ));
+      expect(form(null).draft.name, 'Porag');
+      expect(form(null).draft.phone, '+8801810038855');
+      expect(form(null).draft.email, 'porag@example.com');
+      expect(form(null).formRevision, 1);
+      expect(form(null).hasUnsavedChanges, isTrue);
+    });
   });
 
   group('existing client', () {
@@ -125,6 +146,14 @@ void main() {
       expect(form('c1').hasUnsavedChanges, isTrue);
       vm('c1').updateField(ClientField.name, 'Rahman Traders');
       expect(form('c1').hasUnsavedChanges, isFalse);
+    });
+
+    test('opens with more fields when secondary details already set', () async {
+      when(() => repo.find('c1')).thenAnswer(
+        (_) async => Ok(testClient().copyWith(notes: 'VIP')),
+      );
+      await open('c1');
+      expect(form('c1').showMoreFields, isTrue);
     });
   });
 }

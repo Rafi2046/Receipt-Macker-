@@ -23,6 +23,7 @@ class AppTextField extends StatefulWidget {
     this.suffixText,
     this.suffixIcon,
     this.maxLines = 1,
+    this.maxLength,
     this.enabled = true,
     this.autofillHints,
     super.key,
@@ -45,6 +46,9 @@ class AppTextField extends StatefulWidget {
   /// Trailing widget, e.g. a clear button.
   final Widget? suffixIcon;
   final int maxLines;
+
+  /// When set, shows a character counter (e.g. `0/1000`).
+  final int? maxLength;
   final bool enabled;
   final Iterable<String>? autofillHints;
 
@@ -78,10 +82,11 @@ class _AppTextFieldState extends State<AppTextField> {
         textCapitalization: widget.textCapitalization,
         inputFormatters: widget.inputFormatters,
         maxLines: widget.maxLines,
+        maxLength: widget.maxLength,
         enabled: widget.enabled,
         autofillHints: widget.autofillHints,
         decoration: InputDecoration(
-          labelText: widget.label,
+          labelText: widget.label.isEmpty ? null : widget.label,
           // Multi-line fields keep the label at the top, not centered.
           alignLabelWithHint: widget.maxLines > 1,
           hintText: widget.hint,

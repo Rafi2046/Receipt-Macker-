@@ -24,6 +24,12 @@ abstract class ClientEditorState with _$ClientEditorState {
     @Default(false) bool isSaving,
     @Default(false) bool isDeleting,
 
+    /// Address + notes stay collapsed until the user expands them.
+    @Default(false) bool showMoreFields,
+
+    /// Bumped when fields are filled from contacts so inputs remount.
+    @Default(0) int formRevision,
+
     /// Last failure, shown once as a snackbar, then cleared.
     Failure? failure,
   }) = _ClientEditorState;

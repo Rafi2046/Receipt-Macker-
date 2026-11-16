@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,18 +11,20 @@ import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/display/avatar_initials.dart';
-import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
 import '../../../../core/widgets/layout/app_menu_host.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
+import '../../../business_profile/providers.dart';
 import '../home_snapshot.dart';
 import '../view_models/home_view_model.dart';
+import '../widgets/home_empty_card.dart';
 import '../widgets/home_hero_card.dart';
 import '../widgets/home_invoice_row.dart';
+import '../widgets/home_overview_row.dart';
 import '../widgets/home_templates_carousel.dart';
 
-/// Home tab: what is owed, templates, and recent invoices (or empty state).
+/// Home tab: outstanding hero, overview stats, recent or empty, templates.
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});
 
@@ -40,14 +44,15 @@ class HomeView extends ConsumerWidget {
   }
 }
 
-class _HomeBody extends StatelessWidget {
+class _HomeBody extends ConsumerWidget {
   const _HomeBody({required this.snapshot});
 
   final HomeSnapshot snapshot;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final profile = ref.watch(currentBusinessProfileProvider).asData?.value;
     return ListView(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.pagePadding,
@@ -91,9 +96,9 @@ class _HomeBody extends StatelessWidget {
                         width: 1.5,
                       ),
                     ),
-                    child: AvatarInitials(
+                    child: _HomeAvatar(
                       name: snapshot.businessName,
-                      size: 42,
+                      logoPath: profile?.logoPath,
                     ),
                   ),
                 ),
@@ -104,19 +109,43 @@ class _HomeBody extends StatelessWidget {
         const SizedBox(height: AppSpacing.md),
         HomeHeroCard(snapshot: snapshot),
         const SizedBox(height: AppSpacing.lg),
-        const HomeTemplatesCarousel(),
+        HomeOverviewRow(snapshot: snapshot),
         const SizedBox(height: AppSpacing.lg),
         if (snapshot.hasInvoices)
           _Recent(snapshot: snapshot)
         else
-          EmptyState(
-            icon: AppIcons.invoice,
-            title: l10n.invoicesEmptyTitle,
-            message: l10n.invoicesEmptyBody,
-            actionLabel: l10n.invoicesEmptyAction,
-            onAction: () => context.pushNamed(RouteNames.invoiceNew),
-          ),
+          const HomeEmptyCard(),
+        const SizedBox(height: AppSpacing.lg),
+        const HomeTemplatesCarousel(),
       ],
+    );
+  }
+}
+
+class _HomeAvatar extends ConsumerWidget {
+  const _HomeAvatar({required this.name, this.logoPath});
+
+  final String name;
+  final String? logoPath;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final relative = logoPath;
+    if (relative == null || relative.isEmpty) {
+      return AvatarInitials(name: name, size: 42);
+    }
+    final absolute = ref.watch(profileImagePathProvider(relative)).value;
+    if (absolute == null) {
+      return AvatarInitials(name: name, size: 42);
+    }
+    return ClipOval(
+      child: Image.file(
+        File(absolute),
+        width: 42,
+        height: 42,
+        fit: BoxFit.cover,
+        errorBuilder: (_, _, _) => AvatarInitials(name: name, size: 42),
+      ),
     );
   }
 }
@@ -136,7 +165,9 @@ class _Recent extends StatelessWidget {
             Expanded(
               child: Text(
                 l10n.homeRecent,
-                style: context.textStyles.titleMedium,
+                style: context.textStyles.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             TextButton(

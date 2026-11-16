@@ -13,9 +13,17 @@ abstract class Client with _$Client {
     required DateTime updatedAt,
     @Default('') String phone,
     @Default('') String email,
-    @Default('') String address,
 
-    /// Private notes, never printed.
+    /// Billing address line 1 (used on invoices).
+    @Default('') String address,
+    @Default('') String addressLine2,
+    @Default('') String shippingAddress,
+    @Default('') String shippingAddressLine2,
+    @Default('') String taxRegistrationName,
+    @Default('') String taxRegistrationNumber,
+    @Default('') String licenseNumber,
+
+    /// Private notes / client detail, never printed.
     @Default('') String notes,
   }) = _Client;
 }

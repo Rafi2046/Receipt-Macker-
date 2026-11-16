@@ -145,7 +145,10 @@ class InvoiceEditorViewModel extends _$InvoiceEditorViewModel {
         name: client.name,
         phone: client.phone,
         email: client.email,
-        address: client.address,
+        address: [
+          client.address,
+          client.addressLine2,
+        ].where((l) => l.trim().isNotEmpty).join('\n'),
       ),
     ),
   );

@@ -14,7 +14,10 @@ abstract final class AppIcons {
   static const IconData invoice = Icons.receipt_long_outlined;
   static const IconData receipt = Icons.receipt_outlined;
   static const IconData client = Icons.person_outline;
+  static const IconData clientAdd = Icons.person_add_alt_1_outlined;
   static const IconData clients = Icons.people_outline_rounded;
+  static const IconData expandMore = Icons.keyboard_double_arrow_down_rounded;
+  static const IconData expandLess = Icons.keyboard_double_arrow_up_rounded;
   static const IconData item = Icons.inventory_2_outlined;
   static const IconData payment = Icons.payments_outlined;
   static const IconData settings = Icons.settings_outlined;

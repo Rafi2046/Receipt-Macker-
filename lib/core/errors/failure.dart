@@ -33,6 +33,11 @@ final class UnexpectedFailure extends Failure {
   const UnexpectedFailure({super.cause, super.stackTrace});
 }
 
+/// System contacts picker failed or is unavailable (not SIM-related).
+final class ContactImportFailure extends Failure {
+  const ContactImportFailure({super.cause, super.stackTrace});
+}
+
 /// A free limit was hit. The view opens the paywall.
 final class ProRequiredFailure extends Failure {
   const ProRequiredFailure();

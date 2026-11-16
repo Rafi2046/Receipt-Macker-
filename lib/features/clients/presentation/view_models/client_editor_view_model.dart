@@ -1,9 +1,12 @@
+import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../../../core/errors/result.dart';
+import '../../../../core/services/contact_picker_service.dart';
 import '../../../../core/services/purchases/free_plan.dart';
 import '../../../../core/services/purchases/purchase_providers.dart';
+import '../../../../core/services/service_providers.dart';
 import '../../../../core/utils/id_generator.dart';
 import '../../domain/logic/client_field_access.dart';
 import '../../domain/logic/client_validator.dart';
@@ -44,6 +47,7 @@ class ClientEditorViewModel extends _$ClientEditorViewModel {
         draft: c,
         initial: c,
         isNew: isNew,
+        showMoreFields: c.hasSecondaryDetails,
         errors: ClientValidator.validate(c),
       );
 
@@ -56,6 +60,50 @@ class ClientEditorViewModel extends _$ClientEditorViewModel {
     final draft = f.draft.withField(field, value);
     return f.copyWith(draft: draft, errors: ClientValidator.validate(draft));
   });
+
+  void toggleMoreFields() =>
+      _set((f) => f.copyWith(showMoreFields: !f.showMoreFields));
+
+  /// Fills name / phone / email from a picked contact (non-empty only).
+  void applyImportedContact(PickedContact contact) => _set((f) {
+    var draft = f.draft;
+    if (contact.name.isNotEmpty) draft = draft.copyWith(name: contact.name);
+    if (contact.phone.isNotEmpty) draft = draft.copyWith(phone: contact.phone);
+    if (contact.email.isNotEmpty) draft = draft.copyWith(email: contact.email);
+    return f.copyWith(
+      draft: draft,
+      errors: ClientValidator.validate(draft),
+      formRevision: f.formRevision + 1,
+    );
+  });
+
+  /// Opens the system picker and applies the result. No-op on cancel.
+  Future<bool> importFromContacts() async {
+    final form = _form;
+    if (form == null || form.isBusy) return false;
+    try {
+      final contact = await ref
+          .read(contactPickerServiceProvider)
+          .pickContact();
+      if (contact == null) return false;
+      applyImportedContact(contact);
+      return true;
+    } on MissingPluginException catch (e, st) {
+      _set(
+        (f) => f.copyWith(
+          failure: ContactImportFailure(cause: e, stackTrace: st),
+        ),
+      );
+      return false;
+    } on PlatformException catch (e, st) {
+      _set(
+        (f) => f.copyWith(
+          failure: ContactImportFailure(cause: e, stackTrace: st),
+        ),
+      );
+      return false;
+    }
+  }
 
   void clearFailure() => _set((f) => f.copyWith(failure: null));
 
