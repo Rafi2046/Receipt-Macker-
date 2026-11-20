@@ -5,6 +5,7 @@ abstract final class InvoicePreviewSample {
   static const String sellerDetail = 'Dhaka';
   static const String buyer = 'Amy Clark';
   static const String buyerDetail = 'Sunrise LLC';
+  static const String buyerText = '$buyer\n$buyerDetail';
   static const String number = 'INV-0005';
   static const String issueDate = '16/11/26';
   static const String dueDate = '30/11/26';

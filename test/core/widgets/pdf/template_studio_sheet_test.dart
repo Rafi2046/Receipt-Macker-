@@ -32,7 +32,10 @@ void main() {
 
     // Filter chips
     expect(find.text('All ($total)'), findsOneWidget);
-    expect(find.text('Free (1)'), findsOneWidget);
+    expect(
+      find.text('Free (${PdfTemplate.freeLayouts.length})'),
+      findsOneWidget,
+    );
     expect(find.text('Pro ($proCount)'), findsOneWidget);
 
     // Swatches exist
@@ -70,11 +73,12 @@ void main() {
     expect(find.text('Minimal'), findsOneWidget);
 
     // Tap Free tab
-    await tester.tap(find.text('Free (1)'));
+    final freeCount = PdfTemplate.freeLayouts.length;
+    await tester.tap(find.text('Free ($freeCount)'));
     await tester.pumpAndSettle();
 
     expect(find.text('Classic'), findsOneWidget);
-    expect(find.text('Minimal'), findsNothing);
+    expect(find.text('Minimal'), findsOneWidget);
     expect(find.text('Modern'), findsNothing);
 
     // Tap Pro tab
@@ -83,7 +87,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Classic'), findsNothing);
-    expect(find.text('Minimal'), findsOneWidget);
+    expect(find.text('Minimal'), findsNothing);
     expect(find.text('Modern'), findsOneWidget);
   });
 

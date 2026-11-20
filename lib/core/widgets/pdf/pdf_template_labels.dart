@@ -1,0 +1,109 @@
+import '../../../l10n/gen/app_localizations.dart';
+import '../../services/pdf/pdf_page_size.dart';
+import '../../services/pdf/pdf_template.dart';
+import '../../services/pdf/pdf_template_category.dart';
+
+/// Localized names for PDF layouts, colors, categories and paper sizes,
+/// in one place for every picker.
+extension PdfTemplateLabels on AppLocalizations {
+  String templateName(PdfTemplate t) => switch (t) {
+    PdfTemplate.classic => templateClassic,
+    PdfTemplate.minimal => templateMinimal,
+    PdfTemplate.modern => templateModern,
+    PdfTemplate.executive => templateExecutive,
+    PdfTemplate.studio => templateStudio,
+    PdfTemplate.editorial => templateEditorial,
+    PdfTemplate.compact => templateCompact,
+    PdfTemplate.ledger => templateLedger,
+    PdfTemplate.nordic => templateNordic,
+    PdfTemplate.folio => templateFolio,
+    PdfTemplate.atelier => templateAtelier,
+    PdfTemplate.lumen => templateLumen,
+    PdfTemplate.aurora => templateAurora,
+    PdfTemplate.prestige => templatePrestige,
+    PdfTemplate.vertex => templateVertex,
+    PdfTemplate.pillar => templatePillar,
+    PdfTemplate.crest => templateCrest,
+    PdfTemplate.orbit => templateOrbit,
+    PdfTemplate.ribbon => templateRibbon,
+    PdfTemplate.onyx => templateOnyx,
+    PdfTemplate.metro => templateMetro,
+    PdfTemplate.regal => templateRegal,
+    PdfTemplate.duo => templateDuo,
+    PdfTemplate.halo => templateHalo,
+    PdfTemplate.pinstripe => templatePinstripe,
+    PdfTemplate.impact => templateImpact,
+  };
+
+  String templateDesc(PdfTemplate t) => switch (t) {
+    PdfTemplate.classic => templateClassicDesc,
+    PdfTemplate.minimal => templateMinimalDesc,
+    PdfTemplate.modern => templateModernDesc,
+    PdfTemplate.executive => templateExecutiveDesc,
+    PdfTemplate.studio => templateStudioDesc,
+    PdfTemplate.editorial => templateEditorialDesc,
+    PdfTemplate.compact => templateCompactDesc,
+    PdfTemplate.ledger => templateLedgerDesc,
+    PdfTemplate.nordic => templateNordicDesc,
+    PdfTemplate.folio => templateFolioDesc,
+    PdfTemplate.atelier => templateAtelierDesc,
+    PdfTemplate.lumen => templateLumenDesc,
+    PdfTemplate.aurora => templateAuroraDesc,
+    PdfTemplate.prestige => templatePrestigeDesc,
+    PdfTemplate.vertex => templateVertexDesc,
+    PdfTemplate.pillar => templatePillarDesc,
+    PdfTemplate.crest => templateCrestDesc,
+    PdfTemplate.orbit => templateOrbitDesc,
+    PdfTemplate.ribbon => templateRibbonDesc,
+    PdfTemplate.onyx => templateOnyxDesc,
+    PdfTemplate.metro => templateMetroDesc,
+    PdfTemplate.regal => templateRegalDesc,
+    PdfTemplate.duo => templateDuoDesc,
+    PdfTemplate.halo => templateHaloDesc,
+    PdfTemplate.pinstripe => templatePinstripeDesc,
+    PdfTemplate.impact => templateImpactDesc,
+  };
+
+  /// The name of a `BrandSwatch` by its id; the id itself when unknown.
+  String swatchName(String id) => switch (id) {
+    'coral' => swatchCoral,
+    'emerald' => swatchEmerald,
+    'navy' => swatchNavy,
+    'crimson' => swatchCrimson,
+    'slate' => swatchSlate,
+    'amber' => swatchAmber,
+    'teal' => swatchTeal,
+    'indigo' => swatchIndigo,
+    'charcoal' => swatchCharcoal,
+    'stone' => swatchStone,
+    'royal' => swatchRoyal,
+    'forest' => swatchForest,
+    'wine' => swatchWine,
+    'plum' => swatchPlum,
+    'rose' => swatchRose,
+    'ocean' => swatchOcean,
+    'bronze' => swatchBronze,
+    'midnight' => swatchMidnight,
+    'olive' => swatchOlive,
+    'violet' => swatchViolet,
+    _ => id,
+  };
+
+  String templateCategoryName(PdfTemplateCategory c) => switch (c) {
+    PdfTemplateCategory.recommend => templateCategoryRecommend,
+    PdfTemplateCategory.simple => templateCategorySimple,
+    PdfTemplateCategory.classic => templateCategoryClassic,
+    PdfTemplateCategory.professional => templateCategoryProfessional,
+    PdfTemplateCategory.modern => templateCategoryModern,
+    PdfTemplateCategory.creative => templateCategoryCreative,
+    PdfTemplateCategory.elegant => templateCategoryElegant,
+    PdfTemplateCategory.bold => templateCategoryBold,
+  };
+
+  String pageSizeName(PdfPageSize s) => switch (s) {
+    PdfPageSize.a4 => pdfPageSizeA4,
+    PdfPageSize.letter => pdfPageSizeLetter,
+    PdfPageSize.legal => pdfPageSizeLegal,
+    PdfPageSize.a5 => pdfPageSizeA5,
+  };
+}

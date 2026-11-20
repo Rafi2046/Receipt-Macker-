@@ -13,6 +13,7 @@ import '../../services/pdf/pdf_template_category.dart';
 import '../../utils/extensions/l10n_extension.dart';
 import '../layout/app_scaffold.dart';
 import 'mini_layout_thumbnail.dart';
+import 'pdf_template_labels.dart';
 
 /// Full-screen category grid for picking a layout + accent catalog entry.
 class TemplateCatalogPicker extends StatefulWidget {
@@ -69,35 +70,6 @@ class _TemplateCatalogPickerState extends State<TemplateCatalogPicker> {
     return Color(0xFF000000 | val);
   }
 
-  String _categoryLabel(PdfTemplateCategory c) {
-    final l10n = context.l10n;
-    return switch (c) {
-      PdfTemplateCategory.recommend => l10n.templateCategoryRecommend,
-      PdfTemplateCategory.simple => l10n.templateCategorySimple,
-      PdfTemplateCategory.classic => l10n.templateCategoryClassic,
-      PdfTemplateCategory.professional => l10n.templateCategoryProfessional,
-      PdfTemplateCategory.modern => l10n.templateCategoryModern,
-    };
-  }
-
-  String _layoutName(PdfTemplate t) {
-    final l10n = context.l10n;
-    return switch (t) {
-      PdfTemplate.classic => l10n.templateClassic,
-      PdfTemplate.minimal => l10n.templateMinimal,
-      PdfTemplate.modern => l10n.templateModern,
-      PdfTemplate.executive => l10n.templateExecutive,
-      PdfTemplate.studio => l10n.templateStudio,
-      PdfTemplate.editorial => l10n.templateEditorial,
-      PdfTemplate.compact => l10n.templateCompact,
-      PdfTemplate.ledger => l10n.templateLedger,
-      PdfTemplate.nordic => l10n.templateNordic,
-      PdfTemplate.folio => l10n.templateFolio,
-      PdfTemplate.atelier => l10n.templateAtelier,
-      PdfTemplate.lumen => l10n.templateLumen,
-    };
-  }
-
   Future<void> _onTap(PdfTemplateCatalogEntry entry) async {
     if (entry.requiresPro && !widget.isPro) {
       await context.pushNamed(RouteNames.paywall);
@@ -144,7 +116,7 @@ class _TemplateCatalogPickerState extends State<TemplateCatalogPicker> {
                 final cat = PdfTemplateCategory.values[index];
                 final selected = cat == _category;
                 return ChoiceChip(
-                  label: Text(_categoryLabel(cat)),
+                  label: Text(l10n.templateCategoryName(cat)),
                   selected: selected,
                   onSelected: (_) => setState(() => _category = cat),
                   selectedColor: colors.primary.withValues(alpha: 0.15),
@@ -163,6 +135,8 @@ class _TemplateCatalogPickerState extends State<TemplateCatalogPicker> {
           const SizedBox(height: AppSpacing.sm),
           Expanded(
             child: GridView.builder(
+              // A new tab starts at its top, not at the last scroll offset.
+              key: ValueKey(_category),
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.pagePadding,
                 0,
@@ -182,7 +156,9 @@ class _TemplateCatalogPickerState extends State<TemplateCatalogPicker> {
                 final locked = entry.requiresPro && !widget.isPro;
                 final accent = _accentColor(entry.accentHex);
                 return _CatalogTile(
-                  title: '${_layoutName(entry.layout)} · ${entry.swatch.name}',
+                  title:
+                      '${l10n.templateName(entry.layout)} · '
+                      '${l10n.swatchName(entry.swatch.id)}',
                   selected: selected,
                   locked: locked,
                   proBadge: entry.requiresPro,
@@ -291,10 +267,7 @@ class _CatalogTile extends StatelessWidget {
                               color: colors.textPrimary.withValues(alpha: 0.28),
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: Icon(
-                              AppIcons.lock,
-                              color: colors.surface,
-                            ),
+                            child: Icon(AppIcons.lock, color: colors.surface),
                           ),
                         ),
                     ],

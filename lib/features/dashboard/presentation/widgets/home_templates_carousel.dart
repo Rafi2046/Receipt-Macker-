@@ -11,8 +11,8 @@ import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/services/service_providers.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/pdf/mini_layout_thumbnail.dart';
+import '../../../../core/widgets/pdf/pdf_template_labels.dart';
 import '../../../../core/widgets/pdf/template_studio_sheet.dart';
-import '../../../../l10n/gen/app_localizations.dart';
 
 /// Horizontal carousel of invoice templates (matching Inventix "Trending Templates").
 class HomeTemplatesCarousel extends ConsumerWidget {
@@ -75,7 +75,7 @@ class HomeTemplatesCarousel extends ConsumerWidget {
               final accent = _colorFromHex(entry.accentHex);
               return _CarouselCard(
                 template: entry.layout,
-                name: _templateName(l10n, entry.layout),
+                name: l10n.templateName(entry.layout),
                 isPro: isPro,
                 accentColor: accent,
                 showPro: entry.requiresPro,
@@ -112,21 +112,6 @@ class HomeTemplatesCarousel extends ConsumerWidget {
       onSelectAccentHex: prefs.setBrandAccentColor,
     );
   }
-
-  String _templateName(AppLocalizations l10n, PdfTemplate t) => switch (t) {
-    PdfTemplate.classic => l10n.templateClassic,
-    PdfTemplate.minimal => l10n.templateMinimal,
-    PdfTemplate.modern => l10n.templateModern,
-    PdfTemplate.executive => l10n.templateExecutive,
-    PdfTemplate.studio => l10n.templateStudio,
-    PdfTemplate.editorial => l10n.templateEditorial,
-    PdfTemplate.compact => l10n.templateCompact,
-    PdfTemplate.ledger => l10n.templateLedger,
-    PdfTemplate.nordic => l10n.templateNordic,
-    PdfTemplate.folio => l10n.templateFolio,
-    PdfTemplate.atelier => l10n.templateAtelier,
-    PdfTemplate.lumen => l10n.templateLumen,
-  };
 }
 
 class _CarouselCard extends StatelessWidget {

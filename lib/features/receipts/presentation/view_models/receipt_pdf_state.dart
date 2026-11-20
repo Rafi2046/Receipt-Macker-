@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../../../core/services/pdf/models/rendered_pdf.dart';
+import '../../../../core/services/pdf/pdf_page_size.dart';
 import '../../../../core/services/pdf/pdf_template.dart';
 
 part 'receipt_pdf_state.freezed.dart';
@@ -14,6 +15,7 @@ abstract class ReceiptPdfState with _$ReceiptPdfState {
     required PdfTemplate template,
     required String languageCode,
     String? brandAccentColor,
+    @Default(PdfPageSize.a4) PdfPageSize pageSize,
     RenderedPdf? pdf,
     @Default([]) List<Uint8List> pages,
     @Default(true) bool isRendering,

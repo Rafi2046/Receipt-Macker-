@@ -6,8 +6,7 @@ import 'package:receipt_maker/core/services/pdf/pdf_template_category.dart';
 
 void main() {
   test('catalog has curated entries across every category', () {
-    expect(PdfTemplateCatalog.entries.length, greaterThanOrEqualTo(30));
-    expect(PdfTemplateCatalog.entries.length, lessThanOrEqualTo(64));
+    expect(PdfTemplateCatalog.entries.length, greaterThanOrEqualTo(100));
     for (final category in PdfTemplateCategory.values) {
       expect(
         PdfTemplateCatalog.byCategory(category),
@@ -17,9 +16,21 @@ void main() {
     }
   });
 
-  test('only classic_coral is free in the catalog', () {
+  test('exactly ten designs are free, all on the free layouts', () {
     final free = PdfTemplateCatalog.entries.where((e) => !e.requiresPro);
-    expect(free.map((e) => e.id), ['classic_coral']);
+    expect(free, hasLength(10));
+    expect(free.first.id, 'classic_coral');
+    for (final e in free) {
+      expect(PdfTemplate.freeLayouts, contains(e.layout), reason: e.id);
+    }
+  });
+
+  test('every layout is in the gallery and every color is ours', () {
+    final layouts = PdfTemplateCatalog.entries.map((e) => e.layout).toSet();
+    expect(layouts, PdfTemplate.values.toSet());
+    for (final e in PdfTemplateCatalog.entries) {
+      expect(e.swatch.hex, e.accentHex, reason: e.id);
+    }
   });
 
   test('resolve matches layout and accent, else falls back by layout', () {

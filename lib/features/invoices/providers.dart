@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../core/database/app_database_provider.dart';
+import '../../core/services/pdf/pdf_page_size.dart';
 import '../../core/services/service_providers.dart';
 import '../business_profile/business_profile.dart';
 import 'data/repositories/invoice_pdf_repository_impl.dart';
@@ -23,4 +24,6 @@ InvoicePdfRepository invoicePdfRepository(Ref ref) => InvoicePdfRepositoryImpl(
   ref.watch(htmlPdfConverterProvider),
   ref.watch(pdfFontsProvider),
   ref.watch(cacheDirectoryProvider),
+  pageSize: () =>
+      PdfPageSize.fromId(ref.read(appPreferencesProvider).pdfPageSize),
 );

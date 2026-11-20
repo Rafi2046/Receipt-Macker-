@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'brand_swatch.dart';
 import 'models/pdf_document.dart';
 import 'models/pdf_field.dart';
 import 'models/pdf_party.dart';
@@ -33,16 +34,17 @@ abstract final class PdfHtml {
     final accent = accentColor ?? '#FF5738';
     final soft = accentSoftColor ?? '${accent}18';
     final root =
-        ':root { --brand-accent: $accent; --brand-accent-soft: $soft; }\n';
+        ':root { --brand-accent: $accent; --brand-accent-soft: $soft; '
+        '--brand-deep: ${BrandSwatch.deepFor(accent)}; '
+        '--brand-pair: ${BrandSwatch.pairFor(accent)}; }\n';
     return '<!doctype html><html lang="${esc(doc.languageCode)}"><head>'
         '<meta charset="utf-8"><style>$root$fontsCss${_baseCss(doc, size)}'
         '$templateCss</style></head><body>$body</body></html>';
   }
 
   static String _baseCss(PdfDocument doc, PdfPageSize size) {
-    final paper = size == PdfPageSize.letter ? 'letter' : 'A4';
     return '''
-@page { size: $paper; margin: 14mm 14mm 16mm 14mm;
+@page { size: ${size.cssName}; margin: 14mm 14mm 16mm 14mm;
   @bottom-center { content: ${_pageCounter(doc)}; font-family: $fontStack;
     font-size: 8pt; color: ${PdfPalette.muted}; } }
 * { box-sizing: border-box; }

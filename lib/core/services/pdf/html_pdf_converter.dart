@@ -22,7 +22,7 @@ class HtmlPdfConverter {
     final pages = await _channel.invokeMethod<int>('htmlToPdf', {
       'html': html,
       'path': path,
-      'pageSize': size.name,
+      'pageSize': size.id,
     });
     return pages ?? 0;
   });

@@ -1,4 +1,5 @@
 import '../models/pdf_document.dart';
+import '../pdf_blocks.dart';
 import '../pdf_html.dart';
 import '../pdf_page_size.dart';
 import '../pdf_palette.dart';
@@ -71,7 +72,7 @@ abstract final class ExecutiveTemplate {
 
   static const String _css =
       '''
-.head-banner {
+${PdfBlocks.bleedCss}.head-banner {
   background: ${PdfPalette.brand};
   color: #FFFFFF;
   padding: 8mm 9mm;
@@ -97,7 +98,7 @@ abstract final class ExecutiveTemplate {
   margin-top: 1.5mm;
   text-transform: uppercase;
 }
-.accent-rule { height: 1.2mm; background: ${PdfPalette.accent}; margin: 0 -14mm 6mm -14mm; }
+.accent-rule { height: 1.2mm; background: ${PdfPalette.pair}; margin: 0 -14mm 6mm -14mm; }
 .meta-section { display: flex; gap: 8mm; margin-bottom: 6mm; }
 .meta-card { flex: 1; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 2mm; padding: 3mm 4mm; }
 .section-label { font-size: 8pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: ${PdfPalette.brand}; margin-bottom: 1.5mm; }

@@ -7,6 +7,7 @@ import '../../../../core/errors/result.dart';
 import '../../../../core/services/pdf/html_pdf_converter.dart';
 import '../../../../core/services/pdf/models/rendered_pdf.dart';
 import '../../../../core/services/pdf/pdf_fonts.dart';
+import '../../../../core/services/pdf/pdf_page_size.dart';
 import '../../../../core/services/pdf/pdf_template.dart';
 import '../../../../core/services/pdf/pdf_template_renderer.dart';
 import '../../../../core/utils/formatters.dart';
@@ -27,8 +28,9 @@ class ReceiptPdfRepositoryImpl implements ReceiptPdfRepository {
     this._profiles,
     this._converter,
     this._fonts,
-    this._cacheDirectory,
-  );
+    this._cacheDirectory, {
+    PdfPageSize Function()? pageSize,
+  }) : _pageSize = pageSize ?? _a4;
 
   final PaymentRepository _payments;
   final InvoiceRepository _invoices;
@@ -36,6 +38,11 @@ class ReceiptPdfRepositoryImpl implements ReceiptPdfRepository {
   final HtmlPdfConverter _converter;
   final PdfFonts _fonts;
   final Future<Directory> Function() _cacheDirectory;
+
+  /// The paper size chosen in the app, read for every PDF.
+  final PdfPageSize Function() _pageSize;
+
+  static PdfPageSize _a4() => PdfPageSize.a4;
 
   static const String _folder = 'pdf';
 
@@ -60,7 +67,11 @@ class ReceiptPdfRepositoryImpl implements ReceiptPdfRepository {
     final fileName = fileNameFor(payment.receiptNumber);
     final dir = await _cacheDirectory();
     final path = '${dir.path}/$_folder/$fileName';
-    final pages = await _converter.toPdf(html: html, path: path);
+    final pages = await _converter.toPdf(
+      html: html,
+      path: path,
+      size: _pageSize(),
+    );
     final bytes = await File(path).readAsBytes();
     return RenderedPdf(
       path: path,
@@ -130,6 +141,7 @@ class ReceiptPdfRepositoryImpl implements ReceiptPdfRepository {
       template,
       doc,
       fontsCss: await _fonts.css(),
+      size: _pageSize(),
       footer: showBranding ? l10n.pdfMadeWith : null,
       accentColor: accentColor,
     );

@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../../../core/services/pdf/models/rendered_pdf.dart';
+import '../../../../core/services/pdf/pdf_page_size.dart';
 import '../../../../core/services/pdf/pdf_template.dart';
 
 part 'invoice_pdf_state.freezed.dart';
@@ -16,6 +17,7 @@ abstract class InvoicePdfState with _$InvoicePdfState {
     /// `en` or `bn`: the PDF's language, independent of the app's.
     required String languageCode,
     String? brandAccentColor,
+    @Default(PdfPageSize.a4) PdfPageSize pageSize,
     RenderedPdf? pdf,
 
     /// The pages as PNG images for the preview.

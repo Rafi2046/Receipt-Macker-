@@ -2,21 +2,37 @@ import 'dart:convert';
 
 import 'brand_swatch.dart';
 import 'models/pdf_document.dart';
+import 'pdf_blocks.dart';
+import 'pdf_html.dart';
 import 'pdf_page_size.dart';
 import 'pdf_palette.dart';
 import 'pdf_template.dart';
 import 'templates/atelier_template.dart';
+import 'templates/aurora_template.dart';
 import 'templates/classic_template.dart';
 import 'templates/compact_template.dart';
+import 'templates/crest_template.dart';
+import 'templates/duo_template.dart';
 import 'templates/editorial_template.dart';
 import 'templates/executive_template.dart';
 import 'templates/folio_template.dart';
+import 'templates/halo_template.dart';
+import 'templates/impact_template.dart';
 import 'templates/ledger_template.dart';
 import 'templates/lumen_template.dart';
+import 'templates/metro_template.dart';
 import 'templates/minimal_template.dart';
 import 'templates/modern_template.dart';
 import 'templates/nordic_template.dart';
+import 'templates/onyx_template.dart';
+import 'templates/orbit_template.dart';
+import 'templates/pillar_template.dart';
+import 'templates/pinstripe_template.dart';
+import 'templates/prestige_template.dart';
+import 'templates/regal_template.dart';
+import 'templates/ribbon_template.dart';
 import 'templates/studio_template.dart';
+import 'templates/vertex_template.dart';
 
 /// Turns a [PdfDocument] into HTML with the chosen template and accent color.
 abstract final class PdfTemplateRenderer {
@@ -30,6 +46,17 @@ abstract final class PdfTemplateRenderer {
   }) {
     final hex = accentColor ?? BrandSwatch.coral.hex;
     final soft = BrandSwatch.softFor(hex);
+
+    // Premium layouts share their base CSS and sections (PdfBlocks).
+    String premium(String css, String body) => PdfHtml.page(
+      doc: doc,
+      fontsCss: fontsCss,
+      templateCss: '${PdfBlocks.css}$css',
+      size: size,
+      accentColor: hex,
+      accentSoftColor: soft,
+      body: body,
+    );
 
     final html = switch (template) {
       PdfTemplate.classic => ClassicTemplate.render(
@@ -115,6 +142,41 @@ abstract final class PdfTemplateRenderer {
         size: size,
         accentColor: hex,
         accentSoftColor: soft,
+      ),
+      PdfTemplate.aurora => premium(
+        AuroraTemplate.css,
+        AuroraTemplate.body(doc),
+      ),
+      PdfTemplate.prestige => premium(
+        PrestigeTemplate.css,
+        PrestigeTemplate.body(doc),
+      ),
+      PdfTemplate.vertex => premium(
+        VertexTemplate.css,
+        VertexTemplate.body(doc),
+      ),
+      PdfTemplate.pillar => premium(
+        PillarTemplate.css,
+        PillarTemplate.body(doc),
+      ),
+      PdfTemplate.crest => premium(CrestTemplate.css, CrestTemplate.body(doc)),
+      PdfTemplate.orbit => premium(OrbitTemplate.css, OrbitTemplate.body(doc)),
+      PdfTemplate.ribbon => premium(
+        RibbonTemplate.css,
+        RibbonTemplate.body(doc),
+      ),
+      PdfTemplate.onyx => premium(OnyxTemplate.css, OnyxTemplate.body(doc)),
+      PdfTemplate.metro => premium(MetroTemplate.css, MetroTemplate.body(doc)),
+      PdfTemplate.regal => premium(RegalTemplate.css, RegalTemplate.body(doc)),
+      PdfTemplate.duo => premium(DuoTemplate.css, DuoTemplate.body(doc)),
+      PdfTemplate.halo => premium(HaloTemplate.css, HaloTemplate.body(doc)),
+      PdfTemplate.pinstripe => premium(
+        PinstripeTemplate.css,
+        PinstripeTemplate.body(doc),
+      ),
+      PdfTemplate.impact => premium(
+        ImpactTemplate.css,
+        ImpactTemplate.body(doc),
       ),
     };
     final line = footer?.trim();

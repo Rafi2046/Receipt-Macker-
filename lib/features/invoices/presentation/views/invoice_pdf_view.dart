@@ -96,6 +96,8 @@ class InvoicePdfView extends ConsumerWidget {
             template: state.template,
             languageCode: state.languageCode,
             brandAccentColor: state.brandAccentColor,
+            pageSize: state.pageSize,
+            onPageSize: vm.setPageSize,
             enabled: !state.isRendering,
             onAccentColor: vm.setBrandAccentColor,
             onOpenStudio: () => TemplateStudioSheet.show(

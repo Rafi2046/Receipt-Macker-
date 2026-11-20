@@ -106,6 +106,21 @@ void main() {
       size: PdfPageSize.letter,
     );
     expect(letter, contains('size: letter'));
+    for (final (size, css) in [
+      (PdfPageSize.legal, 'size: legal'),
+      (PdfPageSize.a5, 'size: A5'),
+    ]) {
+      final html = PdfTemplateRenderer.render(
+        PdfTemplate.aurora,
+        doc(),
+        fontsCss: '',
+        size: size,
+      );
+      expect(html, contains(css));
+    }
+    expect(PdfPageSize.fromId('legal'), PdfPageSize.legal);
+    expect(PdfPageSize.fromId(null), PdfPageSize.a4);
+    expect(PdfPageSize.fromId('gone'), PdfPageSize.a4);
   });
 
   test('a free footer is escaped and left off otherwise', () {
@@ -118,7 +133,9 @@ void main() {
   });
 
   test('template ids are stable and unknown ids fall back', () {
-    expect(PdfTemplate.values, hasLength(12));
+    expect(PdfTemplate.values, hasLength(26));
+    expect(PdfTemplate.fromId('aurora'), PdfTemplate.aurora);
+    expect(PdfTemplate.fromId('impact'), PdfTemplate.impact);
     expect(PdfTemplate.fromId('modern'), PdfTemplate.modern);
     expect(PdfTemplate.fromId('executive'), PdfTemplate.executive);
     expect(PdfTemplate.fromId('studio'), PdfTemplate.studio);
@@ -142,6 +159,8 @@ void main() {
     );
     expect(custom, contains('--brand-accent: #1E3A8A'));
     expect(custom, contains('--brand-accent-soft: #EFF6FF'));
+    expect(custom, contains('--brand-deep: #0F1F4D'));
+    expect(custom, contains('--brand-pair: #F59E0B'));
 
     final defaultAccent = PdfTemplateRenderer.render(
       PdfTemplate.classic,
@@ -150,6 +169,25 @@ void main() {
     );
     expect(defaultAccent, contains('--brand-accent: #FF5738'));
     expect(defaultAccent, contains('--brand-accent-soft: #FFF1EE'));
+  });
+
+  test('a color that is not ours still gets a deep shade and a pair', () {
+    final html = PdfTemplateRenderer.render(
+      PdfTemplate.aurora,
+      doc(),
+      fontsCss: '',
+      accentColor: '#00FF00',
+    );
+    expect(html, contains('--brand-deep: #009900'));
+    expect(html, contains('--brand-pair: #E0A100'));
+  });
+
+  test('edge-to-edge layouts move the page margin into the body', () {
+    for (final t in [PdfTemplate.executive, PdfTemplate.aurora]) {
+      final html = render(doc(), t);
+      expect(html, contains('@page :first { margin-top: 0; }'), reason: t.id);
+    }
+    expect(render(doc()), isNot(contains('@page :first')));
   });
 
   test('free watermark renders across all 8 templates when provided', () {

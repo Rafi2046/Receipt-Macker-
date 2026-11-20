@@ -4,6 +4,9 @@ import '../../services/pdf/pdf_template.dart';
 import 'invoice_preview_layouts_a.dart';
 import 'invoice_preview_layouts_b.dart';
 import 'invoice_preview_layouts_c.dart';
+import 'invoice_preview_layouts_d.dart';
+import 'invoice_preview_layouts_e.dart';
+import 'invoice_preview_layouts_f.dart';
 import 'invoice_preview_shared.dart';
 
 /// Full sample-invoice preview for a layout + accent, scaled to [width]×[height].
@@ -45,6 +48,20 @@ class MiniLayoutThumbnail extends StatelessWidget {
       PdfTemplate.folio => InvoicePreviewFolio(accent: accentColor),
       PdfTemplate.atelier => InvoicePreviewAtelier(accent: accentColor),
       PdfTemplate.lumen => InvoicePreviewLumen(accent: accentColor),
+      PdfTemplate.aurora => InvoicePreviewAurora(accent: accentColor),
+      PdfTemplate.prestige => InvoicePreviewPrestige(accent: accentColor),
+      PdfTemplate.vertex => InvoicePreviewVertex(accent: accentColor),
+      PdfTemplate.pillar => InvoicePreviewPillar(accent: accentColor),
+      PdfTemplate.crest => InvoicePreviewCrest(accent: accentColor),
+      PdfTemplate.orbit => InvoicePreviewOrbit(accent: accentColor),
+      PdfTemplate.ribbon => InvoicePreviewRibbon(accent: accentColor),
+      PdfTemplate.onyx => InvoicePreviewOnyx(accent: accentColor),
+      PdfTemplate.metro => InvoicePreviewMetro(accent: accentColor),
+      PdfTemplate.regal => InvoicePreviewRegal(accent: accentColor),
+      PdfTemplate.duo => InvoicePreviewDuo(accent: accentColor),
+      PdfTemplate.halo => InvoicePreviewHalo(accent: accentColor),
+      PdfTemplate.pinstripe => InvoicePreviewPinstripe(accent: accentColor),
+      PdfTemplate.impact => InvoicePreviewImpact(accent: accentColor),
     };
 
     return Container(
@@ -54,9 +71,7 @@ class MiniLayoutThumbnail extends StatelessWidget {
       decoration: BoxDecoration(
         color: InvoicePreviewInk.paper,
         borderRadius: BorderRadius.circular(framed ? 6 : 4),
-        border: framed
-            ? Border.all(color: const Color(0xFFDCE2E8))
-            : null,
+        border: framed ? Border.all(color: const Color(0xFFDCE2E8)) : null,
         boxShadow: framed
             ? const [
                 BoxShadow(
@@ -73,7 +88,9 @@ class MiniLayoutThumbnail extends StatelessWidget {
         child: SizedBox(
           width: designWidth,
           height: designHeight,
-          child: ClipRect(child: page),
+          child: ClipRect(
+            child: ColoredBox(color: InvoicePreviewInk.paper, child: page),
+          ),
         ),
       ),
     );

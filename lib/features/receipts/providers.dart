@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../core/services/pdf/pdf_page_size.dart';
 import '../../core/services/service_providers.dart';
 import '../business_profile/business_profile.dart';
 import '../invoices/providers.dart';
@@ -17,4 +18,6 @@ ReceiptPdfRepository receiptPdfRepository(Ref ref) => ReceiptPdfRepositoryImpl(
   ref.watch(htmlPdfConverterProvider),
   ref.watch(pdfFontsProvider),
   ref.watch(cacheDirectoryProvider),
+  pageSize: () =>
+      PdfPageSize.fromId(ref.read(appPreferencesProvider).pdfPageSize),
 );

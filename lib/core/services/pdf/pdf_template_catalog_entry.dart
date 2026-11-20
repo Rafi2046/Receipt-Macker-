@@ -12,7 +12,6 @@ class PdfTemplateCatalogEntry {
     required this.layout,
     required this.accentHex,
     required this.category,
-    required this.requiresPro,
   });
 
   /// Stable id for analytics / matching selection (`classic_coral`).
@@ -21,8 +20,8 @@ class PdfTemplateCatalogEntry {
   final String accentHex;
   final PdfTemplateCategory category;
 
-  /// True when this catalog card is Pro-only (layout or non-default accent).
-  final bool requiresPro;
+  /// True when this catalog card is Pro-only: its layout is not a free one.
+  bool get requiresPro => layout.requiresPro;
 
   BrandSwatch get swatch => BrandSwatch.fromHex(accentHex);
 

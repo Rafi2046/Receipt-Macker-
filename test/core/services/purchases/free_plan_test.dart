@@ -35,22 +35,18 @@ void main() {
       expect(FreePlan.canAddItem(isPro: true, count: 200), isTrue);
     });
 
-    test('canUse template gates all non-classic templates behind Pro', () {
-      expect(PdfTemplate.classic.requiresPro, isFalse);
-      expect(PdfTemplate.modern.requiresPro, isTrue);
-      expect(PdfTemplate.minimal.requiresPro, isTrue);
-      expect(PdfTemplate.executive.requiresPro, isTrue);
-      expect(PdfTemplate.studio.requiresPro, isTrue);
-      expect(PdfTemplate.editorial.requiresPro, isTrue);
-      expect(PdfTemplate.compact.requiresPro, isTrue);
-      expect(PdfTemplate.ledger.requiresPro, isTrue);
+    test('canUse gates every layout but the three free ones', () {
+      expect(PdfTemplate.freeLayouts, {
+        PdfTemplate.classic,
+        PdfTemplate.minimal,
+        PdfTemplate.compact,
+      });
 
       // Free user
-      expect(FreePlan.canUse(PdfTemplate.classic, isPro: false), isTrue);
-      for (final t in PdfTemplate.values.where(
-        (t) => t != PdfTemplate.classic,
-      )) {
-        expect(FreePlan.canUse(t, isPro: false), isFalse, reason: t.id);
+      for (final t in PdfTemplate.values) {
+        final free = PdfTemplate.freeLayouts.contains(t);
+        expect(t.requiresPro, !free, reason: t.id);
+        expect(FreePlan.canUse(t, isPro: false), free, reason: t.id);
       }
 
       // Pro user

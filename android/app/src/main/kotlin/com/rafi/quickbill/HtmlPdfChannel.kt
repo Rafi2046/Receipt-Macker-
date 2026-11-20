@@ -118,8 +118,12 @@ class HtmlPdfChannel(private val activity: Activity, messenger: BinaryMessenger)
     private fun attributes(pageSize: String?): PrintAttributes =
         PrintAttributes.Builder()
             .setMediaSize(
-                if (pageSize == "letter") PrintAttributes.MediaSize.NA_LETTER
-                else PrintAttributes.MediaSize.ISO_A4,
+                when (pageSize) {
+                    "letter" -> PrintAttributes.MediaSize.NA_LETTER
+                    "legal" -> PrintAttributes.MediaSize.NA_LEGAL
+                    "a5" -> PrintAttributes.MediaSize.ISO_A5
+                    else -> PrintAttributes.MediaSize.ISO_A4
+                },
             )
             .setResolution(PrintAttributes.Resolution("pdf", "pdf", DPI, DPI))
             // Page margins come from the CSS @page rule.

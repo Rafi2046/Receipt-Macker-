@@ -7,6 +7,7 @@ abstract final class AppIcons {
   static const IconData more = Icons.grid_view_outlined;
   static const IconData moreFilled = Icons.grid_view_rounded;
   static const IconData menu = Icons.menu_rounded;
+  static const IconData pageSize = Icons.description_outlined;
   static const IconData support = Icons.support_agent_outlined;
   static const IconData invoiceFilled = Icons.receipt_long_rounded;
   static const IconData clientFilled = Icons.people_rounded;

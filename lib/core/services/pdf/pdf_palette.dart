@@ -4,6 +4,12 @@
 abstract final class PdfPalette {
   static const String brand = 'var(--brand-accent, #FF5738)';
   static const String brandSoft = 'var(--brand-accent-soft, #FFF1EE)';
+
+  /// Darker shade of the brand color, for gradients and dark panels.
+  static const String deep = 'var(--brand-deep, #B8321A)';
+
+  /// Contrasting highlight paired with the brand color (often gold).
+  static const String pair = 'var(--brand-pair, #E0A100)';
   static const String accent = '#2563EB';
   static const String ink = '#111827';
   static const String muted = '#6B7280';

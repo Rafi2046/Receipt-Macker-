@@ -5,4 +5,7 @@ enum PdfTemplateCategory {
   classic,
   professional,
   modern,
+  creative,
+  elegant,
+  bold,
 }

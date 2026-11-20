@@ -11,14 +11,31 @@ enum PdfTemplate {
   nordic('nordic'),
   folio('folio'),
   atelier('atelier'),
-  lumen('lumen');
+  lumen('lumen'),
+  aurora('aurora'),
+  prestige('prestige'),
+  vertex('vertex'),
+  pillar('pillar'),
+  crest('crest'),
+  orbit('orbit'),
+  ribbon('ribbon'),
+  onyx('onyx'),
+  metro('metro'),
+  regal('regal'),
+  duo('duo'),
+  halo('halo'),
+  pinstripe('pinstripe'),
+  impact('impact');
 
   const PdfTemplate(this.id);
 
   final String id;
 
-  /// Classic is free. All other designs are Pro.
-  bool get requiresPro => this != PdfTemplate.classic;
+  /// The layouts a free account may use, in any color.
+  static const Set<PdfTemplate> freeLayouts = {classic, minimal, compact};
+
+  /// Classic, Minimal and Compact are free. All other designs are Pro.
+  bool get requiresPro => !freeLayouts.contains(this);
 
   static PdfTemplate fromId(String? id) =>
       values.firstWhere((t) => t.id == id, orElse: () => classic);

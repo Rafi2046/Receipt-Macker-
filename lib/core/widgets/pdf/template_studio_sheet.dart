@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router/route_names.dart';
 import '../../../app/theme/app_colors.dart';
-import '../../../l10n/gen/app_localizations.dart';
 import '../../constants/app_icons.dart';
 import '../../constants/app_spacing.dart';
 import '../../services/pdf/brand_swatch.dart';
@@ -11,6 +10,7 @@ import '../../services/pdf/pdf_template.dart';
 import '../../utils/extensions/l10n_extension.dart';
 import '../buttons/app_button.dart';
 import 'mini_layout_thumbnail.dart';
+import 'pdf_template_labels.dart';
 import 'template_catalog_picker.dart';
 
 enum _TemplateFilter { all, free, pro }
@@ -74,50 +74,6 @@ class _TemplateStudioSheetState extends State<TemplateStudioSheet> {
     final val = int.tryParse(clean, radix: 16) ?? 0xFF5738;
     return Color(0xFF000000 | val);
   }
-
-  String _templateName(AppLocalizations l10n, PdfTemplate t) => switch (t) {
-    PdfTemplate.classic => l10n.templateClassic,
-    PdfTemplate.minimal => l10n.templateMinimal,
-    PdfTemplate.modern => l10n.templateModern,
-    PdfTemplate.executive => l10n.templateExecutive,
-    PdfTemplate.studio => l10n.templateStudio,
-    PdfTemplate.editorial => l10n.templateEditorial,
-    PdfTemplate.compact => l10n.templateCompact,
-    PdfTemplate.ledger => l10n.templateLedger,
-    PdfTemplate.nordic => l10n.templateNordic,
-    PdfTemplate.folio => l10n.templateFolio,
-    PdfTemplate.atelier => l10n.templateAtelier,
-    PdfTemplate.lumen => l10n.templateLumen,
-  };
-
-  String _templateDesc(AppLocalizations l10n, PdfTemplate t) => switch (t) {
-    PdfTemplate.classic => l10n.templateClassicDesc,
-    PdfTemplate.minimal => l10n.templateMinimalDesc,
-    PdfTemplate.modern => l10n.templateModernDesc,
-    PdfTemplate.executive => l10n.templateExecutiveDesc,
-    PdfTemplate.studio => l10n.templateStudioDesc,
-    PdfTemplate.editorial => l10n.templateEditorialDesc,
-    PdfTemplate.compact => l10n.templateCompactDesc,
-    PdfTemplate.ledger => l10n.templateLedgerDesc,
-    PdfTemplate.nordic => l10n.templateNordicDesc,
-    PdfTemplate.folio => l10n.templateFolioDesc,
-    PdfTemplate.atelier => l10n.templateAtelierDesc,
-    PdfTemplate.lumen => l10n.templateLumenDesc,
-  };
-
-  String _swatchName(AppLocalizations l10n, String id) => switch (id) {
-    'coral' => l10n.swatchCoral,
-    'emerald' => l10n.swatchEmerald,
-    'navy' => l10n.swatchNavy,
-    'crimson' => l10n.swatchCrimson,
-    'slate' => l10n.swatchSlate,
-    'amber' => l10n.swatchAmber,
-    'teal' => l10n.swatchTeal,
-    'indigo' => l10n.swatchIndigo,
-    'charcoal' => l10n.swatchCharcoal,
-    'stone' => l10n.swatchStone,
-    _ => id,
-  };
 
   List<PdfTemplate> get _filteredTemplates {
     return PdfTemplate.values.where((t) {
@@ -276,7 +232,7 @@ class _TemplateStudioSheetState extends State<TemplateStudioSheet> {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                _swatchName(l10n, swatch.id),
+                                l10n.swatchName(swatch.id),
                                 style: context.textStyles.labelSmall?.copyWith(
                                   fontSize: 10,
                                   color: isSelected
@@ -309,7 +265,8 @@ class _TemplateStudioSheetState extends State<TemplateStudioSheet> {
                         ),
                         const SizedBox(width: AppSpacing.xs),
                         _FilterChip(
-                          label: '${l10n.templateFilterFree} (1)',
+                          label:
+                              '${l10n.templateFilterFree} (${PdfTemplate.freeLayouts.length})',
                           selected: _filter == _TemplateFilter.free,
                           onTap: () =>
                               setState(() => _filter = _TemplateFilter.free),
@@ -341,8 +298,8 @@ class _TemplateStudioSheetState extends State<TemplateStudioSheet> {
                   for (final t in _filteredTemplates) ...[
                     _TemplateCard(
                       template: t,
-                      name: _templateName(l10n, t),
-                      description: _templateDesc(l10n, t),
+                      name: l10n.templateName(t),
+                      description: l10n.templateDesc(t),
                       isSelected: t == widget.selectedTemplate,
                       isProUser: widget.isPro,
                       accentColor: activeColor,

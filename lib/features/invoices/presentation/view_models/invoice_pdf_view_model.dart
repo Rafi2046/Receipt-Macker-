@@ -7,6 +7,7 @@ import '../../../../core/errors/result.dart';
 import '../../../../core/services/ads/ad_providers.dart';
 import '../../../../core/services/clock.dart';
 import '../../../../core/services/pdf/models/rendered_pdf.dart';
+import '../../../../core/services/pdf/pdf_page_size.dart';
 import '../../../../core/services/pdf/pdf_template.dart';
 import '../../../../core/services/purchases/free_plan.dart';
 import '../../../../core/services/purchases/purchase_providers.dart';
@@ -38,6 +39,7 @@ class InvoicePdfViewModel extends _$InvoicePdfViewModel {
       template: template,
       languageCode: language,
       brandAccentColor: accent,
+      pageSize: PdfPageSize.fromId(prefs.pdfPageSize),
     );
   }
 
@@ -91,6 +93,13 @@ class InvoicePdfViewModel extends _$InvoicePdfViewModel {
     if (hex == state.brandAccentColor) return;
     state = state.copyWith(brandAccentColor: hex);
     await ref.read(appPreferencesProvider).setBrandAccentColor(hex);
+    await render();
+  }
+
+  Future<void> setPageSize(PdfPageSize size) async {
+    if (size == state.pageSize) return;
+    state = state.copyWith(pageSize: size);
+    await ref.read(appPreferencesProvider).setPdfPageSize(size.id);
     await render();
   }
 

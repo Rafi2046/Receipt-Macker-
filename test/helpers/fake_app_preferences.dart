@@ -12,6 +12,7 @@ class FakeAppPreferences implements AppPreferences {
     this.defaultTaxInclusive = false,
     this.pdfTemplate,
     this.brandAccentColor,
+    this.pdfPageSize,
     this.isPro = false,
     this.firstLaunchMillis,
     this.completedExports = 0,
@@ -69,6 +70,12 @@ class FakeAppPreferences implements AppPreferences {
 
   @override
   Future<void> setPdfTemplate(String id) async => pdfTemplate = id;
+
+  @override
+  String? pdfPageSize;
+
+  @override
+  Future<void> setPdfPageSize(String id) async => pdfPageSize = id;
 
   @override
   String? brandAccentColor;

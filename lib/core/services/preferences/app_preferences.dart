@@ -36,6 +36,10 @@ abstract interface class AppPreferences {
   String? get brandAccentColor;
   Future<void> setBrandAccentColor(String? hex);
 
+  /// Id of the PDF paper size (`a4`, `letter`…); null means A4.
+  String? get pdfPageSize;
+  Future<void> setPdfPageSize(String id);
+
   /// Cached Pro flag. Google Play is checked again on startup.
   bool get isPro;
   Future<void> setPro({required bool value});

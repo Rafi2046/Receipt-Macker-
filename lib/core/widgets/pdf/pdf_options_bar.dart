@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../l10n/gen/app_localizations.dart';
+import '../../constants/app_icons.dart';
+import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 import '../../services/pdf/brand_swatch.dart';
+import '../../services/pdf/pdf_page_size.dart';
 import '../../services/pdf/pdf_template.dart';
 import '../../utils/extensions/l10n_extension.dart';
+import 'pdf_template_labels.dart';
 
 /// Template, color accent and language choice above a PDF preview.
 class PdfOptionsBar extends StatelessWidget {
@@ -17,6 +21,8 @@ class PdfOptionsBar extends StatelessWidget {
     this.onOpenStudio,
     this.onAccentColor,
     this.brandAccentColor,
+    this.pageSize = PdfPageSize.a4,
+    this.onPageSize,
     this.enabled = true,
     super.key,
   });
@@ -28,23 +34,14 @@ class PdfOptionsBar extends StatelessWidget {
   final VoidCallback? onOpenStudio;
   final ValueChanged<String>? onAccentColor;
   final String? brandAccentColor;
+  final PdfPageSize pageSize;
+
+  /// Shows the paper size choice when set.
+  final ValueChanged<PdfPageSize>? onPageSize;
   final bool enabled;
 
   static String _templateName(AppLocalizations l10n, PdfTemplate template) {
-    final name = switch (template) {
-      PdfTemplate.classic => l10n.templateClassic,
-      PdfTemplate.minimal => l10n.templateMinimal,
-      PdfTemplate.modern => l10n.templateModern,
-      PdfTemplate.executive => l10n.templateExecutive,
-      PdfTemplate.studio => l10n.templateStudio,
-      PdfTemplate.editorial => l10n.templateEditorial,
-      PdfTemplate.compact => l10n.templateCompact,
-      PdfTemplate.ledger => l10n.templateLedger,
-      PdfTemplate.nordic => l10n.templateNordic,
-      PdfTemplate.folio => l10n.templateFolio,
-      PdfTemplate.atelier => l10n.templateAtelier,
-      PdfTemplate.lumen => l10n.templateLumen,
-    };
+    final name = l10n.templateName(template);
     if (!template.requiresPro) return name;
     return '$name · ${l10n.templateProBadge}';
   }
@@ -91,6 +88,11 @@ class PdfOptionsBar extends StatelessWidget {
                   icon: const Icon(Icons.palette_outlined, size: 16),
                   label: Text(l10n.templateStudioAction),
                   onPressed: enabled ? onOpenStudio : null,
+                ),
+              if (onPageSize case final onPageSize?)
+                _PageSizeMenu(
+                  pageSize: pageSize,
+                  onSelected: enabled ? onPageSize : null,
                 ),
             ],
           ),
@@ -157,6 +159,52 @@ class PdfOptionsBar extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// The paper size as a compact menu button, so the bar stays short.
+class _PageSizeMenu extends StatelessWidget {
+  const _PageSizeMenu({required this.pageSize, required this.onSelected});
+
+  final PdfPageSize pageSize;
+  final ValueChanged<PdfPageSize>? onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return PopupMenuButton<PdfPageSize>(
+      tooltip: l10n.pdfPageSizeLabel,
+      enabled: onSelected != null,
+      initialValue: pageSize,
+      onSelected: onSelected,
+      itemBuilder: (context) => [
+        for (final size in PdfPageSize.values)
+          PopupMenuItem(value: size, child: Text(l10n.pageSizeName(size))),
+      ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.md,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: AppSpacing.xs,
+          children: [
+            Icon(
+              AppIcons.pageSize,
+              size: AppSizes.iconSm,
+              color: context.appColors.primary,
+            ),
+            Text(
+              l10n.pageSizeName(pageSize),
+              style: context.textStyles.labelLarge?.copyWith(
+                color: context.appColors.primary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

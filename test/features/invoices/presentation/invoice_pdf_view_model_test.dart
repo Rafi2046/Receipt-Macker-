@@ -110,13 +110,13 @@ void main() {
     ).called(1);
   });
 
-  test('a free account stays on Classic', () async {
+  test('a free account stays on a free design', () async {
     prefs = FakeAppPreferences(languageCode: 'bn', pdfTemplate: 'modern');
     await open();
     expect(state().template, PdfTemplate.classic);
     final allowed = await container
         .read(provider.notifier)
-        .setTemplate(PdfTemplate.minimal);
+        .setTemplate(PdfTemplate.executive);
     expect(allowed, isFalse);
     expect(prefs.pdfTemplate, 'modern');
     expect(state().template, PdfTemplate.classic);
