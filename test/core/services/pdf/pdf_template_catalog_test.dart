@@ -6,7 +6,7 @@ import 'package:receipt_maker/core/services/pdf/pdf_template_category.dart';
 
 void main() {
   test('catalog has curated entries across every category', () {
-    expect(PdfTemplateCatalog.entries.length, greaterThanOrEqualTo(100));
+    expect(PdfTemplateCatalog.entries.length, greaterThanOrEqualTo(250));
     for (final category in PdfTemplateCategory.values) {
       expect(
         PdfTemplateCatalog.byCategory(category),
@@ -19,7 +19,13 @@ void main() {
   test('exactly ten designs are free, all on the free layouts', () {
     final free = PdfTemplateCatalog.entries.where((e) => !e.requiresPro);
     expect(free, hasLength(10));
-    expect(free.first.id, 'classic_coral');
+    expect(
+      PdfTemplateCatalog.resolve(
+        layout: PdfTemplate.wave,
+        accentHex: null,
+      ).layout,
+      PdfTemplate.wave,
+    );
     for (final e in free) {
       expect(PdfTemplate.freeLayouts, contains(e.layout), reason: e.id);
     }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../services/pdf/canvas/canvas_designs.dart';
 import '../../services/pdf/pdf_template.dart';
+import 'invoice_preview_canvas.dart';
 import 'invoice_preview_layouts_a.dart';
 import 'invoice_preview_layouts_b.dart';
 import 'invoice_preview_layouts_c.dart';
@@ -35,34 +37,10 @@ class MiniLayoutThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final page = switch (template) {
-      PdfTemplate.classic => InvoicePreviewClassic(accent: accentColor),
-      PdfTemplate.minimal => InvoicePreviewMinimal(accent: accentColor),
-      PdfTemplate.modern => InvoicePreviewModern(accent: accentColor),
-      PdfTemplate.executive => InvoicePreviewExecutive(accent: accentColor),
-      PdfTemplate.studio => InvoicePreviewStudio(accent: accentColor),
-      PdfTemplate.editorial => InvoicePreviewEditorial(accent: accentColor),
-      PdfTemplate.compact => InvoicePreviewCompact(accent: accentColor),
-      PdfTemplate.ledger => InvoicePreviewLedger(accent: accentColor),
-      PdfTemplate.nordic => InvoicePreviewNordic(accent: accentColor),
-      PdfTemplate.folio => InvoicePreviewFolio(accent: accentColor),
-      PdfTemplate.atelier => InvoicePreviewAtelier(accent: accentColor),
-      PdfTemplate.lumen => InvoicePreviewLumen(accent: accentColor),
-      PdfTemplate.aurora => InvoicePreviewAurora(accent: accentColor),
-      PdfTemplate.prestige => InvoicePreviewPrestige(accent: accentColor),
-      PdfTemplate.vertex => InvoicePreviewVertex(accent: accentColor),
-      PdfTemplate.pillar => InvoicePreviewPillar(accent: accentColor),
-      PdfTemplate.crest => InvoicePreviewCrest(accent: accentColor),
-      PdfTemplate.orbit => InvoicePreviewOrbit(accent: accentColor),
-      PdfTemplate.ribbon => InvoicePreviewRibbon(accent: accentColor),
-      PdfTemplate.onyx => InvoicePreviewOnyx(accent: accentColor),
-      PdfTemplate.metro => InvoicePreviewMetro(accent: accentColor),
-      PdfTemplate.regal => InvoicePreviewRegal(accent: accentColor),
-      PdfTemplate.duo => InvoicePreviewDuo(accent: accentColor),
-      PdfTemplate.halo => InvoicePreviewHalo(accent: accentColor),
-      PdfTemplate.pinstripe => InvoicePreviewPinstripe(accent: accentColor),
-      PdfTemplate.impact => InvoicePreviewImpact(accent: accentColor),
-    };
+    final canvas = CanvasDesigns.of(template);
+    final page = canvas != null
+        ? InvoicePreviewCanvas(design: canvas, accent: accentColor)
+        : _layout();
 
     return Container(
       width: width,
@@ -94,5 +72,53 @@ class MiniLayoutThumbnail extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _layout() {
+    return switch (template) {
+      PdfTemplate.classic => InvoicePreviewClassic(accent: accentColor),
+      PdfTemplate.minimal => InvoicePreviewMinimal(accent: accentColor),
+      PdfTemplate.modern => InvoicePreviewModern(accent: accentColor),
+      PdfTemplate.executive => InvoicePreviewExecutive(accent: accentColor),
+      PdfTemplate.studio => InvoicePreviewStudio(accent: accentColor),
+      PdfTemplate.editorial => InvoicePreviewEditorial(accent: accentColor),
+      PdfTemplate.compact => InvoicePreviewCompact(accent: accentColor),
+      PdfTemplate.ledger => InvoicePreviewLedger(accent: accentColor),
+      PdfTemplate.nordic => InvoicePreviewNordic(accent: accentColor),
+      PdfTemplate.folio => InvoicePreviewFolio(accent: accentColor),
+      PdfTemplate.atelier => InvoicePreviewAtelier(accent: accentColor),
+      PdfTemplate.lumen => InvoicePreviewLumen(accent: accentColor),
+      PdfTemplate.aurora => InvoicePreviewAurora(accent: accentColor),
+      PdfTemplate.prestige => InvoicePreviewPrestige(accent: accentColor),
+      PdfTemplate.vertex => InvoicePreviewVertex(accent: accentColor),
+      PdfTemplate.pillar => InvoicePreviewPillar(accent: accentColor),
+      PdfTemplate.crest => InvoicePreviewCrest(accent: accentColor),
+      PdfTemplate.orbit => InvoicePreviewOrbit(accent: accentColor),
+      PdfTemplate.ribbon => InvoicePreviewRibbon(accent: accentColor),
+      PdfTemplate.onyx => InvoicePreviewOnyx(accent: accentColor),
+      PdfTemplate.metro => InvoicePreviewMetro(accent: accentColor),
+      PdfTemplate.regal => InvoicePreviewRegal(accent: accentColor),
+      PdfTemplate.duo => InvoicePreviewDuo(accent: accentColor),
+      PdfTemplate.halo => InvoicePreviewHalo(accent: accentColor),
+      PdfTemplate.pinstripe => InvoicePreviewPinstripe(accent: accentColor),
+      PdfTemplate.impact => InvoicePreviewImpact(accent: accentColor),
+      // Canvas designs are drawn by InvoicePreviewCanvas.
+      PdfTemplate.wave ||
+      PdfTemplate.prism ||
+      PdfTemplate.nocturne ||
+      PdfTemplate.mesh ||
+      PdfTemplate.corner ||
+      PdfTemplate.sash ||
+      PdfTemplate.peak ||
+      PdfTemplate.bubble ||
+      PdfTemplate.hive ||
+      PdfTemplate.tide ||
+      PdfTemplate.halftone ||
+      PdfTemplate.frame ||
+      PdfTemplate.lattice ||
+      PdfTemplate.shard ||
+      PdfTemplate.dusk ||
+      PdfTemplate.carbon => const SizedBox.shrink(),
+    };
   }
 }

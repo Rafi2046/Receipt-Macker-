@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'brand_swatch.dart';
+import 'canvas/canvas_designs.dart';
+import 'canvas/canvas_template.dart';
 import 'models/pdf_document.dart';
 import 'pdf_blocks.dart';
 import 'pdf_html.dart';
@@ -58,127 +60,172 @@ abstract final class PdfTemplateRenderer {
       body: body,
     );
 
-    final html = switch (template) {
-      PdfTemplate.classic => ClassicTemplate.render(
-        doc,
-        fontsCss: fontsCss,
-        size: size,
-        accentColor: hex,
-        accentSoftColor: soft,
-      ),
-      PdfTemplate.modern => ModernTemplate.render(
-        doc,
-        fontsCss: fontsCss,
-        size: size,
-        accentColor: hex,
-        accentSoftColor: soft,
-      ),
-      PdfTemplate.minimal => MinimalTemplate.render(
-        doc,
-        fontsCss: fontsCss,
-        size: size,
-        accentColor: hex,
-        accentSoftColor: soft,
-      ),
-      PdfTemplate.executive => ExecutiveTemplate.render(
-        doc,
-        fontsCss: fontsCss,
-        size: size,
-        accentColor: hex,
-        accentSoftColor: soft,
-      ),
-      PdfTemplate.studio => StudioTemplate.render(
-        doc,
-        fontsCss: fontsCss,
-        size: size,
-        accentColor: hex,
-        accentSoftColor: soft,
-      ),
-      PdfTemplate.editorial => EditorialTemplate.render(
-        doc,
-        fontsCss: fontsCss,
-        size: size,
-        accentColor: hex,
-        accentSoftColor: soft,
-      ),
-      PdfTemplate.compact => CompactTemplate.render(
-        doc,
-        fontsCss: fontsCss,
-        size: size,
-        accentColor: hex,
-        accentSoftColor: soft,
-      ),
-      PdfTemplate.ledger => LedgerTemplate.render(
-        doc,
-        fontsCss: fontsCss,
-        size: size,
-        accentColor: hex,
-        accentSoftColor: soft,
-      ),
-      PdfTemplate.nordic => NordicTemplate.render(
-        doc,
-        fontsCss: fontsCss,
-        size: size,
-        accentColor: hex,
-        accentSoftColor: soft,
-      ),
-      PdfTemplate.folio => FolioTemplate.render(
-        doc,
-        fontsCss: fontsCss,
-        size: size,
-        accentColor: hex,
-        accentSoftColor: soft,
-      ),
-      PdfTemplate.atelier => AtelierTemplate.render(
-        doc,
-        fontsCss: fontsCss,
-        size: size,
-        accentColor: hex,
-        accentSoftColor: soft,
-      ),
-      PdfTemplate.lumen => LumenTemplate.render(
-        doc,
-        fontsCss: fontsCss,
-        size: size,
-        accentColor: hex,
-        accentSoftColor: soft,
-      ),
-      PdfTemplate.aurora => premium(
-        AuroraTemplate.css,
-        AuroraTemplate.body(doc),
-      ),
-      PdfTemplate.prestige => premium(
-        PrestigeTemplate.css,
-        PrestigeTemplate.body(doc),
-      ),
-      PdfTemplate.vertex => premium(
-        VertexTemplate.css,
-        VertexTemplate.body(doc),
-      ),
-      PdfTemplate.pillar => premium(
-        PillarTemplate.css,
-        PillarTemplate.body(doc),
-      ),
-      PdfTemplate.crest => premium(CrestTemplate.css, CrestTemplate.body(doc)),
-      PdfTemplate.orbit => premium(OrbitTemplate.css, OrbitTemplate.body(doc)),
-      PdfTemplate.ribbon => premium(
-        RibbonTemplate.css,
-        RibbonTemplate.body(doc),
-      ),
-      PdfTemplate.onyx => premium(OnyxTemplate.css, OnyxTemplate.body(doc)),
-      PdfTemplate.metro => premium(MetroTemplate.css, MetroTemplate.body(doc)),
-      PdfTemplate.regal => premium(RegalTemplate.css, RegalTemplate.body(doc)),
-      PdfTemplate.duo => premium(DuoTemplate.css, DuoTemplate.body(doc)),
-      PdfTemplate.halo => premium(HaloTemplate.css, HaloTemplate.body(doc)),
-      PdfTemplate.pinstripe => premium(
-        PinstripeTemplate.css,
-        PinstripeTemplate.body(doc),
-      ),
-      PdfTemplate.impact => premium(
-        ImpactTemplate.css,
-        ImpactTemplate.body(doc),
-      ),
-    };
+    final canvas = CanvasDesigns.of(template);
+    final html = canvas != null
+        ? CanvasTemplate.render(
+            canvas,
+            doc,
+            fontsCss: fontsCss,
+            size: size,
+            accentColor: hex,
+            accentSoftColor: soft,
+          )
+        : switch (template) {
+            PdfTemplate.classic => ClassicTemplate.render(
+              doc,
+              fontsCss: fontsCss,
+              size: size,
+              accentColor: hex,
+              accentSoftColor: soft,
+            ),
+            PdfTemplate.modern => ModernTemplate.render(
+              doc,
+              fontsCss: fontsCss,
+              size: size,
+              accentColor: hex,
+              accentSoftColor: soft,
+            ),
+            PdfTemplate.minimal => MinimalTemplate.render(
+              doc,
+              fontsCss: fontsCss,
+              size: size,
+              accentColor: hex,
+              accentSoftColor: soft,
+            ),
+            PdfTemplate.executive => ExecutiveTemplate.render(
+              doc,
+              fontsCss: fontsCss,
+              size: size,
+              accentColor: hex,
+              accentSoftColor: soft,
+            ),
+            PdfTemplate.studio => StudioTemplate.render(
+              doc,
+              fontsCss: fontsCss,
+              size: size,
+              accentColor: hex,
+              accentSoftColor: soft,
+            ),
+            PdfTemplate.editorial => EditorialTemplate.render(
+              doc,
+              fontsCss: fontsCss,
+              size: size,
+              accentColor: hex,
+              accentSoftColor: soft,
+            ),
+            PdfTemplate.compact => CompactTemplate.render(
+              doc,
+              fontsCss: fontsCss,
+              size: size,
+              accentColor: hex,
+              accentSoftColor: soft,
+            ),
+            PdfTemplate.ledger => LedgerTemplate.render(
+              doc,
+              fontsCss: fontsCss,
+              size: size,
+              accentColor: hex,
+              accentSoftColor: soft,
+            ),
+            PdfTemplate.nordic => NordicTemplate.render(
+              doc,
+              fontsCss: fontsCss,
+              size: size,
+              accentColor: hex,
+              accentSoftColor: soft,
+            ),
+            PdfTemplate.folio => FolioTemplate.render(
+              doc,
+              fontsCss: fontsCss,
+              size: size,
+              accentColor: hex,
+              accentSoftColor: soft,
+            ),
+            PdfTemplate.atelier => AtelierTemplate.render(
+              doc,
+              fontsCss: fontsCss,
+              size: size,
+              accentColor: hex,
+              accentSoftColor: soft,
+            ),
+            PdfTemplate.lumen => LumenTemplate.render(
+              doc,
+              fontsCss: fontsCss,
+              size: size,
+              accentColor: hex,
+              accentSoftColor: soft,
+            ),
+            PdfTemplate.aurora => premium(
+              AuroraTemplate.css,
+              AuroraTemplate.body(doc),
+            ),
+            PdfTemplate.prestige => premium(
+              PrestigeTemplate.css,
+              PrestigeTemplate.body(doc),
+            ),
+            PdfTemplate.vertex => premium(
+              VertexTemplate.css,
+              VertexTemplate.body(doc),
+            ),
+            PdfTemplate.pillar => premium(
+              PillarTemplate.css,
+              PillarTemplate.body(doc),
+            ),
+            PdfTemplate.crest => premium(
+              CrestTemplate.css,
+              CrestTemplate.body(doc),
+            ),
+            PdfTemplate.orbit => premium(
+              OrbitTemplate.css,
+              OrbitTemplate.body(doc),
+            ),
+            PdfTemplate.ribbon => premium(
+              RibbonTemplate.css,
+              RibbonTemplate.body(doc),
+            ),
+            PdfTemplate.onyx => premium(
+              OnyxTemplate.css,
+              OnyxTemplate.body(doc),
+            ),
+            PdfTemplate.metro => premium(
+              MetroTemplate.css,
+              MetroTemplate.body(doc),
+            ),
+            PdfTemplate.regal => premium(
+              RegalTemplate.css,
+              RegalTemplate.body(doc),
+            ),
+            PdfTemplate.duo => premium(DuoTemplate.css, DuoTemplate.body(doc)),
+            PdfTemplate.halo => premium(
+              HaloTemplate.css,
+              HaloTemplate.body(doc),
+            ),
+            PdfTemplate.pinstripe => premium(
+              PinstripeTemplate.css,
+              PinstripeTemplate.body(doc),
+            ),
+            PdfTemplate.impact => premium(
+              ImpactTemplate.css,
+              ImpactTemplate.body(doc),
+            ),
+            // Canvas designs are rendered above.
+            PdfTemplate.wave ||
+            PdfTemplate.prism ||
+            PdfTemplate.nocturne ||
+            PdfTemplate.mesh ||
+            PdfTemplate.corner ||
+            PdfTemplate.sash ||
+            PdfTemplate.peak ||
+            PdfTemplate.bubble ||
+            PdfTemplate.hive ||
+            PdfTemplate.tide ||
+            PdfTemplate.halftone ||
+            PdfTemplate.frame ||
+            PdfTemplate.lattice ||
+            PdfTemplate.shard ||
+            PdfTemplate.dusk ||
+            PdfTemplate.carbon => throw StateError('canvas'),
+          };
     final line = footer?.trim();
     if (line == null || line.isEmpty) return html;
     final safe = const HtmlEscape().convert(line);

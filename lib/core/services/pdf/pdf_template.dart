@@ -25,7 +25,23 @@ enum PdfTemplate {
   duo('duo'),
   halo('halo'),
   pinstripe('pinstripe'),
-  impact('impact');
+  impact('impact'),
+  wave('wave'),
+  prism('prism'),
+  nocturne('nocturne'),
+  mesh('mesh'),
+  corner('corner'),
+  sash('sash'),
+  peak('peak'),
+  bubble('bubble'),
+  hive('hive'),
+  tide('tide'),
+  halftone('halftone'),
+  frame('frame'),
+  lattice('lattice'),
+  shard('shard'),
+  dusk('dusk'),
+  carbon('carbon');
 
   const PdfTemplate(this.id);
 

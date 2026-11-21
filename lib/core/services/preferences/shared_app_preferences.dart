@@ -117,8 +117,7 @@ class SharedAppPreferences implements AppPreferences {
   String? get pdfPageSize => _prefs.getString(_pdfPageSize);
 
   @override
-  Future<void> setPdfPageSize(String id) =>
-      _prefs.setString(_pdfPageSize, id);
+  Future<void> setPdfPageSize(String id) => _prefs.setString(_pdfPageSize, id);
 
   @override
   bool get isPro => _prefs.getBool(_pro) ?? false;

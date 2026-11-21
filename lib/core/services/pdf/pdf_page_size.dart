@@ -14,6 +14,14 @@ enum PdfPageSize {
   /// The CSS `@page size` keyword.
   final String cssName;
 
+  /// Width and height of the sheet in millimetres.
+  (double, double) get paperMm => switch (this) {
+    a4 => (210, 297),
+    letter => (215.9, 279.4),
+    legal => (215.9, 355.6),
+    a5 => (148, 210),
+  };
+
   static PdfPageSize fromId(String? id) =>
       values.firstWhere((s) => s.id == id, orElse: () => a4);
 }

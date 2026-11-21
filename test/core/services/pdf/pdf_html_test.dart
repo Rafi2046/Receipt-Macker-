@@ -133,7 +133,8 @@ void main() {
   });
 
   test('template ids are stable and unknown ids fall back', () {
-    expect(PdfTemplate.values, hasLength(26));
+    expect(PdfTemplate.values, hasLength(42));
+    expect(PdfTemplate.fromId('nocturne'), PdfTemplate.nocturne);
     expect(PdfTemplate.fromId('aurora'), PdfTemplate.aurora);
     expect(PdfTemplate.fromId('impact'), PdfTemplate.impact);
     expect(PdfTemplate.fromId('modern'), PdfTemplate.modern);
@@ -180,6 +181,45 @@ void main() {
     );
     expect(html, contains('--brand-deep: #009900'));
     expect(html, contains('--brand-pair: #E0A100'));
+  });
+
+  test('art designs paint the whole sheet, calmer after page one', () {
+    final html = PdfTemplateRenderer.render(
+      PdfTemplate.prism,
+      doc(),
+      fontsCss: '',
+      accentColor: '#006A4E',
+      size: PdfPageSize.letter,
+    );
+    expect(html, contains('-14mm -14mm / 215.9mm 279.4mm no-repeat'));
+    expect(html, contains('@page :first { background-image: url("data:'));
+    expect(html, contains('html, body { background: transparent; }'));
+    // The first-page band is left off later pages.
+    final rest = RegExp(r'background: #FFFFFF url\("([^"]+)"\)')
+        .firstMatch(html)
+        ?.group(1);
+    final first = RegExp(r':first \{ background-image: url\("([^"]+)"\)')
+        .firstMatch(html)
+        ?.group(1);
+    expect(rest, isNotNull);
+    expect(first!.length, greaterThan(rest!.length));
+    expect(Uri.decodeComponent(first), contains('fill="#006A4E"'));
+  });
+
+  test('dark art designs use a highlight that reads on dark', () {
+    String hi(String accent) => RegExp(r'--cv-hi: (#[0-9A-Fa-f]+)')
+        .firstMatch(
+          PdfTemplateRenderer.render(
+            PdfTemplate.nocturne,
+            doc(),
+            fontsCss: '',
+            accentColor: accent,
+          ),
+        )!
+        .group(1)!;
+    expect(hi('#1E3A8A'), '#F59E0B'); // navy pairs with amber
+    expect(hi('#BE185D'), '#FFF1F2'); // rose pairs with dark ink: use wash
+    expect(hi('#123456'), '#E0A100'); // custom color: gold pair
   });
 
   test('edge-to-edge layouts move the page margin into the body', () {

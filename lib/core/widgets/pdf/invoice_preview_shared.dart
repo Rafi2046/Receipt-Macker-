@@ -125,9 +125,16 @@ class PreviewTitleBlock extends StatelessWidget {
 }
 
 class PreviewBillTo extends StatelessWidget {
-  const PreviewBillTo({required this.accent, super.key});
+  const PreviewBillTo({
+    required this.accent,
+    this.nameColor = InvoicePreviewInk.ink,
+    this.detailColor = InvoicePreviewInk.mute,
+    super.key,
+  });
 
   final Color accent;
+  final Color nameColor;
+  final Color detailColor;
 
   @override
   Widget build(BuildContext context) {
@@ -145,13 +152,13 @@ class PreviewBillTo extends StatelessWidget {
           InvoicePreviewSample.buyer,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: InvoicePreviewType.heading(InvoicePreviewInk.ink),
+          style: InvoicePreviewType.heading(nameColor),
         ),
         Text(
           InvoicePreviewSample.buyerDetail,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: InvoicePreviewType.body(InvoicePreviewInk.mute),
+          style: InvoicePreviewType.body(detailColor),
         ),
       ],
     );
@@ -159,9 +166,14 @@ class PreviewBillTo extends StatelessWidget {
 }
 
 class PreviewMeta extends StatelessWidget {
-  const PreviewMeta({this.align = CrossAxisAlignment.end, super.key});
+  const PreviewMeta({
+    this.align = CrossAxisAlignment.end,
+    this.color = InvoicePreviewInk.mute,
+    super.key,
+  });
 
   final CrossAxisAlignment align;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -173,14 +185,14 @@ class PreviewMeta extends StatelessWidget {
           '${l10n.fieldIssueDate}: ${InvoicePreviewSample.issueDate}',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: InvoicePreviewType.body(InvoicePreviewInk.mute),
+          style: InvoicePreviewType.body(color),
         ),
         const SizedBox(height: 2),
         Text(
           '${l10n.fieldDueDate}: ${InvoicePreviewSample.dueDate}',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: InvoicePreviewType.body(InvoicePreviewInk.mute),
+          style: InvoicePreviewType.body(color),
         ),
       ],
     );
@@ -239,9 +251,7 @@ class PreviewItemsTable extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
             decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: InvoicePreviewInk.line),
-              ),
+              border: Border(bottom: BorderSide(color: InvoicePreviewInk.line)),
             ),
             child: Row(
               children: [
@@ -278,10 +288,22 @@ class PreviewItemsTable extends StatelessWidget {
 }
 
 class PreviewTotals extends StatelessWidget {
-  const PreviewTotals({required this.accent, this.filledGrand = true, super.key});
+  const PreviewTotals({
+    required this.accent,
+    this.filledGrand = true,
+    this.textColor = InvoicePreviewInk.ink,
+    this.grandTextColor,
+    super.key,
+  });
 
   final Color accent;
   final bool filledGrand;
+
+  /// Subtotal and tax values; labels are a softer version of it.
+  final Color textColor;
+
+  /// The total row's text; defaults to white on a filled bar.
+  final Color? grandTextColor;
 
   @override
   Widget build(BuildContext context) {
@@ -292,8 +314,16 @@ class PreviewTotals extends StatelessWidget {
         width: 110,
         child: Column(
           children: [
-            _TotalRow(label: l10n.totalSubtotal, value: InvoicePreviewSample.subtotal),
-            _TotalRow(label: l10n.totalTax('5%'), value: InvoicePreviewSample.tax),
+            _TotalRow(
+              label: l10n.totalSubtotal,
+              value: InvoicePreviewSample.subtotal,
+              color: textColor,
+            ),
+            _TotalRow(
+              label: l10n.totalTax('5%'),
+              value: InvoicePreviewSample.tax,
+              color: textColor,
+            ),
             const SizedBox(height: 2),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
@@ -309,14 +339,16 @@ class PreviewTotals extends StatelessWidget {
                     child: Text(
                       l10n.totalTotal,
                       style: InvoicePreviewType.heading(
-                        filledGrand ? InvoicePreviewInk.paper : accent,
+                        grandTextColor ??
+                            (filledGrand ? InvoicePreviewInk.paper : accent),
                       ),
                     ),
                   ),
                   Text(
                     InvoicePreviewSample.total,
                     style: InvoicePreviewType.amount(
-                      filledGrand ? InvoicePreviewInk.paper : accent,
+                      grandTextColor ??
+                          (filledGrand ? InvoicePreviewInk.paper : accent),
                     ),
                   ),
                 ],
@@ -330,10 +362,15 @@ class PreviewTotals extends StatelessWidget {
 }
 
 class _TotalRow extends StatelessWidget {
-  const _TotalRow({required this.label, required this.value});
+  const _TotalRow({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
 
   final String label;
   final String value;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -344,13 +381,10 @@ class _TotalRow extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: InvoicePreviewType.label(InvoicePreviewInk.mute),
+              style: InvoicePreviewType.label(color.withValues(alpha: 0.7)),
             ),
           ),
-          Text(
-            value,
-            style: InvoicePreviewType.amount(InvoicePreviewInk.ink),
-          ),
+          Text(value, style: InvoicePreviewType.amount(color)),
         ],
       ),
     );
@@ -365,11 +399,7 @@ class PreviewSignature extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 56,
-          height: 1,
-          color: InvoicePreviewInk.mute,
-        ),
+        Container(width: 56, height: 1, color: InvoicePreviewInk.mute),
         const SizedBox(height: 2),
         Text(
           context.l10n.pdfSignature,
