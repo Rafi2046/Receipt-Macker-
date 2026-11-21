@@ -38,17 +38,21 @@ class InvoicePreviewAurora extends StatelessWidget {
   Widget build(BuildContext context) {
     final tones = PreviewTones.of(accent);
     Widget card(Widget child) => Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: InvoicePreviewInk.paper,
-          borderRadius: BorderRadius.circular(3),
-          border: Border(
-            top: BorderSide(color: tones.pair, width: 2),
-            bottom: const BorderSide(color: InvoicePreviewInk.line),
+      // A border with mixed colors cannot take a borderRadius, so the
+      // rounding comes from the clip instead.
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(3),
+        child: Container(
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            color: InvoicePreviewInk.paper,
+            border: Border(
+              top: BorderSide(color: tones.pair, width: 2),
+              bottom: const BorderSide(color: InvoicePreviewInk.line),
+            ),
           ),
+          child: child,
         ),
-        child: child,
       ),
     );
     return Stack(

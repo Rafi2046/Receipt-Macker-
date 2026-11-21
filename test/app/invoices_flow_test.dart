@@ -77,7 +77,7 @@ void main() {
     expect(find.text('No invoices yet'), findsOneWidget);
 
     await tap(tester, find.text('Create your first invoice'));
-    expect(find.text('INV-0001'), findsOneWidget);
+    expect(find.text('INV-0001'), findsNWidgets(2), reason: 'header, field');
     await tap(tester, find.text('Save'));
     expect(find.text('Add at least one item'), findsOneWidget);
 
@@ -85,7 +85,7 @@ void main() {
     await tap(tester, find.text('Karim Store'));
     expect(find.text('Karim Store'), findsOneWidget);
 
-    await tap(tester, find.widgetWithText(OutlinedButton, 'Add an item'));
+    await tap(tester, find.widgetWithText(TextButton, 'Add an item'));
     await tap(tester, find.text('Logo design'));
     expect(find.text('Tax 15%'), findsOneWidget, reason: 'item default tax');
     expect(find.text('৳5,750'), findsOneWidget);
@@ -99,7 +99,7 @@ void main() {
     expect(find.text('Sent'), findsOneWidget);
 
     await menu(tester, 'Duplicate');
-    expect(find.text('INV-0002'), findsOneWidget);
+    expect(find.text('INV-0002'), findsNWidgets(2), reason: 'header, field');
     await tap(tester, find.text('Save'));
     expect(find.text('INV-0002'), findsOneWidget);
     expect(find.text('Draft'), findsOneWidget, reason: 'a copy is a draft');
@@ -120,7 +120,7 @@ void main() {
     await openHome(tester);
     await tap(tester, find.byTooltip('Invoices'));
     await tap(tester, find.text('Create your first invoice'));
-    await tap(tester, find.widgetWithText(OutlinedButton, 'Add an item'));
+    await tap(tester, find.widgetWithText(TextButton, 'Add an item'));
     await tap(tester, find.text('Logo design'));
     await tester.pageBack();
     await settle(tester);
@@ -134,11 +134,16 @@ void main() {
     await openHome(tester, language: 'bn');
     await tap(tester, find.byTooltip('ইনভয়েস'));
     await tap(tester, find.text('প্রথম ইনভয়েস তৈরি করুন'));
-    await tap(tester, find.text('বিল প্রাপক').first);
-    await tap(
-      tester,
-      find.widgetWithText(OutlinedButton, 'পণ্য বা সেবা যোগ করুন'),
+    // The editor list builds lazily, so bring the items section into view.
+    final addItem = find.widgetWithText(TextButton, 'পণ্য বা সেবা যোগ করুন');
+    await tester.scrollUntilVisible(
+      addItem,
+      200,
+      scrollable: find.byType(Scrollable).first,
     );
+    await tester.ensureVisible(addItem);
+    await tester.pump();
+    await tap(tester, addItem);
     await tap(tester, find.text('Logo design'));
     await tap(tester, find.text('Logo design').first);
     expect(find.text('লাইন আইটেম'), findsOneWidget);

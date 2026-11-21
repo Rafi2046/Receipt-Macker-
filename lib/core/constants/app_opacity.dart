@@ -6,4 +6,7 @@ abstract final class AppOpacity {
 
   /// Soft drop shadow under floating bars.
   static const double shadow = 0.08;
+
+  /// Secondary text on a dark panel.
+  static const double mutedOnPanel = 0.64;
 }

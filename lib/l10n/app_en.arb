@@ -32,6 +32,7 @@
   "themeLight": "Light",
   "themeDark": "Dark",
   "cancel": "Cancel",
+  "close": "Close",
   "confirm": "Confirm",
   "delete": "Delete",
   "ok": "OK",
@@ -358,6 +359,7 @@
     }
   },
   "dueCustom": "Pick a date",
+  "sectionInvoiceDetails": "Invoice details",
   "sectionBillTo": "Bill to",
   "chooseClient": "Choose a client",
   "chooseClientHint": "Optional. Leave empty for a walk-in customer.",

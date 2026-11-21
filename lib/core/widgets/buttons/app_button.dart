@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../constants/app_opacity.dart';
 import '../../constants/app_sizes.dart';
 
-enum AppButtonVariant { primary, secondary, text, danger }
+enum AppButtonVariant { primary, secondary, tonal, text, danger }
 
 /// The app's one button. Pass `onPressed: null` to disable it.
 /// While [isLoading], it shows a spinner and ignores taps.
@@ -43,6 +44,15 @@ class AppButton extends StatelessWidget {
         onPressed: callback,
         icon: leading,
         label: text,
+      ),
+      AppButtonVariant.tonal => FilledButton.icon(
+        onPressed: callback,
+        icon: leading,
+        label: text,
+        style: FilledButton.styleFrom(
+          backgroundColor: colors.primary.withValues(alpha: AppOpacity.tint),
+          foregroundColor: colors.primary,
+        ),
       ),
       AppButtonVariant.text => TextButton.icon(
         onPressed: callback,

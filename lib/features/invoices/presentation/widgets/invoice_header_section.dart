@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_currencies.dart';
-import '../../../../core/constants/app_icons.dart';
+import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/calendar_date.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
@@ -11,6 +11,7 @@ import '../../../../core/widgets/inputs/app_text_field.dart';
 import '../../../../core/widgets/inputs/currency_picker_field.dart';
 import '../../../../core/widgets/inputs/date_field.dart';
 import '../../../../core/widgets/inputs/dropdown_field.dart';
+import '../../../../core/widgets/layout/form_group_card.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../domain/models/due_term.dart';
 import '../../domain/models/invoice_field.dart';
@@ -29,44 +30,45 @@ class InvoiceHeaderSection extends StatelessWidget {
     final l10n = context.l10n;
     final draft = form.draft;
     final digits = AppFormatters(Localizations.localeOf(context).languageCode);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: AppSpacing.md,
+    return FormGroupCard(
       children: [
         AppTextField(
           label: l10n.fieldInvoiceNumber,
           initialValue: draft.number,
-          prefixIcon: AppIcons.invoice,
           errorText: l10n.validationMessage(form.errorFor(InvoiceField.number)),
           onChanged: vm.setNumber,
         ),
-        DateField(
-          label: l10n.fieldIssueDate,
-          value: draft.issueDate.toLocalDateTime(),
-          onChanged: (d) => vm.setIssueDate(CalendarDate.fromLocal(d)),
-        ),
-        DropdownField<DueTerm>(
-          label: l10n.fieldDueTerm,
-          value: form.dueTerm,
-          options: [
-            for (final t in DueTerm.values) (t, _termLabel(l10n, digits, t)),
-          ],
-          onChanged: (t) =>
-              t == DueTerm.custom ? _pickDueDate(context) : vm.setDueTerm(t),
-        ),
-        DateField(
-          label: l10n.fieldDueDate,
-          value: draft.dueDate.toLocalDateTime(),
-          errorText: l10n.validationMessage(
-            form.errorFor(InvoiceField.dueDate),
+        _FieldPair(
+          first: DateField(
+            label: l10n.fieldIssueDate,
+            value: draft.issueDate.toLocalDateTime(),
+            onChanged: (d) => vm.setIssueDate(CalendarDate.fromLocal(d)),
           ),
-          onChanged: (d) => vm.setDueDate(CalendarDate.fromLocal(d)),
+          second: DateField(
+            label: l10n.fieldDueDate,
+            value: draft.dueDate.toLocalDateTime(),
+            errorText: l10n.validationMessage(
+              form.errorFor(InvoiceField.dueDate),
+            ),
+            onChanged: (d) => vm.setDueDate(CalendarDate.fromLocal(d)),
+          ),
         ),
-        CurrencyPickerField(
-          label: l10n.fieldCurrency,
-          value: draft.currencyCode,
-          codes: {...AppCurrencies.common, draft.currencyCode}.toList(),
-          onChanged: vm.setCurrency,
+        _FieldPair(
+          first: DropdownField<DueTerm>(
+            label: l10n.fieldDueTerm,
+            value: form.dueTerm,
+            options: [
+              for (final t in DueTerm.values) (t, _termLabel(l10n, digits, t)),
+            ],
+            onChanged: (t) =>
+                t == DueTerm.custom ? _pickDueDate(context) : vm.setDueTerm(t),
+          ),
+          second: CurrencyPickerField(
+            label: l10n.fieldCurrency,
+            value: draft.currencyCode,
+            codes: {...AppCurrencies.common, draft.currencyCode}.toList(),
+            onChanged: vm.setCurrency,
+          ),
         ),
       ],
     );
@@ -94,4 +96,54 @@ class InvoiceHeaderSection extends StatelessWidget {
     DueTerm.custom => l10n.dueCustom,
     _ => l10n.dueInDays(digits.integer(term.days ?? 0)),
   };
+}
+
+/// Two fields side by side, or stacked when the row is too narrow or the
+/// system font is large.
+class _FieldPair extends StatelessWidget {
+  const _FieldPair({required this.first, required this.second});
+
+  final Widget first;
+  final Widget second;
+
+  /// Narrowest row that still fits a date and its icon in each half.
+  static const double _minRowWidth = 320;
+  static const double _maxTextScale = 1.15;
+
+  @override
+  Widget build(BuildContext context) {
+    final scale = MediaQuery.textScalerOf(context).scale(1);
+    return LayoutBuilder(
+      builder: (context, box) {
+        if (box.maxWidth < _minRowWidth || scale > _maxTextScale) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              first,
+              const Divider(
+                height: AppSizes.borderWidth,
+                indent: AppSpacing.lg,
+                endIndent: AppSpacing.lg,
+              ),
+              second,
+            ],
+          );
+        }
+        return IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(child: first),
+              const VerticalDivider(
+                width: AppSizes.borderWidth,
+                indent: AppSpacing.md,
+                endIndent: AppSpacing.md,
+              ),
+              Expanded(child: second),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }

@@ -53,7 +53,9 @@ class CurrencyPickerField extends StatelessWidget {
             children: [
               Text(
                 AppCurrencies.flag(value),
-                style: const TextStyle(fontSize: 22),
+                // Tight line height, so the flag does not make the field
+                // taller than the ones beside it.
+                style: const TextStyle(fontSize: 22, height: 1),
               ),
               const SizedBox(width: AppSpacing.sm),
               Expanded(

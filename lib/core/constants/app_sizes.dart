@@ -20,6 +20,7 @@ abstract final class AppSizes {
   static const double progressSm = 20;
   static const double progressStroke = 2.5;
   static const double emptyStateMaxWidth = 360;
+  static const double emptyIllustration = 160;
   static const double imagePreviewHeight = 96;
   static const double signaturePadHeight = 220;
   static const double signatureStroke = 2.5;

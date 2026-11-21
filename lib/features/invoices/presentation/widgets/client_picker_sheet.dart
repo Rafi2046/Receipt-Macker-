@@ -47,7 +47,7 @@ class ClientPickerSheet extends ConsumerWidget {
         AppButton(
           label: l10n.clientNewTitle,
           icon: AppIcons.add,
-          variant: AppButtonVariant.text,
+          variant: AppButtonVariant.tonal,
           onPressed: createNew,
         ),
       ],

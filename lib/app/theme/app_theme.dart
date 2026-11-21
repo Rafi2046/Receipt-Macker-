@@ -118,6 +118,14 @@ abstract final class AppTheme {
           color: c.textSecondary,
         ),
       ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: c.surface,
+        modalBackgroundColor: c.surface,
+        surfaceTintColor: c.surface,
+        dragHandleColor: c.border,
+        showDragHandle: true,
+        shape: const RoundedRectangleBorder(borderRadius: AppRadius.sheet),
+      ),
       progressIndicatorTheme: ProgressIndicatorThemeData(color: c.primary),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: c.primary,

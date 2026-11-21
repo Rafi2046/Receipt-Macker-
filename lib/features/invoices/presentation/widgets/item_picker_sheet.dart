@@ -47,13 +47,14 @@ class ItemPickerSheet extends ConsumerWidget {
       actions: [
         AppButton(
           label: l10n.addOneOffLine,
-          variant: AppButtonVariant.text,
+          icon: AppIcons.oneOff,
+          variant: AppButtonVariant.secondary,
           onPressed: () => close(const ItemPick.oneOff()),
         ),
         AppButton(
           label: l10n.itemNewTitle,
           icon: AppIcons.add,
-          variant: AppButtonVariant.text,
+          variant: AppButtonVariant.tonal,
           onPressed: () => close(_newItem),
         ),
       ],

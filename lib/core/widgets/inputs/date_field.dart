@@ -59,7 +59,12 @@ class DateField extends StatelessWidget {
               enabled: enabled,
               suffixIcon: const Icon(AppIcons.date),
             ),
-            child: Text(text),
+            child: Text(
+              text,
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.fade,
+            ),
           ),
         ),
       ),

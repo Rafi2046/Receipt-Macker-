@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/extensions/validation_message_extension.dart';
 import '../../../../core/widgets/inputs/amount_field.dart';
 import '../../../../core/widgets/inputs/percent_field.dart';
+import '../../../../core/widgets/inputs/soft_input_theme.dart';
+import '../../../../core/widgets/layout/form_group_card.dart';
 import '../../domain/models/invoice_field.dart';
 import '../view_models/invoice_editor_state.dart';
 import '../view_models/invoice_editor_view_model.dart';
@@ -26,18 +29,22 @@ class InvoiceAdjustmentsSection extends StatelessWidget {
     final l10n = context.l10n;
     final draft = form.draft;
     String? error(InvoiceField f) => l10n.validationMessage(form.errorFor(f));
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: AppSpacing.md,
+    return FormGroupCard(
       children: [
-        DiscountInput(
-          // Rebuild the field when the currency changes the amount's scale.
-          key: ValueKey(draft.currencyCode),
-          label: l10n.fieldDiscount,
-          currencyCode: draft.currencyCode,
-          discount: draft.discount,
-          errorText: error(InvoiceField.discount),
-          onChanged: vm.setDiscount,
+        Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: SoftInputTheme(
+            style: SoftInputStyle.tile,
+            child: DiscountInput(
+              // Rebuild the field when the currency changes the amount's scale.
+              key: ValueKey(draft.currencyCode),
+              label: l10n.fieldDiscount,
+              currencyCode: draft.currencyCode,
+              discount: draft.discount,
+              errorText: error(InvoiceField.discount),
+              onChanged: vm.setDiscount,
+            ),
+          ),
         ),
         PercentField(
           label: l10n.fieldTaxRate,
@@ -47,8 +54,11 @@ class InvoiceAdjustmentsSection extends StatelessWidget {
           onChanged: vm.setTaxRate,
         ),
         SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text(l10n.taxInclusiveLabel),
+          contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          title: Text(
+            l10n.taxInclusiveLabel,
+            style: context.textStyles.bodyLarge,
+          ),
           value: draft.taxInclusive,
           onChanged: (v) => vm.setTaxInclusive(inclusive: v),
         ),

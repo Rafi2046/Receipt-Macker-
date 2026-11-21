@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_icons.dart';
-import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
+import '../../../../core/widgets/feedback/empty_illustration.dart';
 import '../../../../core/widgets/layout/app_card.dart';
 
 /// Compact empty invoices prompt for Home (less vertical waste than EmptyState).
@@ -21,12 +21,8 @@ class HomeEmptyCard extends StatelessWidget {
     return AppCard(
       child: Column(
         children: [
-          Icon(
-            AppIcons.invoice,
-            size: AppSizes.iconXl,
-            color: colors.textSecondary,
-          ),
-          const SizedBox(height: AppSpacing.md),
+          const EmptyIllustration(icon: AppIcons.invoice),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             l10n.invoicesEmptyTitle,
             textAlign: TextAlign.center,

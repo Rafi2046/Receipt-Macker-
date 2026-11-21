@@ -25,6 +25,7 @@ abstract final class AppIcons {
   static const IconData settings = Icons.settings_outlined;
   static const IconData add = Icons.add;
   static const IconData edit = Icons.edit_outlined;
+  static const IconData oneOff = Icons.edit_note_rounded;
   static const IconData delete = Icons.delete_outline;
   static const IconData share = Icons.share_outlined;
   static const IconData print = Icons.print_outlined;

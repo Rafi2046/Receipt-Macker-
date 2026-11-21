@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_opacity.dart';
+import '../../../../core/constants/app_radius.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/display/amount_text.dart';
 import '../../../../core/widgets/layout/app_card.dart';
-import '../../../../core/widgets/layout/app_divider.dart';
 import '../../domain/models/invoice_totals.dart';
 
 /// Subtotal, discount, tax, shipping and total. Rows that are zero are left
@@ -62,12 +63,11 @@ class TotalsSummary extends StatelessWidget {
               minor: t.shipping,
               currency: t.currencyCode,
             ),
-          const AppDivider(spacing: AppSpacing.xs),
-          _Row(
+          const SizedBox(height: AppSpacing.xxs),
+          _TotalBand(
             label: l10n.totalTotal,
             minor: t.total,
             currency: t.currencyCode,
-            strong: true,
           ),
           if (t.paid != 0) ...[
             _Row(
@@ -124,6 +124,61 @@ class _Row extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// The grand total on a tinted band, so it reads first.
+class _TotalBand extends StatelessWidget {
+  const _TotalBand({
+    required this.label,
+    required this.minor,
+    required this.currency,
+  });
+
+  final String label;
+  final int minor;
+  final String currency;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colors.primary.withValues(alpha: AppOpacity.tint),
+        borderRadius: AppRadius.input,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.md,
+        ),
+        child: Row(
+          spacing: AppSpacing.md,
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: context.textStyles.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            Flexible(
+              child: Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: AmountText(
+                  minor: minor,
+                  currencyCode: currency,
+                  size: AmountTextSize.lg,
+                  color: colors.primary,
+                  alignment: AlignmentDirectional.centerEnd,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

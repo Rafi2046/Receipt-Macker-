@@ -26,6 +26,7 @@ class ErrorView extends StatelessWidget {
     return EmptyState(
       icon: AppIcons.error,
       iconColor: context.appColors.danger,
+      illustrated: false,
       title: l10n.errorTitle,
       message: message ?? l10n.messageFor(error),
       actionLabel: retry == null ? null : l10n.retry,

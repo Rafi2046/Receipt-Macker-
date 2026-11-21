@@ -70,6 +70,16 @@ abstract final class AppTextStyles {
     height: _tight,
   );
 
+  /// Small spaced caption above a group of form fields.
+  static const TextStyle overline = TextStyle(
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFamilyFallback,
+    fontSize: 12,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 0.8,
+    height: _tight,
+  );
+
   /// Amounts use tabular figures so columns of numbers line up.
   static const TextStyle amountLg = TextStyle(
     fontFamily: fontFamily,

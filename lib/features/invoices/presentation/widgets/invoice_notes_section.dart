@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/inputs/app_text_field.dart';
+import '../../../../core/widgets/layout/form_group_card.dart';
 import '../view_models/invoice_editor_state.dart';
 import '../view_models/invoice_editor_view_model.dart';
 
@@ -28,9 +28,7 @@ class InvoiceNotesSection extends StatelessWidget {
           textCapitalization: TextCapitalization.sentences,
           onChanged: onChanged,
         );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: AppSpacing.md,
+    return FormGroupCard(
       children: [
         field(l10n.fieldNotes, draft.notes, vm.setNotes),
         field(l10n.fieldTerms, draft.terms, vm.setTerms),

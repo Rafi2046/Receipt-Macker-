@@ -5,8 +5,9 @@ import '../../constants/app_icons.dart';
 import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 import '../buttons/app_button.dart';
+import 'empty_illustration.dart';
 
-/// Centered icon, title, message and an optional first action.
+/// Centered animated illustration, title, message and an optional first action.
 /// Scrolls instead of overflowing with large system fonts.
 class EmptyState extends StatelessWidget {
   const EmptyState({
@@ -17,6 +18,7 @@ class EmptyState extends StatelessWidget {
     this.actionIcon = AppIcons.add,
     this.onAction,
     this.iconColor,
+    this.illustrated = true,
     super.key,
   });
 
@@ -27,6 +29,10 @@ class EmptyState extends StatelessWidget {
   final IconData actionIcon;
   final VoidCallback? onAction;
   final Color? iconColor;
+
+  /// The animated character wearing [icon]. False shows the plain icon,
+  /// for errors.
+  final bool illustrated;
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +48,20 @@ class EmptyState extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                icon,
-                size: AppSizes.iconXl,
-                color: iconColor ?? colors.textSecondary,
-              ),
+              if (illustrated)
+                EmptyIllustration(icon: icon)
+              else
+                Icon(
+                  icon,
+                  size: AppSizes.iconXl,
+                  color: iconColor ?? colors.textSecondary,
+                ),
               const SizedBox(height: AppSpacing.lg),
               Text(
                 title,
-                style: context.textStyles.titleMedium,
+                style: context.textStyles.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.sm),

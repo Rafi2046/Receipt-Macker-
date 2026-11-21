@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
-import '../../../../core/widgets/layout/section_header.dart';
+import '../../../../core/widgets/inputs/soft_input_theme.dart';
+import '../../../../core/widgets/layout/form_section.dart';
 import '../view_models/invoice_editor_state.dart';
 import '../view_models/invoice_editor_view_model.dart';
 import 'bill_to_card.dart';
 import 'client_picker_sheet.dart';
 import 'invoice_adjustments_section.dart';
+import 'invoice_editor_hero.dart';
 import 'invoice_header_section.dart';
 import 'invoice_lines_section.dart';
 import 'invoice_notes_section.dart';
@@ -56,54 +57,71 @@ class InvoiceEditorForm extends ConsumerWidget {
     final l10n = context.l10n;
     final vm = ref.read(provider.notifier);
     final draft = form.draft;
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.pagePadding,
-        AppSpacing.pagePadding,
-        AppSpacing.pagePadding,
-        AppSizes.fabClearance,
+    return SoftInputTheme(
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.pagePadding,
+          AppSpacing.sm,
+          AppSpacing.pagePadding,
+          AppSpacing.xxl,
+        ),
+        children: [
+          InvoiceEditorHero(
+            number: draft.number,
+            totalMinor: form.totals.total,
+            currencyCode: form.totals.currencyCode,
+            issueDate: draft.issueDate.toLocalDateTime(),
+            dueDate: draft.dueDate.toLocalDateTime(),
+          ),
+          const _Gap(),
+          FormSection(
+            title: l10n.sectionInvoiceDetails,
+            child: InvoiceHeaderSection(form: form, vm: vm),
+          ),
+          const _Gap(),
+          FormSection(
+            title: l10n.sectionBillTo,
+            child: BillToCard(
+              billTo: draft.billTo,
+              onChoose: () => _chooseClient(context, ref),
+              onRemove: draft.billTo == null ? null : vm.clearClient,
+            ),
+          ),
+          const _Gap(),
+          FormSection(
+            title: l10n.itemsTitle,
+            child: InvoiceLinesSection(
+              form: form,
+              onEditLine: (id) => _editLine(context, ref, id),
+              onAdd: () => _addLine(context, ref),
+            ),
+          ),
+          const _Gap(),
+          FormSection(
+            title: l10n.sectionAdjustments,
+            child: InvoiceAdjustmentsSection(form: form, vm: vm),
+          ),
+          const _Gap(),
+          TotalsSummary(
+            totals: form.totals,
+            taxRateBasisPoints: draft.taxRateBasisPoints,
+            taxInclusive: draft.taxInclusive,
+          ),
+          const _Gap(),
+          FormSection(
+            title: l10n.sectionNotesTerms,
+            child: InvoiceNotesSection(form: form, vm: vm),
+          ),
+        ],
       ),
-      children: [
-        InvoiceHeaderSection(form: form, vm: vm),
-        _Gap(title: l10n.sectionBillTo),
-        BillToCard(
-          billTo: draft.billTo,
-          onChoose: () => _chooseClient(context, ref),
-          onRemove: draft.billTo == null ? null : vm.clearClient,
-        ),
-        _Gap(title: l10n.itemsTitle),
-        InvoiceLinesSection(
-          form: form,
-          onEditLine: (id) => _editLine(context, ref, id),
-          onAdd: () => _addLine(context, ref),
-        ),
-        _Gap(title: l10n.sectionAdjustments),
-        InvoiceAdjustmentsSection(form: form, vm: vm),
-        const SizedBox(height: AppSpacing.sectionGap),
-        TotalsSummary(
-          totals: form.totals,
-          taxRateBasisPoints: draft.taxRateBasisPoints,
-          taxInclusive: draft.taxInclusive,
-        ),
-        _Gap(title: l10n.sectionNotesTerms),
-        InvoiceNotesSection(form: form, vm: vm),
-      ],
     );
   }
 }
 
-/// Section spacing and header.
+/// Space between two sections.
 class _Gap extends StatelessWidget {
-  const _Gap({required this.title});
-
-  final String title;
+  const _Gap();
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(
-      top: AppSpacing.sectionGap,
-      bottom: AppSpacing.sm,
-    ),
-    child: SectionHeader(title: title),
-  );
+  Widget build(BuildContext context) => const SizedBox(height: AppSpacing.xl);
 }

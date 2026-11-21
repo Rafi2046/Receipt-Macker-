@@ -6,6 +6,7 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/extensions/validation_message_extension.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
+import '../../../../core/widgets/layout/app_card.dart';
 import '../../../../core/widgets/layout/app_divider.dart';
 import '../../domain/models/invoice_field.dart';
 import '../view_models/invoice_editor_state.dart';
@@ -30,39 +31,44 @@ class InvoiceLinesSection extends StatelessWidget {
     final draft = form.draft;
     final totals = form.totals;
     final error = l10n.validationMessage(form.errorFor(InvoiceField.lines));
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (final (i, line) in draft.lines.indexed) ...[
-          if (i > 0) const AppDivider(spacing: AppSpacing.xxs),
-          LineItemRow(
-            line: line,
-            totals: totals.lines[i],
-            currencyCode: draft.currencyCode,
-            hasError: form.lineErrors(line.id).isNotEmpty,
-            onTap: () => onEditLine(line.id),
-          ),
-        ],
-        if (error != null)
-          Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-            child: Text(
-              error,
-              style: context.textStyles.bodySmall?.copyWith(
-                color: context.appColors.danger,
+    return AppCard(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final (i, line) in draft.lines.indexed) ...[
+            if (i > 0) const AppDivider(spacing: AppSpacing.xxs),
+            LineItemRow(
+              line: line,
+              totals: totals.lines[i],
+              currencyCode: draft.currencyCode,
+              hasError: form.lineErrors(line.id).isNotEmpty,
+              onTap: () => onEditLine(line.id),
+            ),
+          ],
+          if (draft.lines.isNotEmpty) const AppDivider(spacing: AppSpacing.xxs),
+          if (error != null)
+            Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.md),
+              child: Text(
+                error,
+                style: context.textStyles.bodySmall?.copyWith(
+                  color: context.appColors.danger,
+                ),
               ),
             ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+            child: AppButton(
+              label: l10n.chooseItem,
+              icon: AppIcons.add,
+              variant: AppButtonVariant.text,
+              expand: true,
+              onPressed: onAdd,
+            ),
           ),
-        Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: AppButton(
-            label: l10n.chooseItem,
-            icon: AppIcons.add,
-            variant: AppButtonVariant.secondary,
-            onPressed: onAdd,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../app/theme/app_colors.dart';
 import '../../constants/app_icons.dart';
+import '../../constants/app_opacity.dart';
 import '../../constants/app_spacing.dart';
 import '../../utils/extensions/l10n_extension.dart';
 import '../buttons/app_button.dart';
@@ -71,17 +73,48 @@ class EditorScaffold extends StatelessWidget {
         bottomBarAboveKeyboard: true,
         bottomBar: save == null
             ? null
-            : SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.pagePadding),
-                  child: AppButton(
-                    label: context.l10n.save,
-                    expand: true,
-                    isLoading: isSaving,
-                    onPressed: save,
-                  ),
-                ),
-              ),
+            : _SaveBar(isSaving: isSaving, onSave: save),
+      ),
+    );
+  }
+}
+
+/// Save on its own surface, lifted off the form by a hairline and a shadow.
+class _SaveBar extends StatelessWidget {
+  const _SaveBar({required this.isSaving, required this.onSave});
+
+  final bool isSaving;
+  final VoidCallback onSave;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final button = AppButton(
+      label: context.l10n.save,
+      expand: true,
+      isLoading: isSaving,
+      onPressed: onSave,
+    );
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colors.surface,
+        border: Border(top: BorderSide(color: colors.border)),
+        boxShadow: [
+          BoxShadow(
+            color: colors.textPrimary.withValues(alpha: AppOpacity.shadow),
+            blurRadius: AppSpacing.lg,
+            offset: const Offset(0, -AppSpacing.xs),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.pagePadding,
+            vertical: AppSpacing.md,
+          ),
+          child: button,
+        ),
       ),
     );
   }
