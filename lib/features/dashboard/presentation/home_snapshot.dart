@@ -61,7 +61,8 @@ HomeSnapshot assembleHome({
     final thisMonth =
         invoice.issueDate.year == today.year &&
         invoice.issueDate.month == today.month;
-    if (thisMonth) {
+    // A draft is not billed yet; the invoice list's overview skips it too.
+    if (thisMonth && status != InvoiceStatus.draft) {
       invoiced += invoice.totalMinor;
       received += invoice.paidMinor;
     }

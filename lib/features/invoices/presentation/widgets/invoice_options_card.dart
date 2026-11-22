@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_currencies.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
@@ -32,6 +33,8 @@ class InvoiceOptionsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    // Payments are in the invoice's currency; it cannot change after one.
+    final currencyLocked = draft.paidMinor > 0;
     String? firstLine(String s) {
       final line = s.trim().split('\n').first.trim();
       return line.isEmpty ? null : line;
@@ -41,9 +44,13 @@ class InvoiceOptionsCard extends StatelessWidget {
       EditorRow(
         icon: AppIcons.currency,
         title: l10n.fieldCurrency,
+        subtitle: currencyLocked ? l10n.currencyLockedHint : null,
         value:
             '${AppCurrencies.flag(draft.currencyCode)} ${draft.currencyCode}',
-        onTap: onCurrency,
+        trailing: currencyLocked
+            ? Icon(AppIcons.lock, color: context.appColors.textSecondary)
+            : null,
+        onTap: currencyLocked ? null : onCurrency,
       ),
       EditorRow(
         icon: AppIcons.paymentMethod,

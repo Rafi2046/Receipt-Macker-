@@ -14,6 +14,7 @@ extension ValidationMessageX on AppLocalizations {
     ValidationError.mustBePositive => validationPositive,
     ValidationError.amountTooLarge => validationAmountTooLarge,
     ValidationError.amountAboveBalance => validationAboveBalance,
+    ValidationError.belowPaid => validationBelowPaid,
     ValidationError.discountTooLarge => validationDiscountTooLarge,
     ValidationError.dueBeforeIssue => validationDueBeforeIssue,
     ValidationError.noLines => validationNoLines,

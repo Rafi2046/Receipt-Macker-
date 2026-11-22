@@ -120,7 +120,10 @@ class InvoiceEditorViewModel extends _$InvoiceEditorViewModel {
   void setDueDate(CalendarDate date) => _edit((d) => d.copyWith(dueDate: date));
 
   /// Keeps the face value of amounts (৳500.00 becomes ¥500).
+  /// Ignored once a payment exists: payments are recorded in the invoice's
+  /// currency, so switching would change what they are worth.
   void setCurrency(String code) {
+    if ((state.value?.draft.paidMinor ?? 0) > 0) return;
     _edit((d) => withCurrency(d, code));
     _patch(
       (f) => f.copyWith(

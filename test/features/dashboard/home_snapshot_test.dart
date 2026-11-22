@@ -80,7 +80,8 @@ void main() {
       ],
     );
 
-    expect(snapshot.invoicedMinor, 500000 + 200000 + 900000);
+    // The draft (900000) is not billed yet, so it is left out.
+    expect(snapshot.invoicedMinor, 500000 + 200000);
     expect(snapshot.receivedMinor, 200000);
     expect(snapshot.outstandingMinor, 500000 + 100000);
     expect(snapshot.overdueCount, 1);

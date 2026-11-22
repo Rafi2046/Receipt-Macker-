@@ -1146,5 +1146,7 @@
   "backupErrorInvalid": "This file is not a QuickBill backup, or it is damaged. Your data was not changed.",
   "backupErrorNewer": "This backup was made by a newer QuickBill. Update the app, then restore it.",
   "backupErrorTooLarge": "This file is too large to be a QuickBill backup.",
-  "backupErrorFailed": "That did not work. Your data was not changed. Please try again."
+  "backupErrorFailed": "That did not work. Your data was not changed. Please try again.",
+  "validationBelowPaid": "The total can't be less than what is already paid",
+  "currencyLockedHint": "Fixed after a payment is recorded"
 }

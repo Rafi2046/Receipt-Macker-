@@ -30,7 +30,10 @@ abstract final class InvoiceValidator {
           : null,
       InvoiceField.discount: discountError(invoice.discount, totals.subtotal),
       InvoiceField.tax: Validators.optionalPercent(invoice.taxRateBasisPoints),
-      InvoiceField.total: _amountError(totals.total),
+      // Payments already taken set a floor for the total.
+      InvoiceField.total:
+          _amountError(totals.total) ??
+          (totals.total < invoice.paidMinor ? ValidationError.belowPaid : null),
     };
     final lines = {
       for (final l in invoice.lines)

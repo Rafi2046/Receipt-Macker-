@@ -32,16 +32,12 @@ class BackupView extends ConsumerWidget {
       // 1. Error messages
       if (next.errorMessage != null &&
           next.errorMessage != prev?.errorMessage) {
-        AppSnackbar.show(
-          context,
-          switch (next.errorMessage) {
-            BackupViewModel.errorNewer => l10n.backupErrorNewer,
-            BackupViewModel.errorTooLarge => l10n.backupErrorTooLarge,
-            BackupViewModel.errorFailed => l10n.backupErrorFailed,
-            _ => l10n.backupErrorInvalid,
-          },
-          tone: AppSnackbarTone.error,
-        );
+        AppSnackbar.show(context, switch (next.errorMessage) {
+          BackupViewModel.errorNewer => l10n.backupErrorNewer,
+          BackupViewModel.errorTooLarge => l10n.backupErrorTooLarge,
+          BackupViewModel.errorFailed => l10n.backupErrorFailed,
+          _ => l10n.backupErrorInvalid,
+        }, tone: AppSnackbarTone.error);
         ref.read(backupViewModelProvider.notifier).clearFeedback();
       }
 

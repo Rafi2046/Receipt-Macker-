@@ -339,9 +339,9 @@ class _FinancialSummaryGrid extends StatelessWidget {
             amountMinor: finances.totalPaidMinor,
             currencyCode: finances.currencyCode,
             format: format,
-            backgroundColor: const Color(0xFFEFF6FF),
-            borderColor: const Color(0xFFBFDBFE),
-            textColor: const Color(0xFF1D4ED8),
+            backgroundColor: context.appColors.info.withValues(alpha: 0.10),
+            borderColor: context.appColors.info.withValues(alpha: 0.35),
+            textColor: context.appColors.info,
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
@@ -352,13 +352,13 @@ class _FinancialSummaryGrid extends StatelessWidget {
             currencyCode: finances.currencyCode,
             format: format,
             backgroundColor: finances.balanceMinor > 0
-                ? const Color(0xFFFFF1EE)
+                ? context.appColors.danger.withValues(alpha: 0.10)
                 : null,
             borderColor: finances.balanceMinor > 0
-                ? const Color(0xFFFFD5CE)
+                ? context.appColors.danger.withValues(alpha: 0.35)
                 : null,
             textColor: finances.balanceMinor > 0
-                ? context.appColors.primary
+                ? context.appColors.danger
                 : null,
           ),
         ),

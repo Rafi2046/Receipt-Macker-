@@ -45,7 +45,7 @@ void main() {
       expect(result.invoiceCount, 1);
     });
 
-    test('multiple invoices sum totals correctly', () {
+    test('sent invoices are summed; a draft is counted but not billed', () {
       final invoices = [
         InvoiceSummary(
           id: 'inv1',
@@ -83,10 +83,32 @@ void main() {
         defaultCurrency: 'BDT',
       );
 
-      expect(result.totalBilledMinor, 50000);
+      expect(result.totalBilledMinor, 35000, reason: 'the draft is left out');
       expect(result.totalPaidMinor, 15000);
-      expect(result.balanceMinor, 35000);
+      expect(result.balanceMinor, 20000);
       expect(result.currencyCode, 'USD');
+      expect(result.invoiceCount, 3);
+    });
+
+    test('currencies are never added together', () {
+      InvoiceSummary inv(String id, String currency, int total) =>
+          InvoiceSummary(
+            id: id,
+            number: id,
+            currencyCode: currency,
+            issueDate: CalendarDate(2026, 10, 1),
+            dueDate: CalendarDate(2026, 10, 8),
+            stage: InvoiceStage.sent,
+            totalMinor: total,
+          );
+      final result = ClientFinanceCalculator.calculate([
+        inv('a', 'USD', 10000),
+        inv('b', 'BDT', 500000),
+        inv('c', 'BDT', 200000),
+      ], defaultCurrency: 'BDT');
+
+      expect(result.currencyCode, 'BDT', reason: 'the default when present');
+      expect(result.totalBilledMinor, 700000);
       expect(result.invoiceCount, 3);
     });
   });
