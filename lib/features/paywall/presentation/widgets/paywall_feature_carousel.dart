@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_durations.dart';
-import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_radius.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/services/purchases/free_plan.dart';
@@ -57,17 +56,11 @@ class _PaywallFeatureCarouselState extends State<PaywallFeatureCarousel> {
     final slides = <(Widget, String)>[
       (
         const TemplatesSlideArt(),
-        l10n.paywallSlideTemplates(format.integer(FreePlan.templateCount)),
+        l10n.paywallSlideTemplates(format.integer(FreePlan.designCount)),
       ),
       (const ColorsSlideArt(), l10n.paywallSlideColors),
-      (
-        const IconsSlideArt(icons: [AppIcons.noAds, AppIcons.noFooter]),
-        l10n.paywallSlideClean,
-      ),
-      (
-        const IconsSlideArt(icons: [AppIcons.clients, AppIcons.unlimited]),
-        l10n.paywallSlideUnlimited,
-      ),
+      (const CleanSlideArt(), l10n.paywallSlideClean),
+      (const UnlimitedSlideArt(), l10n.paywallSlideUnlimited),
     ];
     return Column(
       spacing: AppSpacing.md,

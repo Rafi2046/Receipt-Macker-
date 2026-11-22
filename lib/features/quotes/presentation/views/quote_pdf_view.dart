@@ -89,6 +89,7 @@ class QuotePdfView extends ConsumerWidget {
               isPro: ref.read(proStatusProvider),
               onSelectTemplate: (template) => choosePdfTemplate(
                 context,
+                ref,
                 template: template,
                 setTemplate: vm.setTemplate,
               ),
@@ -96,6 +97,7 @@ class QuotePdfView extends ConsumerWidget {
             ),
             onTemplate: (template) => choosePdfTemplate(
               context,
+              ref,
               template: template,
               setTemplate: vm.setTemplate,
             ),

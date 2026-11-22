@@ -9,11 +9,13 @@ import '../../constants/app_spacing.dart';
 import '../../utils/extensions/l10n_extension.dart';
 import '../buttons/app_button.dart';
 
-/// Shown when a free user taps a Pro color: watch a rewarded ad to use it
-/// once, or go Pro. Returns true only when the ad's reward was earned.
-abstract final class ProColorGateSheet {
+/// Shown when a free user taps a Pro choice (a color, a design): watch a
+/// rewarded ad to use it once, or go Pro. Returns true only when the ad's reward was earned.
+abstract final class ProGateSheet {
   static Future<bool> show(
     BuildContext context, {
+    required String title,
+    required String body,
     required Future<bool> Function() watchAd,
   }) async {
     final result = await showModalBottomSheet<_Outcome>(
@@ -28,7 +30,7 @@ abstract final class ProColorGateSheet {
           top: Radius.circular(AppSpacing.xxl),
         ),
       ),
-      builder: (_) => _Body(watchAd: watchAd),
+      builder: (_) => _Body(title: title, body: body, watchAd: watchAd),
     );
     if (result == _Outcome.goPro && context.mounted) {
       await context.pushNamed(RouteNames.paywall);
@@ -40,8 +42,10 @@ abstract final class ProColorGateSheet {
 enum _Outcome { unlocked, goPro }
 
 class _Body extends StatefulWidget {
-  const _Body({required this.watchAd});
+  const _Body({required this.title, required this.body, required this.watchAd});
 
+  final String title;
+  final String body;
   final Future<bool> Function() watchAd;
 
   @override
@@ -87,17 +91,17 @@ class _BodyState extends State<_Body> {
           Icon(
             AppIcons.proBadge,
             size: AppSizes.iconXl,
-            color: colors.secondary,
+            color: colors.warning,
           ),
           Text(
-            l10n.colorProTitle,
+            widget.title,
             textAlign: TextAlign.center,
             style: context.textStyles.titleLarge?.copyWith(
               fontWeight: FontWeight.w700,
             ),
           ),
           Text(
-            l10n.colorProBody,
+            widget.body,
             textAlign: TextAlign.center,
             style: context.textStyles.bodyMedium?.copyWith(
               color: colors.textSecondary,

@@ -32,6 +32,11 @@ abstract interface class AppPreferences {
   String? get pdfTemplate;
   Future<void> setPdfTemplate(String id);
 
+  /// Id of the one Pro template a free user unlocked with a rewarded ad;
+  /// null when none. It stays usable until another template is chosen.
+  String? get adUnlockedTemplate;
+  Future<void> setAdUnlockedTemplate(String? id);
+
   /// Brand accent color hex for PDF templates (e.g. '#006A4E'); null means default.
   String? get brandAccentColor;
   Future<void> setBrandAccentColor(String? hex);

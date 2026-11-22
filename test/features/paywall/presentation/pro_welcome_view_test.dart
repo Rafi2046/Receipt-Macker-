@@ -24,7 +24,7 @@ void main() {
     );
     expect(find.text('Welcome to Pro'), findsOneWidget);
     expect(
-      find.text('All ${FreePlan.templateCount} templates'),
+      find.text('All ${FreePlan.designCount} designs'),
       findsOneWidget,
     );
     expect(find.text('No ads anywhere'), findsOneWidget);

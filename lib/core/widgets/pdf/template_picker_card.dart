@@ -8,6 +8,7 @@ import '../../constants/app_spacing.dart';
 import '../../services/pdf/brand_swatch.dart';
 import '../../services/pdf/pdf_template.dart';
 import '../../services/purchases/purchase_providers.dart';
+import '../../services/purchases/template_choice.dart';
 import '../../services/service_providers.dart';
 import '../../utils/color_from_hex.dart';
 import '../../utils/extensions/l10n_extension.dart';
@@ -52,7 +53,7 @@ class _TemplatePickerCardState extends ConsumerState<TemplatePickerCard> {
       isPro: ref.read(proStatusProvider),
     );
     if (entry == null || !mounted) return;
-    await prefs.setPdfTemplate(entry.layout.id);
+    await TemplateChoice.remember(prefs, entry.layout);
     await prefs.setBrandAccentColor(entry.accentHex);
     setState(() {
       _layout = entry.layout;

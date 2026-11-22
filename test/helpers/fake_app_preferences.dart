@@ -72,6 +72,13 @@ class FakeAppPreferences implements AppPreferences {
   Future<void> setPdfTemplate(String id) async => pdfTemplate = id;
 
   @override
+  String? adUnlockedTemplate;
+
+  @override
+  Future<void> setAdUnlockedTemplate(String? id) async =>
+      adUnlockedTemplate = id;
+
+  @override
   String? pdfPageSize;
 
   @override

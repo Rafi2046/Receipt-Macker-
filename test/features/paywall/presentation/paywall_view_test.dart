@@ -60,7 +60,7 @@ void main() {
       expect(find.text('Terms'), findsOneWidget);
       expect(find.text('Privacy policy'), findsOneWidget);
       expect(find.text('Invoices and receipts'), findsOneWidget);
-      expect(find.text('PDF templates'), findsOneWidget);
+      expect(find.text('Invoice designs'), findsOneWidget);
     },
   );
 

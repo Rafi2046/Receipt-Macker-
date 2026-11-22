@@ -17,6 +17,7 @@ class SharedAppPreferences implements AppPreferences {
   static const String _defaultTaxRate = 'default_tax_rate_basis_points';
   static const String _defaultTaxInclusive = 'default_tax_inclusive';
   static const String _pdfTemplate = 'pdf_template';
+  static const String _adTemplate = 'ad_unlocked_template';
   static const String _brandAccent = 'brand_accent_color';
   static const String _pdfPageSize = 'pdf_page_size';
   static const String _pro = 'is_pro';
@@ -37,6 +38,7 @@ class SharedAppPreferences implements AppPreferences {
           _defaultTaxRate,
           _defaultTaxInclusive,
           _pdfTemplate,
+          _adTemplate,
           _brandAccent,
           _pdfPageSize,
           _pro,
@@ -104,6 +106,14 @@ class SharedAppPreferences implements AppPreferences {
 
   @override
   Future<void> setPdfTemplate(String id) => _prefs.setString(_pdfTemplate, id);
+
+  @override
+  String? get adUnlockedTemplate => _prefs.getString(_adTemplate);
+
+  @override
+  Future<void> setAdUnlockedTemplate(String? id) => id == null
+      ? _prefs.remove(_adTemplate)
+      : _prefs.setString(_adTemplate, id);
 
   @override
   String? get brandAccentColor => _prefs.getString(_brandAccent);

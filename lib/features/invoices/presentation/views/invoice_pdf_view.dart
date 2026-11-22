@@ -108,6 +108,7 @@ class InvoicePdfView extends ConsumerWidget {
               isPro: ref.read(proStatusProvider),
               onSelectTemplate: (template) => choosePdfTemplate(
                 context,
+                ref,
                 template: template,
                 setTemplate: vm.setTemplate,
               ),
@@ -115,6 +116,7 @@ class InvoicePdfView extends ConsumerWidget {
             ),
             onTemplate: (template) => choosePdfTemplate(
               context,
+              ref,
               template: template,
               setTemplate: vm.setTemplate,
             ),

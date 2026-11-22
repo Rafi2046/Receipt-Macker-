@@ -10,6 +10,7 @@ import '../../../../core/services/pdf/pdf_page_size.dart';
 import '../../../../core/services/pdf/pdf_template.dart';
 import '../../../../core/services/purchases/free_plan.dart';
 import '../../../../core/services/purchases/purchase_providers.dart';
+import '../../../../core/services/purchases/template_choice.dart';
 import '../../../../core/services/service_providers.dart';
 import '../../providers.dart';
 import 'receipt_pdf_state.dart';
@@ -25,7 +26,11 @@ class ReceiptPdfViewModel extends _$ReceiptPdfViewModel {
   ReceiptPdfState build(String paymentId) {
     final prefs = ref.read(appPreferencesProvider);
     var template = PdfTemplate.fromId(prefs.pdfTemplate);
-    if (!FreePlan.canUse(template, isPro: prefs.isPro)) {
+    if (!FreePlan.canUse(
+      template,
+      isPro: prefs.isPro,
+      adUnlockedId: prefs.adUnlockedTemplate,
+    )) {
       template = PdfTemplate.classic;
     }
     scheduleMicrotask(render);
@@ -73,11 +78,16 @@ class ReceiptPdfViewModel extends _$ReceiptPdfViewModel {
   /// False when [template] is Pro and this account is free.
   Future<bool> setTemplate(PdfTemplate template) async {
     if (template == state.template) return true;
-    if (!FreePlan.canUse(template, isPro: ref.read(proStatusProvider))) {
+    final prefs = ref.read(appPreferencesProvider);
+    if (!FreePlan.canUse(
+      template,
+      isPro: ref.read(proStatusProvider),
+      adUnlockedId: prefs.adUnlockedTemplate,
+    )) {
       return false;
     }
     state = state.copyWith(template: template);
-    await ref.read(appPreferencesProvider).setPdfTemplate(template.id);
+    await TemplateChoice.remember(prefs, template);
     await render();
     return true;
   }

@@ -30,8 +30,8 @@ class ProComparisonTable extends StatelessWidget {
       (l10n.proRowInvoices, _yes, _yes),
       (
         l10n.proRowTemplates,
-        l10n.proRowTemplatesFree(format.integer(FreePlan.freeTemplateCount)),
-        l10n.proRowTemplatesPro(format.integer(FreePlan.templateCount)),
+        l10n.proRowTemplatesFree(format.integer(FreePlan.freeDesignCount)),
+        l10n.proRowTemplatesPro(format.integer(FreePlan.designCount)),
       ),
       (l10n.proRowLogo, _yes, _yes),
       (l10n.proRowColors, l10n.proRowColorsFree, _yes),

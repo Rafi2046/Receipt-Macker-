@@ -15,7 +15,7 @@ import '../../utils/hex_color.dart';
 import 'accent_dot.dart';
 import 'custom_color_sheet.dart';
 import 'pdf_template_labels.dart';
-import 'pro_color_gate_sheet.dart';
+import 'pro_gate_sheet.dart';
 
 /// The invoice color choice: the logo's color (when there is a logo), a
 /// custom color, then the curated swatches. The swatches are free; the logo
@@ -44,8 +44,10 @@ class AccentColorRow extends ConsumerWidget {
   /// True when the user may pick a Pro color now: Pro, or just watched an ad.
   Future<bool> _unlock(BuildContext context, WidgetRef ref) async {
     if (ref.read(proStatusProvider)) return true;
-    return ProColorGateSheet.show(
+    return ProGateSheet.show(
       context,
+      title: context.l10n.colorProTitle,
+      body: context.l10n.colorProBody,
       watchAd: ref.read(rewardedAdPresenterProvider).showForReward,
     );
   }

@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../app/router/route_names.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../constants/app_icons.dart';
 import '../../constants/app_radius.dart';
 import '../../constants/app_spacing.dart';
+import '../../services/ads/ad_providers.dart';
 import '../../services/pdf/pdf_template.dart';
 import '../../services/pdf/pdf_template_catalog.dart';
 import '../../services/pdf/pdf_template_catalog_entry.dart';
 import '../../services/pdf/pdf_template_category.dart';
+import '../../services/purchases/free_plan.dart';
+import '../../services/purchases/template_choice.dart';
+import '../../services/service_providers.dart';
 import '../../utils/extensions/l10n_extension.dart';
 import '../layout/app_scaffold.dart';
 import 'mini_layout_thumbnail.dart';
 import 'pdf_template_labels.dart';
+import 'pro_gate_sheet.dart';
 
 /// Full-screen category grid for picking a layout + accent catalog entry.
-class TemplateCatalogPicker extends StatefulWidget {
+class TemplateCatalogPicker extends ConsumerStatefulWidget {
   const TemplateCatalogPicker({
     required this.selectedLayout,
     required this.selectedAccentHex,
@@ -47,10 +51,11 @@ class TemplateCatalogPicker extends StatefulWidget {
   }
 
   @override
-  State<TemplateCatalogPicker> createState() => _TemplateCatalogPickerState();
+  ConsumerState<TemplateCatalogPicker> createState() =>
+      _TemplateCatalogPickerState();
 }
 
-class _TemplateCatalogPickerState extends State<TemplateCatalogPicker> {
+class _TemplateCatalogPickerState extends ConsumerState<TemplateCatalogPicker> {
   late PdfTemplateCategory _category;
   late PdfTemplateCatalogEntry _draft;
 
@@ -70,10 +75,29 @@ class _TemplateCatalogPickerState extends State<TemplateCatalogPicker> {
     return Color(0xFF000000 | val);
   }
 
+  /// A Pro design a free user may not use yet. The one opened with a
+  /// rewarded ad counts as unlocked.
+  bool _locked(PdfTemplateCatalogEntry entry) => !FreePlan.canUse(
+    entry.layout,
+    isPro: widget.isPro,
+    adUnlockedId: ref.read(appPreferencesProvider).adUnlockedTemplate,
+  );
+
   Future<void> _onTap(PdfTemplateCatalogEntry entry) async {
-    if (entry.requiresPro && !widget.isPro) {
-      await context.pushNamed(RouteNames.paywall);
-      return;
+    if (_locked(entry)) {
+      final l10n = context.l10n;
+      final earned = await ProGateSheet.show(
+        context,
+        title: l10n.templateProTitle,
+        body: l10n.templateProBody,
+        watchAd: ref.read(rewardedAdPresenterProvider).showForReward,
+      );
+      if (!earned || !mounted) return;
+      await TemplateChoice.unlockWithAd(
+        ref.read(appPreferencesProvider),
+        entry.layout,
+      );
+      if (!mounted) return;
     }
     setState(() => _draft = entry);
   }
@@ -153,7 +177,7 @@ class _TemplateCatalogPickerState extends State<TemplateCatalogPicker> {
               itemBuilder: (context, index) {
                 final entry = items[index];
                 final selected = entry.id == _draft.id;
-                final locked = entry.requiresPro && !widget.isPro;
+                final locked = _locked(entry);
                 final accent = _accentColor(entry.accentHex);
                 return _CatalogTile(
                   title:

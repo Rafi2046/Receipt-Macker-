@@ -1,17 +1,30 @@
 import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../app/router/route_names.dart';
+import '../../services/ads/ad_providers.dart';
 import '../../services/pdf/pdf_template.dart';
+import '../../services/purchases/template_choice.dart';
+import '../../services/service_providers.dart';
+import '../../utils/extensions/l10n_extension.dart';
+import 'pro_gate_sheet.dart';
 
-/// Applies a template, or opens the paywall when it is a Pro design.
+/// Applies a template. For a Pro design on a free account it offers a
+/// rewarded ad (use it once) or Pro, and applies it after the ad.
 Future<void> choosePdfTemplate(
-  BuildContext context, {
+  BuildContext context,
+  WidgetRef ref, {
   required PdfTemplate template,
   required Future<bool> Function(PdfTemplate template) setTemplate,
 }) async {
-  final allowed = await setTemplate(template);
-  if (!allowed && context.mounted) {
-    await context.pushNamed(RouteNames.paywall);
-  }
+  if (await setTemplate(template) || !context.mounted) return;
+  final l10n = context.l10n;
+  final earned = await ProGateSheet.show(
+    context,
+    title: l10n.templateProTitle,
+    body: l10n.templateProBody,
+    watchAd: ref.read(rewardedAdPresenterProvider).showForReward,
+  );
+  if (!earned) return;
+  await TemplateChoice.unlockWithAd(ref.read(appPreferencesProvider), template);
+  await setTemplate(template);
 }

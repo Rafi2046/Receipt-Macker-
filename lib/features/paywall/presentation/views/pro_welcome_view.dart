@@ -6,15 +6,16 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_durations.dart';
 import '../../../../core/constants/app_icons.dart';
-import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/constants/app_radius.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/services/purchases/free_plan.dart';
 import '../../../../core/services/url_launch_service.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
-import '../../../../core/widgets/layout/app_card.dart';
+import '../widgets/paywall_slides.dart';
 import '../widgets/pro_badge.dart';
+import '../widgets/pro_unlocked_tile.dart';
 
 /// Shown right after a purchase: a welcome, what Pro unlocked, and a link
 /// to manage the subscription in Google Play (CLAUDE §9.1).
@@ -29,7 +30,7 @@ class ProWelcomeView extends StatelessWidget {
     final unlocked = <(IconData, String)>[
       (
         AppIcons.template,
-        l10n.proUnlockedTemplates(format.integer(FreePlan.templateCount)),
+        l10n.proUnlockedTemplates(format.integer(FreePlan.designCount)),
       ),
       (AppIcons.palette, l10n.proUnlockedColors),
       (AppIcons.noAds, l10n.proUnlockedNoAds),
@@ -64,36 +65,13 @@ class ProWelcomeView extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(
               AppSpacing.pagePadding,
-              AppSpacing.xxxl,
+              AppSpacing.lg,
               AppSpacing.pagePadding,
               AppSpacing.xxl,
             ),
             children: [
-              const Center(child: _Burst()),
+              const _Hero(),
               const SizedBox(height: AppSpacing.xl),
-              Text(
-                l10n.proWelcomeTitle,
-                textAlign: TextAlign.center,
-                style: context.textStyles.bodyLarge?.copyWith(
-                  color: colors.textSecondary,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Wrap(
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: AppSpacing.sm,
-                children: [
-                  Text(
-                    AppConstants.appName,
-                    style: context.textStyles.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  const ProBadge(),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.xxl),
               Text(
                 l10n.proUnlockedTitle.toUpperCase(),
                 style: context.textStyles.labelMedium?.copyWith(
@@ -103,35 +81,25 @@ class ProWelcomeView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
-              AppCard(
-                child: Column(
-                  spacing: AppSpacing.md,
-                  children: [
-                    for (final (icon, text) in unlocked)
-                      Row(
-                        spacing: AppSpacing.md,
-                        children: [
-                          Icon(
-                            icon,
-                            size: AppSizes.iconRow,
-                            color: colors.textPrimary,
-                          ),
-                          Expanded(
-                            child: Text(
-                              text,
-                              style: context.textStyles.bodyLarge,
-                            ),
-                          ),
-                          Icon(
-                            AppIcons.check,
-                            size: AppSizes.iconRow,
-                            color: colors.success,
-                          ),
-                        ],
-                      ),
-                  ],
-                ),
+              ProUnlockedTile(
+                icon: unlocked.first.$1,
+                label: unlocked.first.$2,
               ),
+              for (var i = 1; i < unlocked.length; i += 2) ...[
+                const SizedBox(height: AppSpacing.sm),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    spacing: AppSpacing.sm,
+                    children: [
+                      for (final (icon, label) in unlocked.skip(i).take(2))
+                        Expanded(
+                          child: ProUnlockedTile(icon: icon, label: label),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
               const SizedBox(height: AppSpacing.md),
               Text(
                 l10n.proManage,
@@ -158,29 +126,69 @@ class ProWelcomeView extends StatelessWidget {
   }
 }
 
-/// The celebration mark: a gold disc that pops in once.
-class _Burst extends StatelessWidget {
-  const _Burst();
+/// The welcome card: Pro designs fanned out over a deep panel with a gold
+/// edge, then the thank-you and the QuickBill PRO mark. It pops in once.
+class _Hero extends StatelessWidget {
+  const _Hero();
+
+  static const double _artHeight = 150;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colors = context.appColors;
     return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.6, end: 1),
+      tween: Tween(begin: 0.94, end: 1),
       duration: AppDurations.slow,
       curve: Curves.easeOutBack,
       builder: (_, scale, child) => Transform.scale(scale: scale, child: child),
       child: Container(
-        padding: const EdgeInsets.all(AppSpacing.xxl),
+        padding: const EdgeInsets.all(AppSpacing.xl),
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: colors.warning.withValues(alpha: 0.16),
-          border: Border.all(color: colors.warning.withValues(alpha: 0.5)),
+          borderRadius: AppRadius.card,
+          border: Border.all(color: colors.warning.withValues(alpha: 0.6)),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [colors.warning.withValues(alpha: 0.22), colors.panel],
+            stops: const [0, 0.6],
+          ),
+          color: colors.panel,
         ),
-        child: Icon(
-          AppIcons.welcome,
-          size: AppSizes.iconXl,
-          color: colors.warning,
+        child: Column(
+          spacing: AppSpacing.sm,
+          children: [
+            const SizedBox(height: _artHeight, child: TemplatesSlideArt()),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              l10n.proWelcomeTitle,
+              style: context.textStyles.bodyLarge?.copyWith(
+                color: colors.onPanelMuted,
+              ),
+            ),
+            Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: AppSpacing.sm,
+              children: [
+                Text(
+                  AppConstants.appName,
+                  style: context.textStyles.headlineSmall?.copyWith(
+                    color: colors.onPanel,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const ProBadge(),
+              ],
+            ),
+            Text(
+              l10n.proWelcomeLead,
+              textAlign: TextAlign.center,
+              style: context.textStyles.bodyMedium?.copyWith(
+                color: colors.onPanelMuted,
+              ),
+            ),
+          ],
         ),
       ),
     );
