@@ -9,6 +9,7 @@ import '../../../../core/widgets/feedback/app_snackbar.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
 import '../../../../core/widgets/layout/editor_scaffold.dart';
+import '../../domain/models/invoice.dart';
 import '../view_models/invoice_editor_view_model.dart';
 import '../widgets/invoice_editor_form.dart';
 
@@ -24,21 +25,25 @@ class InvoiceEditorView extends ConsumerWidget {
   InvoiceEditorViewModelProvider get _provider =>
       invoiceEditorViewModelProvider(invoiceId, copyOf);
 
-  Future<void> _save(BuildContext context, WidgetRef ref) async {
+  /// Saves; null (after telling the user why) when it could not.
+  Future<Invoice?> _store(BuildContext context, WidgetRef ref) async {
     final l10n = context.l10n;
     final vm = ref.read(_provider.notifier);
     final saved = await vm.save();
-    if (!context.mounted) return;
-    if (saved == null) {
-      if (vm.form?.canSave == false) {
-        AppSnackbar.show(
-          context,
-          l10n.validationFixErrors,
-          tone: AppSnackbarTone.error,
-        );
-      }
-      return;
+    if (saved == null && context.mounted && vm.form?.canSave == false) {
+      AppSnackbar.show(
+        context,
+        l10n.validationFixErrors,
+        tone: AppSnackbarTone.error,
+      );
     }
+    return saved;
+  }
+
+  Future<void> _save(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
+    final saved = await _store(context, ref);
+    if (saved == null || !context.mounted) return;
     AppSnackbar.show(context, l10n.invoiceSaved, tone: AppSnackbarTone.success);
     if (invoiceId != null) {
       Navigator.of(context).pop(saved);
@@ -46,6 +51,16 @@ class InvoiceEditorView extends ConsumerWidget {
     }
     context.pushReplacementNamed(
       RouteNames.invoiceDetail,
+      pathParameters: {RouteNames.idParam: saved.id},
+    );
+  }
+
+  /// Saves the invoice, then opens its PDF; back returns to the editor.
+  Future<void> _preview(BuildContext context, WidgetRef ref) async {
+    final saved = await _store(context, ref);
+    if (saved == null || !context.mounted) return;
+    await context.pushNamed(
+      RouteNames.invoicePdf,
       pathParameters: {RouteNames.idParam: saved.id},
     );
   }
@@ -70,6 +85,8 @@ class InvoiceEditorView extends ConsumerWidget {
       hasUnsavedChanges: form?.hasUnsavedChanges ?? false,
       isSaving: form?.isSaving ?? false,
       onSave: form == null ? null : () => _save(context, ref),
+      secondaryLabel: l10n.editorPreview,
+      onSecondary: form == null ? null : () => _preview(context, ref),
       body: async.when(
         data: (form) => InvoiceEditorForm(provider: provider, form: form),
         loading: () => const LoadingView(),

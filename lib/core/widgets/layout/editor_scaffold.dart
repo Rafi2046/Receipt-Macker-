@@ -22,6 +22,8 @@ class EditorScaffold extends StatelessWidget {
     this.isSaving = false,
     this.onSave,
     this.onDelete,
+    this.secondaryLabel,
+    this.onSecondary,
     super.key,
   });
 
@@ -37,6 +39,10 @@ class EditorScaffold extends StatelessWidget {
 
   /// Null hides the Delete action.
   final VoidCallback? onDelete;
+
+  /// A quieter button beside Save (e.g. Preview); shown when both are set.
+  final String? secondaryLabel;
+  final VoidCallback? onSecondary;
 
   Future<void> _confirmLeave(BuildContext context) async {
     final l10n = context.l10n;
@@ -73,7 +79,12 @@ class EditorScaffold extends StatelessWidget {
         bottomBarAboveKeyboard: true,
         bottomBar: save == null
             ? null
-            : _SaveBar(isSaving: isSaving, onSave: save),
+            : _SaveBar(
+                isSaving: isSaving,
+                onSave: save,
+                secondaryLabel: secondaryLabel,
+                onSecondary: onSecondary,
+              ),
       ),
     );
   }
@@ -81,20 +92,49 @@ class EditorScaffold extends StatelessWidget {
 
 /// Save on its own surface, lifted off the form by a hairline and a shadow.
 class _SaveBar extends StatelessWidget {
-  const _SaveBar({required this.isSaving, required this.onSave});
+  const _SaveBar({
+    required this.isSaving,
+    required this.onSave,
+    this.secondaryLabel,
+    this.onSecondary,
+  });
 
   final bool isSaving;
   final VoidCallback onSave;
+  final String? secondaryLabel;
+  final VoidCallback? onSecondary;
+
+  static const int _secondaryFlex = 2;
+  static const int _saveFlex = 3;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final button = AppButton(
+    final save = AppButton(
       label: context.l10n.save,
       expand: true,
       isLoading: isSaving,
       onPressed: onSave,
     );
+    final label = secondaryLabel;
+    final secondary = onSecondary;
+    final button = label == null || secondary == null
+        ? save
+        : Row(
+            spacing: AppSpacing.md,
+            children: [
+              Expanded(
+                flex: _secondaryFlex,
+                child: AppButton(
+                  label: label,
+                  variant: AppButtonVariant.secondary,
+                  expand: true,
+                  onPressed: isSaving ? null : secondary,
+                ),
+              ),
+              Expanded(flex: _saveFlex, child: save),
+            ],
+          );
     return DecoratedBox(
       decoration: BoxDecoration(
         color: colors.surface,

@@ -63,4 +63,10 @@ abstract final class AppIcons {
   static const IconData lock = Icons.lock_outline;
   static const IconData privacy = Icons.shield_outlined;
   static const IconData terms = Icons.description_outlined;
+  static const IconData template = Icons.dashboard_customize_outlined;
+  static const IconData adjust = Icons.tune_rounded;
+  static const IconData currency = Icons.paid_outlined;
+  static const IconData paymentMethod = Icons.credit_card_outlined;
+  static const IconData notes = Icons.sticky_note_2_outlined;
+  static const IconData preview = Icons.visibility_outlined;
 }

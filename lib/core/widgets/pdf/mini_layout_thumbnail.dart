@@ -66,8 +66,12 @@ class MiniLayoutThumbnail extends StatelessWidget {
         child: SizedBox(
           width: designWidth,
           height: designHeight,
-          child: ClipRect(
-            child: ColoredBox(color: InvoicePreviewInk.paper, child: page),
+          // A picture of a page: its type does not follow the system
+          // font size.
+          child: MediaQuery.withNoTextScaling(
+            child: ClipRect(
+              child: ColoredBox(color: InvoicePreviewInk.paper, child: page),
+            ),
           ),
         ),
       ),

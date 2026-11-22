@@ -20,16 +20,39 @@ import '../view_models/invoice_editor_view_model.dart';
 
 /// Invoice number, issue date, payment term, due date and currency.
 class InvoiceHeaderSection extends StatelessWidget {
-  const InvoiceHeaderSection({required this.form, required this.vm, super.key});
+  const InvoiceHeaderSection({
+    required this.form,
+    required this.vm,
+    this.showCurrency = true,
+    super.key,
+  });
 
   final InvoiceEditorState form;
   final InvoiceEditorViewModel vm;
+
+  /// False when the currency has its own row elsewhere.
+  final bool showCurrency;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final draft = form.draft;
     final digits = AppFormatters(Localizations.localeOf(context).languageCode);
+    final term = DropdownField<DueTerm>(
+      label: l10n.fieldDueTerm,
+      value: form.dueTerm,
+      options: [
+        for (final t in DueTerm.values) (t, _termLabel(l10n, digits, t)),
+      ],
+      onChanged: (t) =>
+          t == DueTerm.custom ? _pickDueDate(context) : vm.setDueTerm(t),
+    );
+    final currency = CurrencyPickerField(
+      label: l10n.fieldCurrency,
+      value: draft.currencyCode,
+      codes: {...AppCurrencies.common, draft.currencyCode}.toList(),
+      onChanged: vm.setCurrency,
+    );
     return FormGroupCard(
       children: [
         AppTextField(
@@ -53,23 +76,7 @@ class InvoiceHeaderSection extends StatelessWidget {
             onChanged: (d) => vm.setDueDate(CalendarDate.fromLocal(d)),
           ),
         ),
-        _FieldPair(
-          first: DropdownField<DueTerm>(
-            label: l10n.fieldDueTerm,
-            value: form.dueTerm,
-            options: [
-              for (final t in DueTerm.values) (t, _termLabel(l10n, digits, t)),
-            ],
-            onChanged: (t) =>
-                t == DueTerm.custom ? _pickDueDate(context) : vm.setDueTerm(t),
-          ),
-          second: CurrencyPickerField(
-            label: l10n.fieldCurrency,
-            value: draft.currencyCode,
-            codes: {...AppCurrencies.common, draft.currencyCode}.toList(),
-            onChanged: vm.setCurrency,
-          ),
-        ),
+        if (showCurrency) _FieldPair(first: term, second: currency) else term,
       ],
     );
   }

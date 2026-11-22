@@ -10,6 +10,7 @@ import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/layout/app_card.dart';
 import '../../../../core/widgets/layout/section_header.dart';
+import '../../../../core/widgets/pdf/template_picker_card.dart';
 import '../../../business_profile/business_profile.dart';
 import '../../../invoices/presentation/widgets/bill_to_card.dart';
 import '../../../invoices/presentation/widgets/client_picker_sheet.dart';
@@ -22,7 +23,6 @@ import 'quote_adjustments_section.dart';
 import 'quote_header_card.dart';
 import 'quote_line_sheet.dart';
 import 'quote_notes_section.dart';
-import 'quote_template_card.dart';
 
 class QuoteEditorForm extends ConsumerWidget {
   const QuoteEditorForm({required this.quoteId, required this.form, super.key});
@@ -102,7 +102,7 @@ class QuoteEditorForm extends ConsumerWidget {
       children: [
         QuoteHeaderCard(draft: draft, vm: vm),
         const SizedBox(height: AppSpacing.md),
-        const QuoteTemplateCard(),
+        const TemplatePickerCard(),
         const SizedBox(height: AppSpacing.md),
         AppCard(
           onTap: () => context.pushNamed(RouteNames.businessProfile),

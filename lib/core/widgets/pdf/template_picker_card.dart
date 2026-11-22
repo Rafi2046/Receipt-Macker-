@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../app/theme/app_colors.dart';
-import '../../../../core/constants/app_icons.dart';
-import '../../../../core/constants/app_spacing.dart';
-import '../../../../core/services/pdf/brand_swatch.dart';
-import '../../../../core/services/pdf/pdf_template.dart';
-import '../../../../core/services/pdf/pdf_template_catalog.dart';
-import '../../../../core/services/pdf/pdf_template_catalog_entry.dart';
-import '../../../../core/services/purchases/purchase_providers.dart';
-import '../../../../core/services/service_providers.dart';
-import '../../../../core/utils/extensions/l10n_extension.dart';
-import '../../../../core/widgets/layout/app_card.dart';
-import '../../../../core/widgets/pdf/mini_layout_thumbnail.dart';
-import '../../../../core/widgets/pdf/template_catalog_picker.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../constants/app_icons.dart';
+import '../../constants/app_spacing.dart';
+import '../../services/pdf/brand_swatch.dart';
+import '../../services/pdf/pdf_template.dart';
+import '../../services/pdf/pdf_template_catalog.dart';
+import '../../services/pdf/pdf_template_catalog_entry.dart';
+import '../../services/purchases/purchase_providers.dart';
+import '../../services/service_providers.dart';
+import '../../utils/extensions/l10n_extension.dart';
+import '../layout/app_card.dart';
+import 'mini_layout_thumbnail.dart';
+import 'template_catalog_picker.dart';
 
-/// Opens the shared template catalog; selection is stored in app prefs.
-class QuoteTemplateCard extends ConsumerStatefulWidget {
-  const QuoteTemplateCard({super.key});
+/// A "Templates" row showing the current PDF design; opens the template
+/// catalog. The choice is stored in app preferences (one for every
+/// document).
+class TemplatePickerCard extends ConsumerStatefulWidget {
+  const TemplatePickerCard({super.key});
 
   @override
-  ConsumerState<QuoteTemplateCard> createState() => _QuoteTemplateCardState();
+  ConsumerState<TemplatePickerCard> createState() => _TemplatePickerCardState();
 }
 
-class _QuoteTemplateCardState extends ConsumerState<QuoteTemplateCard> {
+class _TemplatePickerCardState extends ConsumerState<TemplatePickerCard> {
   PdfTemplateCatalogEntry? _entry;
 
   Color _accent(String hex) {
@@ -67,11 +69,11 @@ class _QuoteTemplateCardState extends ConsumerState<QuoteTemplateCard> {
       onTap: _open,
       child: Row(
         children: [
-          Icon(AppIcons.business, color: colors.primary),
+          Icon(AppIcons.template, color: colors.textPrimary),
           const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Text(
-              l10n.quoteTemplates,
+              l10n.editorTemplates,
               style: context.textStyles.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
