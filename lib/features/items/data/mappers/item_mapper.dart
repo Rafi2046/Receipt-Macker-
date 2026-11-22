@@ -1,5 +1,6 @@
 import '../../../../core/database/app_database.dart';
 import '../../domain/models/item.dart';
+import '../../domain/models/item_discount_type.dart';
 
 /// Converts between DB rows and the domain model. Dates are stored in UTC.
 extension ItemRowMapper on ItemRow {
@@ -11,6 +12,11 @@ extension ItemRowMapper on ItemRow {
     unitPriceMinor: unitPriceMinor,
     currencyCode: currencyCode,
     defaultTaxBasisPoints: defaultTaxBasisPoints,
+    defaultQuantityMilli: defaultQuantityMilli,
+    discountType: ItemDiscountType.values
+        .where((t) => t.name == discountType)
+        .firstOrNull,
+    discountValue: discountValue,
     createdAt: createdAt.toUtc(),
     updatedAt: updatedAt.toUtc(),
   );
@@ -25,6 +31,9 @@ extension ItemToRow on Item {
     unitPriceMinor: unitPriceMinor,
     currencyCode: currencyCode,
     defaultTaxBasisPoints: defaultTaxBasisPoints,
+    defaultQuantityMilli: defaultQuantityMilli,
+    discountType: discountType?.name,
+    discountValue: discountType == null ? 0 : discountValue,
     createdAt: createdAt.toUtc(),
     updatedAt: updatedAt.toUtc(),
   );

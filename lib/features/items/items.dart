@@ -2,6 +2,7 @@
 library;
 
 export 'domain/models/item.dart';
+export 'domain/models/item_discount_type.dart';
 export 'presentation/view_models/item_list_state.dart';
 export 'presentation/view_models/item_list_view_model.dart';
 export 'presentation/widgets/item_list_tile.dart';

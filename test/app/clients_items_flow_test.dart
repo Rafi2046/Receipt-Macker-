@@ -101,7 +101,8 @@ void main() {
     await tap(tester, find.text('পণ্য ও সেবা'));
     await tap(tester, find.text('প্রথম পণ্য বা সেবা যোগ করুন'));
 
-    // Labels sit above the fields: name, description, price, default tax.
+    // Labels sit above the fields: name, description, price, quantity,
+    // then tax rate.
     Finder input(int index) => find.byType(TextField).at(index);
     await tester.enterText(input(0), 'লোগো ডিজাইন');
     await tap(tester, find.text('সংরক্ষণ করুন'));
@@ -110,7 +111,7 @@ void main() {
     await tester.enterText(input(2), '১৫০০.৫');
     await tap(tester, find.text('ঐচ্ছিক'));
     await tap(tester, find.text('পিস'));
-    await tester.enterText(input(3), '15');
+    await tester.enterText(input(4), '15');
     await tap(tester, find.text('সংরক্ষণ করুন'));
     expect(find.text('লোগো ডিজাইন'), findsOneWidget);
     expect(find.text('৳১,৫০০.৫০'), findsOneWidget);

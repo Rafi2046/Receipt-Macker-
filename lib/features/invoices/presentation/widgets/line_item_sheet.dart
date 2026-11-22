@@ -9,14 +9,16 @@ import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/buttons/more_fields_toggle.dart';
 import '../../../../core/widgets/inputs/app_text_field.dart';
+import '../../../../core/widgets/inputs/discount_fields.dart';
 import '../../../../core/widgets/inputs/field_block.dart';
 import '../../../../core/widgets/inputs/soft_input_theme.dart';
 import '../../../../core/widgets/inputs/unit_field.dart';
 import '../../../../core/widgets/layout/app_card.dart';
+import '../../domain/models/discount.dart';
+import '../../domain/models/discount_type.dart';
 import '../../domain/models/line_field.dart';
 import '../view_models/invoice_editor_view_model.dart';
 import 'line_amount_card.dart';
-import 'line_discount_block.dart';
 import 'line_price_quantity.dart';
 
 /// Edits one line of the invoice draft in place, one card per group: name
@@ -159,11 +161,27 @@ class _LineItemSheetState extends ConsumerState<LineItemSheet> {
                 currency: currency,
                 error: error(LineField.total),
                 discount: _showMore
-                    ? LineDiscountBlock(
+                    ? DiscountFields(
+                        kind: switch (line.discount?.type) {
+                          null => DiscountKind.none,
+                          DiscountType.percent => DiscountKind.percent,
+                          DiscountType.flat => DiscountKind.flat,
+                        },
+                        value: line.discount?.value ?? 0,
                         currencyCode: currency,
-                        discount: line.discount,
                         errorText: error(LineField.discount),
-                        onChanged: (d) => vm.setLineDiscount(lineId, d),
+                        onChanged: (kind, value) =>
+                            vm.setLineDiscount(lineId, switch (kind) {
+                              DiscountKind.none => null,
+                              DiscountKind.percent => Discount(
+                                type: DiscountType.percent,
+                                value: value,
+                              ),
+                              DiscountKind.flat => Discount(
+                                type: DiscountType.flat,
+                                value: value,
+                              ),
+                            }),
                       )
                     : null,
               ),

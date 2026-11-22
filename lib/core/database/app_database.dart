@@ -68,7 +68,7 @@ class AppDatabase extends _$AppDatabase {
   );
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -103,6 +103,11 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(schema.quotes);
         await m.createTable(schema.quoteLines);
         await m.createTable(schema.quoteNumbering);
+      },
+      from7To8: (m, schema) async {
+        await m.addColumn(schema.items, schema.items.defaultQuantityMilli);
+        await m.addColumn(schema.items, schema.items.discountType);
+        await m.addColumn(schema.items, schema.items.discountValue);
       },
     ),
     beforeOpen: (details) async {

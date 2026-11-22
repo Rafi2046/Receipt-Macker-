@@ -136,6 +136,7 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
       description: item.description,
       unit: item.unit,
       unitPriceMinor: item.unitPriceMinor,
+      quantityMilli: item.defaultQuantityMilli,
       itemId: item.id,
     );
     return f.copyWith(

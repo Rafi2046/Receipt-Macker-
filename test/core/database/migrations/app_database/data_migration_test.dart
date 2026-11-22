@@ -79,4 +79,25 @@ void main() {
     expect(await db.select(db.receiptNumberingTable).get(), isEmpty);
     await db.close();
   });
+
+  test('v7 to v8 keeps items and gives them a quantity of one', () async {
+    final schema = await verifier.schemaAt(7);
+    schema.rawDatabase.execute(
+      'INSERT INTO items (id, name, unit_price_minor, currency_code, '
+      'default_tax_basis_points, created_at, updated_at) '
+      "VALUES ('i', 'Logo design', 500000, 'BDT', 1500, "
+      '1760000000, 1760000000)',
+    );
+    final db = AppDatabase(schema.newConnection());
+    await verifier.migrateAndValidate(db, 8);
+
+    final item = await db.select(db.itemsTable).getSingle();
+    expect(item.name, 'Logo design');
+    expect(item.unitPriceMinor, 500000);
+    expect(item.defaultTaxBasisPoints, 1500);
+    expect(item.defaultQuantityMilli, 1000);
+    expect(item.discountType, null);
+    expect(item.discountValue, 0);
+    await db.close();
+  });
 }

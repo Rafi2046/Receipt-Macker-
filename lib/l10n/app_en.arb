@@ -384,6 +384,7 @@
   "fieldItemNamePlaceholder": "Enter item name",
   "fieldDescriptionHint": "Add item description or note",
   "fieldPrice": "Price",
+  "itemAmount": "Amount",
   "lineNewTitle": "Create item",
   "fieldDiscount": "Discount",
   "discountNone": "None",

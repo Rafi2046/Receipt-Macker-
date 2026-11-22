@@ -19,6 +19,7 @@ import '../../domain/logic/invoice_drafting.dart';
 import '../../domain/logic/invoice_validator.dart';
 import '../../domain/models/bill_to.dart';
 import '../../domain/models/discount.dart';
+import '../../domain/models/discount_type.dart';
 import '../../domain/models/due_term.dart';
 import '../../domain/models/invoice.dart';
 import '../../domain/models/line_item.dart';
@@ -243,6 +244,19 @@ class InvoiceEditorViewModel extends _$InvoiceEditorViewModel {
         description: item.description,
         unit: item.unit,
         unitPriceMinor: foreign ? 0 : item.unitPriceMinor,
+        quantityMilli: item.defaultQuantityMilli,
+        // A flat discount is in the item's currency; skip it in another.
+        discount: switch (item.discountType) {
+          null => null,
+          ItemDiscountType.percent => Discount(
+            type: DiscountType.percent,
+            value: item.discountValue,
+          ),
+          ItemDiscountType.flat =>
+            foreign
+                ? null
+                : Discount(type: DiscountType.flat, value: item.discountValue),
+        },
         itemId: item.id,
       ),
     );

@@ -4,23 +4,26 @@ import '../../../../core/constants/app_currencies.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/extensions/validation_message_extension.dart';
+import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/buttons/more_fields_toggle.dart';
 import '../../../../core/widgets/inputs/amount_field.dart';
 import '../../../../core/widgets/inputs/app_text_field.dart';
 import '../../../../core/widgets/inputs/currency_picker_field.dart';
+import '../../../../core/widgets/inputs/decimal_field.dart';
 import '../../../../core/widgets/inputs/field_block.dart';
-import '../../../../core/widgets/inputs/percent_field.dart';
 import '../../../../core/widgets/inputs/soft_input_theme.dart';
 import '../../../../core/widgets/inputs/unit_field.dart';
 import '../../../../core/widgets/layout/app_card.dart';
 import '../../domain/models/item_field.dart';
 import '../view_models/item_editor_state.dart';
 import '../view_models/item_editor_view_model.dart';
+import 'item_amount_card.dart';
 
 /// The item editor's fields, one card per group: name and description,
-/// price and currency, then the unit and default tax, which "Show less
-/// fields" folds away.
+/// price and quantity, the unit and currency, then discount and tax with
+/// the amount on a ticket stub. "Show less fields" folds the optional
+/// ones away.
 class ItemFormFields extends StatefulWidget {
   const ItemFormFields({required this.form, required this.vm, super.key});
 
@@ -83,25 +86,39 @@ class _ItemFormFieldsState extends State<ItemFormFields> {
           gap,
           _Group(
             children: [
-              FieldBlock(
-                label: l10n.fieldPrice,
-                required: true,
-                child: AmountField(
-                  label: '',
-                  currencyCode: draft.currencyCode,
-                  initialMinor: form.hasPrice ? draft.unitPriceMinor : null,
-                  errorText: error(ItemField.unitPrice),
-                  onChanged: vm.setUnitPrice,
-                ),
-              ),
-              FieldBlock(
-                label: l10n.fieldCurrency,
-                child: CurrencyPickerField(
-                  label: '',
-                  value: draft.currencyCode,
-                  codes: {...AppCurrencies.common, draft.currencyCode}.toList(),
-                  onChanged: vm.setCurrency,
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: AppSpacing.md,
+                children: [
+                  Expanded(
+                    child: FieldBlock(
+                      label: l10n.fieldPrice,
+                      required: true,
+                      child: AmountField(
+                        key: ValueKey('price-${draft.currencyCode}'),
+                        label: '',
+                        currencyCode: draft.currencyCode,
+                        initialMinor: form.hasPrice
+                            ? draft.unitPriceMinor
+                            : null,
+                        errorText: error(ItemField.unitPrice),
+                        onChanged: vm.setUnitPrice,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FieldBlock(
+                      label: l10n.fieldQuantity,
+                      child: DecimalField(
+                        label: '',
+                        decimalDigits: AppFormatters.quantityDecimalDigits,
+                        value: draft.defaultQuantityMilli,
+                        errorText: error(ItemField.quantity),
+                        onChanged: vm.setQuantity,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -117,24 +134,23 @@ class _ItemFormFieldsState extends State<ItemFormFields> {
                     onChanged: vm.setUnit,
                   ),
                 ),
-              ],
-            ),
-            gap,
-            _Group(
-              children: [
                 FieldBlock(
-                  label: l10n.fieldDefaultTax,
-                  child: PercentField(
+                  label: l10n.fieldCurrency,
+                  child: CurrencyPickerField(
                     label: '',
-                    hint: l10n.fieldDefaultTaxHint,
-                    basisPoints: draft.defaultTaxBasisPoints,
-                    errorText: error(ItemField.defaultTax),
-                    onChanged: vm.setDefaultTax,
+                    value: draft.currencyCode,
+                    codes: {
+                      ...AppCurrencies.common,
+                      draft.currencyCode,
+                    }.toList(),
+                    onChanged: vm.setCurrency,
                   ),
                 ),
               ],
             ),
           ],
+          gap,
+          ItemAmountCard(form: form, vm: vm, showFields: _showMore),
           gap,
           MoreFieldsToggle(
             expanded: _showMore,

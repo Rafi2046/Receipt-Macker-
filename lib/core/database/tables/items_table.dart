@@ -14,6 +14,14 @@ class ItemsTable extends Table {
   IntColumn get unitPriceMinor => integer()();
   TextColumn get currencyCode => text()();
   IntColumn get defaultTaxBasisPoints => integer().nullable()();
+
+  /// In thousandths; a new invoice line starts with it.
+  IntColumn get defaultQuantityMilli =>
+      integer().withDefault(const Constant(1000))();
+
+  /// `percent` or `flat`, null for no default discount.
+  TextColumn get discountType => text().nullable()();
+  IntColumn get discountValue => integer().withDefault(const Constant(0))();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
 

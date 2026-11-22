@@ -9,6 +9,7 @@ import '../../../../core/services/service_providers.dart';
 import '../../../../core/utils/id_generator.dart';
 import '../../domain/logic/item_validator.dart';
 import '../../domain/models/item.dart';
+import '../../domain/models/item_discount_type.dart';
 import '../../providers.dart';
 import 'item_editor_state.dart';
 import 'item_list_view_model.dart';
@@ -92,6 +93,14 @@ class ItemEditorViewModel extends _$ItemEditorViewModel {
   /// [basisPoints] is null for no default tax.
   void setDefaultTax(int? basisPoints) =>
       _edit((d) => d.copyWith(defaultTaxBasisPoints: basisPoints));
+
+  /// [milli] is null while the field is empty (then invalid).
+  void setQuantity(int? milli) =>
+      _edit((d) => d.copyWith(defaultQuantityMilli: milli ?? 0));
+
+  /// [type] null removes the default discount.
+  void setDiscount(ItemDiscountType? type, int value) =>
+      _edit((d) => d.copyWith(discountType: type, discountValue: value));
 
   void clearFailure() => _set((f) => f.copyWith(failure: null));
 

@@ -319,6 +319,7 @@
   "fieldItemNamePlaceholder": "আইটেমের নাম লিখুন",
   "fieldDescriptionHint": "আইটেমের বিবরণ বা নোট লিখুন",
   "fieldPrice": "মূল্য",
+  "itemAmount": "মোট অঙ্ক",
   "lineNewTitle": "আইটেম তৈরি করুন",
   "fieldDiscount": "ছাড়",
   "discountNone": "নেই",
