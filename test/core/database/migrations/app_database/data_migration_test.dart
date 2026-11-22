@@ -49,8 +49,15 @@ void main() {
     final db = AppDatabase(schema.newConnection());
     await verifier.migrateAndValidate(db, 4);
 
-    expect((await db.clientDao.findById('c'))?.name, 'Karim');
-    expect((await db.itemDao.findById('i'))?.unitPriceMinor, 1500);
+    // Raw reads: today's DAOs expect columns added after v4.
+    final client = await db
+        .customSelect("SELECT name FROM clients WHERE id = 'c'")
+        .getSingle();
+    final item = await db
+        .customSelect("SELECT unit_price_minor FROM items WHERE id = 'i'")
+        .getSingle();
+    expect(client.read<String>('name'), 'Karim');
+    expect(item.read<int>('unit_price_minor'), 1500);
     expect(await db.select(db.invoicesTable).get(), isEmpty);
     await db.close();
   });

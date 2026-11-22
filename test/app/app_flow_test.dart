@@ -17,9 +17,16 @@ void main() {
 
   Future<void> tearDownApp(WidgetTester tester) => tester.tearDownFullApp(env);
 
+  // First run opens the marketing tour; its Skip leads to the setup steps.
+  Future<void> skipTour(WidgetTester tester, {String label = 'Skip'}) async {
+    await tester.tap(find.text(label));
+    await settle(tester);
+  }
+
   testWidgets('first run: onboarding in Bangla ends on home', (tester) async {
     env = TestEnv();
     await pumpApp(tester);
+    await skipTour(tester);
     expect(find.text('Choose your language'), findsOneWidget);
 
     await tester.tap(find.text('বাংলা'));
@@ -45,9 +52,9 @@ void main() {
     await tester.tap(find.text('এখন নয়'));
     await settle(tester);
     expect(
-      find.text('রহমান ট্রেডার্স'),
+      find.byKey(const Key('home_profile_avatar_button')),
       findsOneWidget,
-      reason: 'home shows the business',
+      reason: 'onboarding ends on home',
     );
     expect(env.prefs.onboardingComplete, isTrue);
     expect(env.prefs.languageCode, 'bn');
@@ -70,7 +77,7 @@ void main() {
       ),
     );
     await pumpApp(tester);
-    expect(find.text('Rahman Traders'), findsOneWidget);
+    expect(find.text('RT'), findsOneWidget, reason: 'home avatar initials');
 
     await tester.tap(find.byTooltip('Edit business profile'));
     await settle(tester);
@@ -96,7 +103,7 @@ void main() {
     expect(find.text('Business profile saved'), findsOneWidget);
     await tester.pageBack();
     await settle(tester);
-    expect(find.text('Rahman & Sons'), findsOneWidget);
+    expect(find.text('R&'), findsOneWidget, reason: 'avatar follows the name');
     await tearDownApp(tester);
   });
 
@@ -105,6 +112,7 @@ void main() {
     tester.platformDispatcher.textScaleFactorTestValue = 2;
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     await pumpApp(tester);
+    await skipTour(tester, label: 'এড়িয়ে যান');
     Future<void> next() async {
       await tester.tap(find.text('এগিয়ে যান'));
       await settle(tester);
@@ -112,6 +120,9 @@ void main() {
 
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -800));
     await next();
+    // At 2x the step hero fills the screen; scroll so the name field builds.
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -800));
+    await settle(tester);
     await tester.enterText(find.byType(TextField).first, 'রহমান ট্রেডার্স');
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -1600));
     await settle(tester);

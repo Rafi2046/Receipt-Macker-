@@ -39,15 +39,19 @@ class OnboardingSetupFrame extends StatelessWidget {
               ),
               child: progress,
             ),
+            // At large font sizes the hero may take at most half the space
+            // and scrolls inside it, so the sheet below keeps room.
             if (hero != null)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.pagePadding,
-                  0,
-                  AppSpacing.pagePadding,
-                  AppSpacing.lg,
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.pagePadding,
+                    0,
+                    AppSpacing.pagePadding,
+                    AppSpacing.lg,
+                  ),
+                  child: hero,
                 ),
-                child: hero,
               ),
             Expanded(
               child: DecoratedBox(

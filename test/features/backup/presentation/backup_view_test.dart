@@ -106,7 +106,7 @@ void main() {
       expect(find.textContaining('Invoices: 10'), findsOneWidget);
       expect(find.textContaining('Clients: 4'), findsOneWidget);
       expect(find.textContaining('Items: 8'), findsOneWidget);
-      expect(find.textContaining('Schema version: 5'), findsOneWidget);
+      expect(find.textContaining('Schema version: 7'), findsOneWidget);
       expect(find.text('Restore data'), findsWidgets);
 
       // Tap Restore data in the dialog

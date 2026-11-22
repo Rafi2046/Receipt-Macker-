@@ -98,7 +98,18 @@ void main() {
   testWidgets('item: add with price and tax, shown in Bangla', (tester) async {
     await openHome(tester, language: 'bn');
     await tap(tester, find.byTooltip('আরও'));
-    await tap(tester, find.text('পণ্য ও সেবা'));
+    // The More menu is a lazy list; at 2x the row starts off screen, and
+    // once built it can still sit under the bottom bar, so centre it.
+    await tester.scrollUntilVisible(
+      find.text('পণ্য ও সেবা'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    final itemsRow = find.text('পণ্য ও সেবা');
+    await Scrollable.ensureVisible(tester.element(itemsRow), alignment: 0.5);
+    await settle(tester);
+    await tester.tap(itemsRow);
+    await settle(tester);
     await tap(tester, find.text('প্রথম পণ্য বা সেবা যোগ করুন'));
 
     // Labels sit above the fields: name, description, price, quantity,
@@ -141,7 +152,18 @@ void main() {
     await settle(tester);
 
     await tap(tester, find.byTooltip('আরও'));
-    await tap(tester, find.text('পণ্য ও সেবা'));
+    // The More menu is a lazy list; at 2x the row starts off screen, and
+    // once built it can still sit under the bottom bar, so centre it.
+    await tester.scrollUntilVisible(
+      find.text('পণ্য ও সেবা'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    final itemsRow = find.text('পণ্য ও সেবা');
+    await Scrollable.ensureVisible(tester.element(itemsRow), alignment: 0.5);
+    await settle(tester);
+    await tester.tap(itemsRow);
+    await settle(tester);
     await tap(tester, find.text('প্রথম পণ্য বা সেবা যোগ করুন'));
     await tap(tester, find.text('সংরক্ষণ করুন'));
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -2000));
