@@ -2,7 +2,7 @@
 # Android only. Icon chip uses brand primary (coral).
 flutter_native_splash:
   color: "#F7F8FA"
-  color_dark: "#090C10"
+  color_dark: "#121316"
   image: assets/branding/generated/splash_logo_384.png
   image_dark: assets/branding/generated/splash_logo_384.png
   android_12:
@@ -11,6 +11,6 @@ flutter_native_splash:
     icon_background_color: "#FF5738"
     icon_background_color_dark: "#FF5738"
     color: "#F7F8FA"
-    color_dark: "#090C10"
+    color_dark: "#121316"
   ios: false
   web: false
