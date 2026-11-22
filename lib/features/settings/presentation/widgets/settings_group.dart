@@ -8,12 +8,20 @@ import '../../../../core/widgets/layout/app_card.dart';
 /// A titled settings card: a small heading above a card of rows split by
 /// dividers that start after the row icons.
 class SettingsGroup extends StatelessWidget {
-  const SettingsGroup({required this.title, required this.children, super.key});
+  const SettingsGroup({
+    required this.title,
+    required this.children,
+    this.dividerIndent = _iconIndent,
+    super.key,
+  });
 
   final String title;
   final List<Widget> children;
 
-  static const double _dividerIndent =
+  /// Where dividers start; by default just after the row icons.
+  final double dividerIndent;
+
+  static const double _iconIndent =
       AppSpacing.lg + AppSizes.iconRow + AppSpacing.md;
 
   @override
@@ -46,7 +54,7 @@ class SettingsGroup extends StatelessWidget {
                 if (i > 0)
                   Divider(
                     height: AppSizes.borderWidth,
-                    indent: _dividerIndent,
+                    indent: dividerIndent,
                     color: colors.border,
                   ),
                 children[i],

@@ -9,7 +9,6 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
-import '../../../../core/services/url_launch_service.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/display/pro_upgrade_banner.dart';
@@ -104,14 +103,7 @@ class AppMenuBody extends ConsumerWidget {
               icon: AppIcons.support,
               label: l10n.menuSupport,
               subtitle: l10n.menuSupportHint,
-              onTap: () {
-                onNavigate?.call();
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  UrlLaunchService.openUrl(
-                    'mailto:${AppConstants.supportEmail}',
-                  );
-                });
-              },
+              onTap: () => _go(context, RouteNames.support),
             ),
           ],
         ),

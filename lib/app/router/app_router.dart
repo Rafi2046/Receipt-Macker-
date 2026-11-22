@@ -20,6 +20,7 @@ import '../../features/paywall/presentation/views/paywall_view.dart';
 import '../../features/paywall/presentation/views/pro_welcome_view.dart';
 import '../../features/settings/presentation/views/privacy_policy_view.dart';
 import '../../features/settings/presentation/views/settings_view.dart';
+import '../../features/settings/presentation/views/support_view.dart';
 import '../../features/settings/presentation/views/terms_view.dart';
 import '../shell/app_shell.dart';
 import 'invoice_routes.dart';
@@ -107,6 +108,11 @@ GoRouter appRouter(Ref ref) {
         name: RouteNames.privacy,
         path: RouteNames.privacyPath,
         builder: (_, _) => const PrivacyPolicyView(),
+      ),
+      GoRoute(
+        name: RouteNames.support,
+        path: RouteNames.supportPath,
+        builder: (_, _) => const SupportView(),
       ),
       GoRoute(
         name: RouteNames.terms,

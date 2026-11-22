@@ -3,12 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
-import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/services/ads/consent_service.dart';
-import '../../../../core/services/url_launch_service.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/layout/editor_row.dart';
 import 'settings_group.dart';
@@ -52,18 +50,22 @@ class SettingsLinksGroup extends ConsumerWidget {
           title: l10n.legalSectionTitle,
           children: [
             EditorRow(
+              icon: AppIcons.supportHero,
+              iconSize: AppSizes.iconRow,
+              title: l10n.supportTitle,
+              onTap: () => context.pushNamed(RouteNames.support),
+            ),
+            EditorRow(
               icon: AppIcons.setPrivacy,
               iconSize: AppSizes.iconRow,
               title: l10n.settingsPrivacyPolicy,
-              onTap: () =>
-                  UrlLaunchService.openUrl(AppConstants.privacyPolicyUrl),
+              onTap: () => context.pushNamed(RouteNames.privacy),
             ),
             EditorRow(
               icon: AppIcons.setTerms,
               iconSize: AppSizes.iconRow,
               title: l10n.settingsTermsOfService,
-              onTap: () =>
-                  UrlLaunchService.openUrl(AppConstants.termsOfServiceUrl),
+              onTap: () => context.pushNamed(RouteNames.terms),
             ),
           ],
         ),

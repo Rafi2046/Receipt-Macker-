@@ -21,9 +21,8 @@ void main() {
     when(() => mockInvoiceRepo.getNumbering()).thenAnswer(
       (_) async => const Ok(InvoiceNumbering(prefix: 'INV-', nextSequence: 5)),
     );
-    when(
-      () => mockInvoiceRepo.getHighestSequence(any()),
-    ).thenAnswer((_) async => const Ok(4));
+    when(() => mockInvoiceRepo.getHighestSequence(any()))
+        .thenAnswer((_) async => const Ok(4));
     when(
       () => mockInvoiceRepo.updateNumbering(
         prefix: any(named: 'prefix'),
@@ -57,9 +56,7 @@ void main() {
     expect(find.text('Next: INV-0005'), findsOneWidget);
   });
 
-  testWidgets('language row opens a sheet and saves the pick', (
-    tester,
-  ) async {
+  testWidgets('language row opens a sheet and saves the pick', (tester) async {
     await pump(tester);
     await tester.tap(find.text('App language'));
     await tester.pumpAndSettle();

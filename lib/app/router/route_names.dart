@@ -16,6 +16,8 @@ abstract final class RouteNames {
   static const String paywallPath = '/paywall';
   static const String proWelcome = 'proWelcome';
   static const String proWelcomePath = '/pro-welcome';
+  static const String support = 'support';
+  static const String supportPath = '/support';
   static const String privacy = 'privacy';
   static const String privacyPath = '/privacy';
   static const String terms = 'terms';
