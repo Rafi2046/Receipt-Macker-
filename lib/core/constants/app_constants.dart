@@ -8,6 +8,10 @@ abstract final class AppConstants {
   static const String publisher = 'IRR Dev Labs';
   static const String supportEmail = 'irrdevlabs.support@gmail.com';
 
+  /// Where Google Play lists this app's subscription (manage or cancel).
+  static const String manageSubscriptionUrl =
+      'https://play.google.com/store/account/subscriptions?package=$packageId';
+
   /// Date shown as "last updated" on the privacy policy and terms.
   static final DateTime legalUpdatedOn = DateTime(2026, 11, 22);
 

@@ -17,4 +17,10 @@ abstract final class FreePlan {
 
   static bool showPdfFooter({required bool isPro}) =>
       AppConstants.freeShowsPdfFooter && !isPro;
+
+  /// How many PDF templates exist, and how many of them are free.
+  static int get templateCount => PdfTemplate.values.length;
+
+  static int get freeTemplateCount =>
+      PdfTemplate.values.where((t) => !t.requiresPro).length;
 }

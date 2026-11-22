@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/errors/result.dart';
+import '../../../../core/services/purchases/pro_plan.dart';
 import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/services/telemetry/analytics_service.dart';
 import '../paywall_state.dart';
@@ -19,12 +20,32 @@ class PaywallViewModel extends Notifier<PaywallState> {
 
   void clearNotice() => state = state.copyWith(clearNotice: true);
 
+  void select(String productId) =>
+      state = state.copyWith(selectedId: productId);
+
+  List<ProPlan> _yearlyFirst(List<ProPlan> plans) => [
+    ...plans.where((p) => p.period == ProPeriod.yearly),
+    ...plans.where((p) => p.period != ProPeriod.yearly),
+  ];
+
+  /// Yearly when offered (the better price), else the first plan.
+  String? _defaultPlan(List<ProPlan> plans) {
+    for (final plan in plans) {
+      if (plan.period == ProPeriod.yearly) return plan.id;
+    }
+    return plans.isEmpty ? null : plans.first.id;
+  }
+
   Future<void> load() async {
     state = state.copyWith(loading: true, clearNotice: true);
     final result = await ref.read(purchaseRepositoryProvider).loadPlans();
     if (!ref.mounted) return;
     state = switch (result) {
-      Ok(:final value) => state.copyWith(loading: false, plans: value),
+      Ok(:final value) => state.copyWith(
+        loading: false,
+        plans: _yearlyFirst(value),
+        selectedId: _defaultPlan(value),
+      ),
       Err() => state.copyWith(loading: false, plans: const []),
     };
   }

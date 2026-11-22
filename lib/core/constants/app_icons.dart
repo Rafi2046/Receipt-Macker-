@@ -103,4 +103,11 @@ abstract final class AppIcons {
   static const IconData address = LucideIcons.mapPin;
   static const IconData star = LucideIcons.star;
   static const IconData unchecked = LucideIcons.circle;
+
+  // Paywall and Pro welcome.
+  static const IconData noAds = LucideIcons.megaphoneOff;
+  static const IconData noFooter = LucideIcons.fileX;
+  static const IconData unlimited = LucideIcons.infinity;
+  static const IconData welcome = LucideIcons.partyPopper;
+  static const IconData openExternal = LucideIcons.externalLink;
 }

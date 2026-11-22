@@ -52,7 +52,8 @@ void main() {
         ],
       );
 
-      expect(find.text('QuickBill Pro'), findsOneWidget);
+      expect(find.text('Upgrade to'), findsOneWidget);
+      expect(find.text('PRO'), findsWidgets);
       expect(find.text('\$4.99'), findsOneWidget);
       expect(find.text('\$39.99'), findsOneWidget);
       expect(find.text('Restore purchases'), findsOneWidget);
@@ -62,6 +63,46 @@ void main() {
       expect(find.text('PDF templates'), findsOneWidget);
     },
   );
+
+  testWidgets('yearly is preselected; Continue buys the chosen plan', (
+    tester,
+  ) async {
+    when(() => mockRepo.loadPlans()).thenAnswer((_) async => Ok(testPlans));
+    when(() => mockRepo.buy(any())).thenAnswer((_) async => const Ok(false));
+
+    await tester.pumpApp(
+      const PaywallView(),
+      surface: const Size(400, 1800),
+      overrides: [
+        appPreferencesProvider.overrideWithValue(fakePrefs),
+        purchaseRepositoryProvider.overrideWithValue(mockRepo),
+      ],
+    );
+    // The yearly plan has a 7-day trial, so the button says so.
+    expect(find.text('Start 7-day free trial'), findsOneWidget);
+
+    await tester.tap(find.text('Monthly'));
+    await tester.pumpAndSettle();
+    expect(find.text('Continue'), findsOneWidget);
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    verify(() => mockRepo.buy(AppConstants.proMonthlyId)).called(1);
+  });
+
+  testWidgets('fits at 2x font in Bangla', (tester) async {
+    when(() => mockRepo.loadPlans()).thenAnswer((_) async => Ok(testPlans));
+    await tester.pumpApp(
+      const PaywallView(),
+      language: 'bn',
+      textScale: 2,
+      surface: const Size(360, 740),
+      overrides: [
+        appPreferencesProvider.overrideWithValue(fakePrefs),
+        purchaseRepositoryProvider.overrideWithValue(mockRepo),
+      ],
+    );
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('tapping restore purchases shows success message when restored', (
     tester,
