@@ -8,7 +8,8 @@ import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/layout/editor_row.dart';
 import 'settings_group.dart';
 
-/// The business's own records: profile, clients, items and backups.
+/// The business's own records: profile, items and backups. Clients have
+/// their own tab.
 class SettingsBusinessGroup extends StatelessWidget {
   const SettingsBusinessGroup({super.key});
 
@@ -29,7 +30,6 @@ class SettingsBusinessGroup extends StatelessWidget {
           l10n.businessProfileTitle,
           RouteNames.businessProfile,
         ),
-        row(AppIcons.clients, l10n.clientsTitle, RouteNames.clients),
         row(AppIcons.item, l10n.itemsTitle, RouteNames.items),
         row(AppIcons.setBackup, l10n.backupTitle, RouteNames.backup),
       ],

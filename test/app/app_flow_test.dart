@@ -79,7 +79,10 @@ void main() {
     await pumpApp(tester);
     expect(find.text('RT'), findsOneWidget, reason: 'home avatar initials');
 
-    await tester.tap(find.byTooltip('Edit business profile'));
+    // The Home logo opens Settings; its Edit button opens the profile.
+    await tester.tap(find.byTooltip('Settings'));
+    await settle(tester);
+    await tester.tap(find.text('Edit'));
     await settle(tester);
     expect(find.text('Business profile'), findsOneWidget);
 
@@ -101,6 +104,9 @@ void main() {
     await tester.tap(find.text('Save'));
     await settle(tester);
     expect(find.text('Business profile saved'), findsOneWidget);
+    await tester.pageBack();
+    await settle(tester);
+    expect(find.text('Rahman & Sons'), findsOneWidget, reason: 'Settings');
     await tester.pageBack();
     await settle(tester);
     expect(find.text('R&'), findsOneWidget, reason: 'avatar follows the name');

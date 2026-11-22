@@ -32,7 +32,7 @@ class AppNavBar extends StatelessWidget {
     AppIcons.dashboard,
     AppIcons.invoice,
     AppIcons.quote,
-    AppIcons.settings,
+    AppIcons.clients,
   ];
 
   /// The notch leaves a small ring of space around the create button.

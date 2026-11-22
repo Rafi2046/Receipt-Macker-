@@ -128,14 +128,14 @@ class _HomeHeader extends ConsumerWidget {
           ),
         ),
         Tooltip(
-          message: l10n.homeEditProfile,
+          message: l10n.settingsTitle,
           child: Material(
             color: context.appColors.surface.withValues(alpha: 0),
             shape: const CircleBorder(),
             clipBehavior: Clip.antiAlias,
             child: InkWell(
               key: const Key('home_profile_avatar_button'),
-              onTap: () => context.pushNamed(RouteNames.businessProfile),
+              onTap: () => context.pushNamed(RouteNames.settings),
               child: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(

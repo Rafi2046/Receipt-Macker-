@@ -7,7 +7,7 @@ import '../../core/widgets/layout/app_nav_bar.dart';
 import '../router/route_names.dart';
 import 'create_choice_sheet.dart';
 
-/// The four tabs that stay on screen: Home, Invoices, Estimates, Settings,
+/// The four tabs that stay on screen: Home, Invoices, Estimates, Clients,
 /// with the create button between them. Nested screens cover the bar.
 class AppShell extends StatelessWidget {
   const AppShell({required this.shell, required this.path, super.key});
@@ -21,7 +21,7 @@ class AppShell extends StatelessWidget {
       path == RouteNames.homePath ||
       path == RouteNames.invoicesPath ||
       path == RouteNames.quotesPath ||
-      path == RouteNames.settingsPath;
+      path == RouteNames.clientsPath;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class AppShell extends StatelessWidget {
                 l10n.navHome,
                 l10n.invoicesTitle,
                 l10n.quotesTitle,
-                l10n.settingsTitle,
+                l10n.clientsTitle,
               ],
               createLabel: l10n.createChooseTitle,
               onSelected: (index) => shell.goBranch(

@@ -110,4 +110,3 @@ class QuoteListView extends ConsumerWidget {
     );
   }
 }
-

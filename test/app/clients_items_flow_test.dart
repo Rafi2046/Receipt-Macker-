@@ -43,14 +43,15 @@ void main() {
 
   Finder field(String label) => find.widgetWithText(TextField, label);
 
-  /// Opens the Settings tab, then the [row] under Business. The list is
-  /// lazy, so the row is scrolled into the middle before the tap.
+  /// Opens Settings from the Home logo, then the [row] under Business.
+  /// The list is lazy, so the row is scrolled into the middle first.
   Future<void> openFromSettings(
     WidgetTester tester, {
-    required String settings,
+    required String home,
     required String row,
   }) async {
-    await tap(tester, find.byTooltip(settings));
+    await tap(tester, find.byTooltip(home));
+    await tap(tester, find.byKey(const Key('home_profile_avatar_button')));
     final target = find.text(row);
     await tester.scrollUntilVisible(
       target,
@@ -65,7 +66,7 @@ void main() {
 
   testWidgets('client: add, find, edit, delete', (tester) async {
     await openHome(tester);
-    await openFromSettings(tester, settings: 'Settings', row: 'Clients');
+    await tap(tester, find.byTooltip('Clients'));
     expect(find.text('No clients yet'), findsOneWidget);
 
     await tap(tester, find.text('Add your first client'));
@@ -117,7 +118,7 @@ void main() {
 
   testWidgets('item: add with price and tax, shown in Bangla', (tester) async {
     await openHome(tester, language: 'bn');
-    await openFromSettings(tester, settings: 'সেটিংস', row: 'পণ্য ও সেবা');
+    await openFromSettings(tester, home: 'হোম', row: 'পণ্য ও সেবা');
     await tap(tester, find.text('প্রথম পণ্য বা সেবা যোগ করুন'));
 
     // Labels sit above the fields: name, description, price, quantity,
@@ -150,19 +151,17 @@ void main() {
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     await openHome(tester, language: 'bn');
 
-    await openFromSettings(tester, settings: 'সেটিংস', row: 'ক্লায়েন্ট');
+    await tap(tester, find.byTooltip('ক্লায়েন্ট'));
     await tap(tester, find.text('প্রথম ক্লায়েন্ট যোগ করুন'));
     await tap(tester, find.text('সংরক্ষণ করুন'));
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -2000));
     await settle(tester);
     expect(tester.takeException(), isNull);
-    // Close the editor, then the client list, back to Settings.
-    for (var i = 0; i < 2; i++) {
-      Navigator.of(tester.element(find.byType(Scrollable).first)).pop();
-      await settle(tester);
-    }
+    // Close the editor, back to the Clients tab.
+    Navigator.of(tester.element(find.byType(Scrollable).first)).pop();
+    await settle(tester);
 
-    await openFromSettings(tester, settings: 'সেটিংস', row: 'পণ্য ও সেবা');
+    await openFromSettings(tester, home: 'হোম', row: 'পণ্য ও সেবা');
     await tap(tester, find.text('প্রথম পণ্য বা সেবা যোগ করুন'));
     await tap(tester, find.text('সংরক্ষণ করুন'));
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -2000));
