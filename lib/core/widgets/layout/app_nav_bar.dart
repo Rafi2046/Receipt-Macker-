@@ -69,9 +69,12 @@ class AppNavBar extends StatelessWidget {
                   painter: NotchedDockPainter(
                     color: colors.surface,
                     borderColor: colors.border,
-                    shadowColor: colors.textPrimary.withValues(
-                      alpha: AppOpacity.shadow * 3,
-                    ),
+                    // A light shadow on a dark page reads as a glow.
+                    shadowColor: Theme.of(context).brightness == Brightness.dark
+                        ? colors.textPrimary.withValues(alpha: 0)
+                        : colors.textPrimary.withValues(
+                            alpha: AppOpacity.shadow * 3,
+                          ),
                     notchRadius: _notchRadius,
                   ),
                   child: Padding(

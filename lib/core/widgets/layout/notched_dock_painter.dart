@@ -12,6 +12,8 @@ class NotchedDockPainter extends CustomPainter {
 
   final Color color;
   final Color borderColor;
+
+  /// Fully transparent skips the shadow (dark mode, where it would glow).
   final Color shadowColor;
 
   /// Half the notch width at the top edge.
@@ -41,8 +43,8 @@ class NotchedDockPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final path = _path(size);
+    if (shadowColor.a > 0) canvas.drawShadow(path, shadowColor, 10, false);
     canvas
-      ..drawShadow(path, shadowColor, 10, false)
       ..drawPath(path, Paint()..color = color)
       ..drawPath(
         path,
