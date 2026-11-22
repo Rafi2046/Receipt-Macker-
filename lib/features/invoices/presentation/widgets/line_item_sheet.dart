@@ -5,21 +5,25 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/extensions/validation_message_extension.dart';
-import '../../../../core/utils/formatters.dart';
+import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
-import '../../../../core/widgets/display/amount_text.dart';
-import '../../../../core/widgets/inputs/amount_field.dart';
+import '../../../../core/widgets/buttons/more_fields_toggle.dart';
 import '../../../../core/widgets/inputs/app_text_field.dart';
-import '../../../../core/widgets/inputs/decimal_field.dart';
-import '../../domain/logic/invoice_calculator.dart';
+import '../../../../core/widgets/inputs/field_block.dart';
+import '../../../../core/widgets/inputs/soft_input_theme.dart';
+import '../../../../core/widgets/inputs/unit_field.dart';
+import '../../../../core/widgets/layout/app_card.dart';
 import '../../domain/models/line_field.dart';
-import '../../domain/models/line_item.dart';
 import '../view_models/invoice_editor_view_model.dart';
-import 'discount_input.dart';
+import 'line_amount_card.dart';
+import 'line_discount_block.dart';
+import 'line_price_quantity.dart';
 
-/// Edits one line of the invoice draft in place. Use [LineItemSheet.show];
-/// a line left empty is dropped when the sheet closes.
-class LineItemSheet extends ConsumerWidget {
+/// Edits one line of the invoice draft in place, one card per group: name
+/// and description, price and quantity, the unit, then the discount with
+/// the line amount on a ticket stub. Use [LineItemSheet.show]; a line left
+/// empty is dropped when the sheet closes.
+class LineItemSheet extends ConsumerStatefulWidget {
   const LineItemSheet({
     required this.provider,
     required this.lineId,
@@ -39,13 +43,29 @@ class LineItemSheet extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
+      showDragHandle: true,
+      backgroundColor: context.appColors.background,
       builder: (_) => LineItemSheet(provider: provider, lineId: lineId),
     );
     ref.read(provider.notifier).discardLineIfBlank(lineId);
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LineItemSheet> createState() => _LineItemSheetState();
+}
+
+class _LineItemSheetState extends ConsumerState<LineItemSheet> {
+  bool _showMore = true;
+
+  /// Whether the line was still unnamed when the sheet opened.
+  bool? _isNew;
+
+  static const int _descriptionLines = 3;
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = widget.provider;
+    final lineId = widget.lineId;
     final form = ref.watch(provider).value;
     final line = form?.draft.lines.where((l) => l.id == lineId).firstOrNull;
     if (form == null || line == null) return const SizedBox.shrink();
@@ -55,156 +75,130 @@ class LineItemSheet extends ConsumerWidget {
     final errors = form.lineErrors(lineId);
     String? error(LineField f) => l10n.validationMessage(errors[f]);
     final foreign = form.foreignPriceLines[lineId];
+    final isNew = _isNew ??= line.name.trim().isEmpty;
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.pagePadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: AppSpacing.md,
-          children: [
-            Text(l10n.lineEditTitle, style: context.textStyles.titleMedium),
-            AppTextField(
-              label: l10n.fieldItemName,
-              initialValue: line.name,
-              errorText: error(LineField.name),
-              textCapitalization: TextCapitalization.sentences,
-              textInputAction: TextInputAction.next,
-              onChanged: (v) => vm.setLineName(lineId, v),
-            ),
-            AppTextField(
-              label: l10n.fieldDescription,
-              initialValue: line.description,
-              maxLines: _descriptionLines,
-              keyboardType: TextInputType.multiline,
-              textCapitalization: TextCapitalization.sentences,
-              onChanged: (v) => vm.setLineDescription(lineId, v),
-            ),
-            _QuantityAndUnit(
-              line: line,
-              vm: vm,
-              error: error(LineField.quantity),
-            ),
-            if (foreign != null)
+      child: SoftInputTheme(
+        style: SoftInputStyle.boxed,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.pagePadding,
+            0,
+            AppSpacing.pagePadding,
+            AppSpacing.pagePadding,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: AppSpacing.md,
+            children: [
               Text(
-                l10n.lineCurrencyNote(foreign, currency),
-                style: context.textStyles.bodySmall?.copyWith(
-                  color: context.appColors.warning,
-                ),
+                isNew ? l10n.lineNewTitle : l10n.lineEditTitle,
+                style: context.textStyles.titleLarge,
               ),
-            AmountField(
-              label: l10n.fieldUnitPrice,
-              currencyCode: currency,
-              initialMinor: line.unitPriceMinor == 0
-                  ? null
-                  : line.unitPriceMinor,
-              onChanged: (v) => vm.setLinePrice(lineId, v),
-            ),
-            DiscountInput(
-              label: l10n.fieldDiscount,
-              currencyCode: currency,
-              discount: line.discount,
-              errorText: error(LineField.discount),
-              onChanged: (d) => vm.setLineDiscount(lineId, d),
-            ),
-            _LineTotal(
-              line: line,
-              currency: currency,
-              error: error(LineField.total),
-            ),
-            _Actions(
-              onRemove: () {
-                vm.removeLine(lineId);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+              _Group(
+                children: [
+                  FieldBlock(
+                    label: l10n.fieldItemName,
+                    required: true,
+                    child: AppTextField(
+                      label: '',
+                      hint: l10n.fieldItemNamePlaceholder,
+                      initialValue: line.name,
+                      errorText: error(LineField.name),
+                      textCapitalization: TextCapitalization.sentences,
+                      textInputAction: TextInputAction.next,
+                      onChanged: (v) => vm.setLineName(lineId, v),
+                    ),
+                  ),
+                  FieldBlock(
+                    label: l10n.fieldDescription,
+                    child: AppTextField(
+                      label: '',
+                      hint: l10n.fieldDescriptionHint,
+                      initialValue: line.description,
+                      maxLines: _descriptionLines,
+                      maxLength: Validators.maxLongText,
+                      keyboardType: TextInputType.multiline,
+                      textCapitalization: TextCapitalization.sentences,
+                      onChanged: (v) => vm.setLineDescription(lineId, v),
+                    ),
+                  ),
+                ],
+              ),
+              _Group(
+                children: [
+                  LinePriceQuantity(
+                    line: line,
+                    vm: vm,
+                    currency: currency,
+                    quantityError: error(LineField.quantity),
+                  ),
+                  if (foreign != null)
+                    Text(
+                      l10n.lineCurrencyNote(foreign, currency),
+                      style: context.textStyles.bodySmall?.copyWith(
+                        color: context.appColors.warning,
+                      ),
+                    ),
+                ],
+              ),
+              if (_showMore)
+                _Group(
+                  children: [
+                    FieldBlock(
+                      label: l10n.unitOfMeasure,
+                      child: UnitField(
+                        value: line.unit,
+                        onChanged: (v) => vm.setLineUnit(lineId, v),
+                      ),
+                    ),
+                  ],
+                ),
+              LineAmountCard(
+                line: line,
+                currency: currency,
+                error: error(LineField.total),
+                discount: _showMore
+                    ? LineDiscountBlock(
+                        currencyCode: currency,
+                        discount: line.discount,
+                        errorText: error(LineField.discount),
+                        onChanged: (d) => vm.setLineDiscount(lineId, d),
+                      )
+                    : null,
+              ),
+              MoreFieldsToggle(
+                expanded: _showMore,
+                onPressed: () => setState(() => _showMore = !_showMore),
+              ),
+              _Actions(
+                onRemove: () {
+                  vm.removeLine(lineId);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-
-  static const int _descriptionLines = 2;
 }
 
-class _QuantityAndUnit extends StatelessWidget {
-  const _QuantityAndUnit({required this.line, required this.vm, this.error});
+/// One card of the sheet.
+class _Group extends StatelessWidget {
+  const _Group({required this.children});
 
-  final LineItem line;
-  final InvoiceEditorViewModel vm;
-  final String? error;
+  final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: AppSpacing.md,
-      children: [
-        Expanded(
-          child: DecimalField(
-            label: l10n.fieldQuantity,
-            decimalDigits: AppFormatters.quantityDecimalDigits,
-            value: line.quantityMilli,
-            errorText: error,
-            onChanged: (v) => vm.setLineQuantity(line.id, v),
-          ),
-        ),
-        Expanded(
-          child: AppTextField(
-            label: l10n.fieldUnit,
-            hint: l10n.fieldUnitHint,
-            initialValue: line.unit,
-            onChanged: (v) => vm.setLineUnit(line.id, v),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _LineTotal extends StatelessWidget {
-  const _LineTotal({required this.line, required this.currency, this.error});
-
-  final LineItem line;
-  final String currency;
-  final String? error;
-
-  @override
-  Widget build(BuildContext context) {
-    final totals = InvoiceCalculator.line(line, currency);
-    final message = error;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                context.l10n.lineTotal,
-                style: context.textStyles.titleSmall,
-              ),
-            ),
-            Flexible(
-              child: Align(
-                alignment: AlignmentDirectional.centerEnd,
-                child: AmountText(
-                  minor: totals.net,
-                  currencyCode: currency,
-                  alignment: AlignmentDirectional.centerEnd,
-                ),
-              ),
-            ),
-          ],
-        ),
-        if (message != null)
-          Text(
-            message,
-            style: context.textStyles.bodySmall?.copyWith(
-              color: context.appColors.danger,
-            ),
-          ),
-      ],
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: AppSpacing.lg,
+        children: children,
+      ),
     );
   }
 }

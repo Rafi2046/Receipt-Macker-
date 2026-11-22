@@ -12,6 +12,9 @@ enum SoftInputStyle {
 
   /// A soft filled tile with the label inside it.
   tile,
+
+  /// A rounded outline; the label sits above the field (see `FieldBlock`).
+  boxed,
 }
 
 /// Restyles the inputs below it for long forms, where the default outlined
@@ -35,6 +38,7 @@ class SoftInputTheme extends StatelessWidget {
         inputDecorationTheme: switch (style) {
           SoftInputStyle.row => _row(base),
           SoftInputStyle.tile => _tile(base, context.appColors),
+          SoftInputStyle.boxed => _boxed(base, context.appColors),
         },
       ),
       child: child,
@@ -80,6 +84,34 @@ class SoftInputTheme extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.xs,
+      ),
+    );
+  }
+
+  static InputDecorationThemeData _boxed(
+    InputDecorationThemeData base,
+    AppColors colors,
+  ) {
+    OutlineInputBorder edge(
+      Color color, [
+      double width = AppSizes.borderWidth,
+    ]) => OutlineInputBorder(
+      borderRadius: AppRadius.card,
+      borderSide: BorderSide(color: color, width: width),
+    );
+    final rest = edge(colors.border);
+    return base.copyWith(
+      filled: false,
+      isDense: false,
+      border: rest,
+      enabledBorder: rest,
+      disabledBorder: rest,
+      focusedBorder: edge(colors.primary, AppSizes.selectedBorderWidth),
+      errorBorder: edge(colors.danger),
+      focusedErrorBorder: edge(colors.danger, AppSizes.selectedBorderWidth),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
       ),
     );
   }

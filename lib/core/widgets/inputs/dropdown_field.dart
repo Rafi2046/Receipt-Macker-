@@ -35,7 +35,10 @@ class DropdownField<T> extends StatelessWidget {
           color: context.appColors.textPrimary,
         ),
         icon: const Icon(AppIcons.dropdown),
-        decoration: InputDecoration(labelText: label, errorText: errorText),
+        decoration: InputDecoration(
+          labelText: label.isEmpty ? null : label,
+          errorText: errorText,
+        ),
         items: [
           for (final (v, text) in options)
             DropdownMenuItem<T>(

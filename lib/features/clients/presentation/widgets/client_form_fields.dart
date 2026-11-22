@@ -6,6 +6,7 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/extensions/validation_message_extension.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
+import '../../../../core/widgets/buttons/more_fields_toggle.dart';
 import '../../../../core/widgets/inputs/app_text_field.dart';
 import '../../../../core/widgets/layout/app_card.dart';
 import '../../../../l10n/gen/app_localizations.dart';
@@ -91,7 +92,7 @@ class ClientFormFields extends StatelessWidget {
           ),
         ],
         const SizedBox(height: AppSpacing.lg),
-        _MoreFieldsToggle(
+        MoreFieldsToggle(
           expanded: form.showMoreFields,
           onPressed: onToggleMoreFields,
         ),
@@ -141,40 +142,6 @@ class _FieldCard extends StatelessWidget {
             ),
           ],
         ],
-      ),
-    );
-  }
-}
-
-class _MoreFieldsToggle extends StatelessWidget {
-  const _MoreFieldsToggle({required this.expanded, required this.onPressed});
-
-  final bool expanded;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final colors = context.appColors;
-    return Center(
-      child: TextButton(
-        onPressed: onPressed,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              expanded ? l10n.clientShowLessFields : l10n.clientShowMoreFields,
-              style: context.textStyles.labelLarge?.copyWith(
-                color: colors.textPrimary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            Icon(
-              expanded ? AppIcons.expandLess : AppIcons.expandMore,
-              color: colors.textSecondary,
-            ),
-          ],
-        ),
       ),
     );
   }

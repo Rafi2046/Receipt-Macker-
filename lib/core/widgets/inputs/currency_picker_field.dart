@@ -45,7 +45,7 @@ class CurrencyPickerField extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSpacing.sm),
         child: InputDecorator(
           decoration: InputDecoration(
-            labelText: label,
+            labelText: label.isEmpty ? null : label,
             errorText: errorText,
             suffixIcon: Icon(AppIcons.dropdown, color: colors.textSecondary),
           ),
