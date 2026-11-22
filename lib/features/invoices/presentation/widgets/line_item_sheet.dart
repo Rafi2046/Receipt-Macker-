@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/extensions/validation_message_extension.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
+import '../../../../core/widgets/buttons/app_icon_button.dart';
 import '../../../../core/widgets/buttons/more_fields_toggle.dart';
 import '../../../../core/widgets/inputs/app_text_field.dart';
 import '../../../../core/widgets/inputs/discount_fields.dart';
@@ -14,6 +16,8 @@ import '../../../../core/widgets/inputs/field_block.dart';
 import '../../../../core/widgets/inputs/soft_input_theme.dart';
 import '../../../../core/widgets/inputs/unit_field.dart';
 import '../../../../core/widgets/layout/app_card.dart';
+import '../../../../core/widgets/layout/app_scaffold.dart';
+import '../../../../core/widgets/layout/bottom_action_bar.dart';
 import '../../domain/models/discount.dart';
 import '../../domain/models/discount_type.dart';
 import '../../domain/models/line_field.dart';
@@ -23,8 +27,8 @@ import 'line_price_quantity.dart';
 
 /// Edits one line of the invoice draft in place, one card per group: name
 /// and description, price and quantity, the unit, then the discount with
-/// the line amount on a ticket stub. Use [LineItemSheet.show]; a line left
-/// empty is dropped when the sheet closes.
+/// the line amount on a ticket stub, on a full-screen page. Use
+/// [LineItemSheet.show]; a line left empty is dropped when it closes.
 class LineItemSheet extends ConsumerStatefulWidget {
   const LineItemSheet({
     required this.provider,
@@ -41,13 +45,10 @@ class LineItemSheet extends ConsumerStatefulWidget {
     required InvoiceEditorViewModelProvider provider,
     required String lineId,
   }) async {
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      showDragHandle: true,
-      backgroundColor: context.appColors.background,
-      builder: (_) => LineItemSheet(provider: provider, lineId: lineId),
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => LineItemSheet(provider: provider, lineId: lineId),
+      ),
     );
     ref.read(provider.notifier).discardLineIfBlank(lineId);
   }
@@ -78,25 +79,41 @@ class _LineItemSheetState extends ConsumerState<LineItemSheet> {
     String? error(LineField f) => l10n.validationMessage(errors[f]);
     final foreign = form.foreignPriceLines[lineId];
     final isNew = _isNew ??= line.name.trim().isEmpty;
-    return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-      child: SoftInputTheme(
+    void remove() {
+      vm.removeLine(lineId);
+      Navigator.of(context).pop();
+    }
+
+    return AppScaffold(
+      title: isNew ? l10n.lineNewTitle : l10n.lineEditTitle,
+      bottomBarAboveKeyboard: true,
+      actions: [
+        AppIconButton(
+          icon: AppIcons.delete,
+          semanticLabel: l10n.removeFromInvoice,
+          onPressed: remove,
+        ),
+      ],
+      bottomBar: BottomActionBar(
+        child: AppButton(
+          label: l10n.done,
+          expand: true,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: SoftInputTheme(
         style: SoftInputStyle.boxed,
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(
             AppSpacing.pagePadding,
-            0,
+            AppSpacing.sm,
             AppSpacing.pagePadding,
-            AppSpacing.pagePadding,
+            AppSpacing.xxl,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: AppSpacing.md,
             children: [
-              Text(
-                isNew ? l10n.lineNewTitle : l10n.lineEditTitle,
-                style: context.textStyles.titleLarge,
-              ),
               _Group(
                 children: [
                   FieldBlock(
@@ -189,12 +206,6 @@ class _LineItemSheetState extends ConsumerState<LineItemSheet> {
                 expanded: _showMore,
                 onPressed: () => setState(() => _showMore = !_showMore),
               ),
-              _Actions(
-                onRemove: () {
-                  vm.removeLine(lineId);
-                  Navigator.of(context).pop();
-                },
-              ),
             ],
           ),
         ),
@@ -203,7 +214,7 @@ class _LineItemSheetState extends ConsumerState<LineItemSheet> {
   }
 }
 
-/// One card of the sheet.
+/// One card of the page.
 class _Group extends StatelessWidget {
   const _Group({required this.children});
 
@@ -217,34 +228,6 @@ class _Group extends StatelessWidget {
         spacing: AppSpacing.lg,
         children: children,
       ),
-    );
-  }
-}
-
-class _Actions extends StatelessWidget {
-  const _Actions({required this.onRemove});
-
-  final VoidCallback onRemove;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    return Wrap(
-      alignment: WrapAlignment.spaceBetween,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: AppSpacing.sm,
-      runSpacing: AppSpacing.sm,
-      children: [
-        AppButton(
-          label: l10n.removeFromInvoice,
-          variant: AppButtonVariant.text,
-          onPressed: onRemove,
-        ),
-        AppButton(
-          label: l10n.done,
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ],
     );
   }
 }

@@ -3,17 +3,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
-import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
 import '../../../../core/widgets/layout/searchable_list.dart';
 import '../../../clients/clients.dart';
-import 'picker_sheet_frame.dart';
+import 'editor_add_dot.dart';
+import 'editor_row.dart';
+import 'picker_page_frame.dart';
 
-/// Searchable list of saved clients, with "New client".
+/// Full-screen list of saved clients to search and pick, under "New
+/// client".
 /// Use [ClientPickerSheet.show]; it resolves to the chosen or new client,
 /// or null when dismissed.
 class ClientPickerSheet extends ConsumerWidget {
@@ -23,11 +26,9 @@ class ClientPickerSheet extends ConsumerWidget {
   static const String _newClient = 'new';
 
   static Future<Client?> show(BuildContext context) async {
-    final picked = await showModalBottomSheet<Object>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (_) => const ClientPickerSheet(),
+    final picked = await PickerPageFrame.push<Object>(
+      context,
+      (_) => const ClientPickerSheet(),
     );
     if (picked is Client) return picked;
     if (picked == _newClient && context.mounted) {
@@ -41,14 +42,17 @@ class ClientPickerSheet extends ConsumerWidget {
     final l10n = context.l10n;
     final clients = ref.watch(clientListViewModelProvider);
     void createNew() => Navigator.of(context).pop(_newClient);
-    return PickerSheetFrame(
+    return PickerPageFrame(
       title: l10n.chooseClient,
+      listTitle: l10n.pickerSavedClients,
       actions: [
-        AppButton(
-          label: l10n.clientNewTitle,
-          icon: AppIcons.add,
-          variant: AppButtonVariant.tonal,
-          onPressed: createNew,
+        EditorRow(
+          icon: AppIcons.clientAdd,
+          tone: context.appColors.warning,
+          title: l10n.clientNewTitle,
+          subtitle: l10n.pickerNewClientHint,
+          trailing: const EditorAddDot(),
+          onTap: createNew,
         ),
       ],
       body: clients.when(

@@ -3,19 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
-import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
 import '../../../../core/widgets/layout/searchable_list.dart';
 import '../../../items/items.dart';
+import 'editor_add_dot.dart';
+import 'editor_row.dart';
 import 'item_pick.dart';
-import 'picker_sheet_frame.dart';
+import 'picker_page_frame.dart';
 
-/// Searchable list of saved items, plus "One-off line" and "New item".
-/// Use [ItemPickerSheet.show]; null when dismissed.
+/// Full-screen list of saved items to search and pick, under "New item"
+/// and "One-off line". Use [ItemPickerSheet.show]; null when dismissed.
 class ItemPickerSheet extends ConsumerWidget {
   const ItemPickerSheet({super.key});
 
@@ -23,11 +25,9 @@ class ItemPickerSheet extends ConsumerWidget {
   static const String _newItem = 'new';
 
   static Future<ItemPick?> show(BuildContext context) async {
-    final picked = await showModalBottomSheet<Object>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (_) => const ItemPickerSheet(),
+    final picked = await PickerPageFrame.push<Object>(
+      context,
+      (_) => const ItemPickerSheet(),
     );
     if (picked is ItemPick) return picked;
     if (picked == _newItem && context.mounted) {
@@ -42,20 +42,25 @@ class ItemPickerSheet extends ConsumerWidget {
     final l10n = context.l10n;
     final items = ref.watch(itemListViewModelProvider);
     void close(Object result) => Navigator.of(context).pop(result);
-    return PickerSheetFrame(
+    final colors = context.appColors;
+    return PickerPageFrame(
       title: l10n.chooseItem,
+      listTitle: l10n.pickerSavedItems,
       actions: [
-        AppButton(
-          label: l10n.addOneOffLine,
-          icon: AppIcons.oneOff,
-          variant: AppButtonVariant.secondary,
-          onPressed: () => close(const ItemPick.oneOff()),
-        ),
-        AppButton(
-          label: l10n.itemNewTitle,
+        EditorRow(
           icon: AppIcons.add,
-          variant: AppButtonVariant.tonal,
-          onPressed: () => close(_newItem),
+          tone: colors.primary,
+          title: l10n.itemNewTitle,
+          subtitle: l10n.pickerNewItemHint,
+          trailing: const EditorAddDot(),
+          onTap: () => close(_newItem),
+        ),
+        EditorRow(
+          icon: AppIcons.oneOff,
+          tone: colors.info,
+          title: l10n.addOneOffLine,
+          subtitle: l10n.pickerOneOffHint,
+          onTap: () => close(const ItemPick.oneOff()),
         ),
       ],
       body: items.when(
@@ -77,6 +82,7 @@ class ItemPickerSheet extends ConsumerWidget {
             actionLabel: l10n.itemsEmptyAction,
             onAction: () => close(_newItem),
           ),
+          cards: true,
           itemCount: state.items.length,
           itemBuilder: (context, i) => ItemListTile(
             item: state.items[i],

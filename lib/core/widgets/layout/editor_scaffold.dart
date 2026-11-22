@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../app/theme/app_colors.dart';
 import '../../constants/app_icons.dart';
-import '../../constants/app_opacity.dart';
 import '../../constants/app_spacing.dart';
 import '../../utils/extensions/l10n_extension.dart';
 import '../buttons/app_button.dart';
 import '../buttons/app_icon_button.dart';
 import '../feedback/confirm_dialog.dart';
 import 'app_scaffold.dart';
+import 'bottom_action_bar.dart';
 
 /// Frame for form screens: a Save button at the bottom, an optional Delete
 /// action, and a "Discard changes?" check when leaving with unsaved edits.
@@ -90,7 +89,7 @@ class EditorScaffold extends StatelessWidget {
   }
 }
 
-/// Save on its own surface, lifted off the form by a hairline and a shadow.
+/// Save (and an optional quieter button) on a [BottomActionBar].
 class _SaveBar extends StatelessWidget {
   const _SaveBar({
     required this.isSaving,
@@ -109,7 +108,6 @@ class _SaveBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     final save = AppButton(
       label: context.l10n.save,
       expand: true,
@@ -135,27 +133,6 @@ class _SaveBar extends StatelessWidget {
               Expanded(flex: _saveFlex, child: save),
             ],
           );
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colors.surface,
-        border: Border(top: BorderSide(color: colors.border)),
-        boxShadow: [
-          BoxShadow(
-            color: colors.textPrimary.withValues(alpha: AppOpacity.shadow),
-            blurRadius: AppSpacing.lg,
-            offset: const Offset(0, -AppSpacing.xs),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.pagePadding,
-            vertical: AppSpacing.md,
-          ),
-          child: button,
-        ),
-      ),
-    );
+    return BottomActionBar(child: button);
   }
 }
