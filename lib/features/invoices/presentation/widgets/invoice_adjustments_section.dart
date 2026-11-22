@@ -5,6 +5,7 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/extensions/validation_message_extension.dart';
 import '../../../../core/widgets/inputs/amount_field.dart';
+import '../../../../core/widgets/inputs/app_switch.dart';
 import '../../../../core/widgets/inputs/percent_field.dart';
 import '../../../../core/widgets/inputs/soft_input_theme.dart';
 import '../../../../core/widgets/layout/form_group_card.dart';
@@ -53,14 +54,17 @@ class InvoiceAdjustmentsSection extends StatelessWidget {
           errorText: error(InvoiceField.tax),
           onChanged: vm.setTaxRate,
         ),
-        SwitchListTile(
+        ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           title: Text(
             l10n.taxInclusiveLabel,
             style: context.textStyles.bodyLarge,
           ),
-          value: draft.taxInclusive,
-          onChanged: (v) => vm.setTaxInclusive(inclusive: v),
+          onTap: () => vm.setTaxInclusive(inclusive: !draft.taxInclusive),
+          trailing: AppSwitch(
+            value: draft.taxInclusive,
+            onChanged: (v) => vm.setTaxInclusive(inclusive: v),
+          ),
         ),
         AmountField(
           key: ValueKey('shipping-${draft.currencyCode}'),

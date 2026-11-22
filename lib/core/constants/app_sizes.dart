@@ -9,6 +9,11 @@ abstract final class AppSizes {
   static const double navDockHeight = 64;
   static const double navCreateSize = 56;
   static const double navSelectedSize = 46;
+
+  /// Compact switch, about 68% of the Material one (52 x 32).
+  static const double switchWidth = 36;
+  static const double switchHeight = 22;
+  static const double switchThumb = 16;
   static const double navItemSize = 36;
   static const double navIconSize = 22;
   static const double topBarHeight = 56;

@@ -7,6 +7,7 @@ import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/formatters.dart';
+import '../../../../core/widgets/inputs/app_switch.dart';
 import '../../../../core/widgets/inputs/choice_sheet.dart';
 import '../../../../core/widgets/inputs/currency_picker_sheet.dart';
 import '../../../../core/widgets/layout/editor_row.dart';
@@ -88,7 +89,7 @@ class SettingsDefaultsGroup extends ConsumerWidget {
           subtitle: l10n.settingsTaxInclusiveHint,
           onTap: () =>
               vm.setDefaultTaxInclusive(value: !state.defaultTaxInclusive),
-          trailing: Switch.adaptive(
+          trailing: AppSwitch(
             value: state.defaultTaxInclusive,
             onChanged: (v) => vm.setDefaultTaxInclusive(value: v),
           ),

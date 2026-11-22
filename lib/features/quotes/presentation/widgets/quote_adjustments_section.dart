@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/inputs/amount_field.dart';
+import '../../../../core/widgets/inputs/app_switch.dart';
 import '../../../../core/widgets/inputs/percent_field.dart';
 import '../../../invoices/presentation/widgets/discount_input.dart';
 import '../../domain/models/quote.dart';
@@ -38,11 +39,14 @@ class QuoteAdjustmentsSection extends StatelessWidget {
           basisPoints: draft.taxRateBasisPoints,
           onChanged: vm.setTaxRate,
         ),
-        SwitchListTile(
+        ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(l10n.taxInclusiveLabel),
-          value: draft.taxInclusive,
-          onChanged: (v) => vm.setTaxInclusive(inclusive: v),
+          onTap: () => vm.setTaxInclusive(inclusive: !draft.taxInclusive),
+          trailing: AppSwitch(
+            value: draft.taxInclusive,
+            onChanged: (v) => vm.setTaxInclusive(inclusive: v),
+          ),
         ),
         AmountField(
           key: ValueKey('shipping-${draft.currencyCode}'),

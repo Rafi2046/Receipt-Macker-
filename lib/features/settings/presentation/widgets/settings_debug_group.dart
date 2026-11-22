@@ -9,6 +9,7 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
+import '../../../../core/widgets/inputs/app_switch.dart';
 import '../../../../core/widgets/layout/editor_row.dart';
 import '../../../debug/presentation/view_models/sample_data_view_model.dart';
 import 'settings_group.dart';
@@ -43,7 +44,7 @@ class SettingsDebugGroup extends ConsumerWidget {
               title: 'Unlock all Pro features',
               subtitle: 'Templates, colors, no watermark and no ads',
               onTap: () => toggle(!pro),
-              trailing: Switch.adaptive(value: pro, onChanged: toggle),
+              trailing: AppSwitch(value: pro, onChanged: toggle),
             ),
             tool(l10n.themePreviewTitle, RouteNames.themePreview),
             tool(l10n.designDirectionsTitle, RouteNames.designDirections),
