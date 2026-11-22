@@ -1,4 +1,5 @@
 import 'brand_swatch.dart';
+import 'canvas/canvas_logo_picks.dart';
 import 'canvas/canvas_picks.dart';
 import 'pdf_template.dart';
 import 'pdf_template_catalog_entry.dart';
@@ -7,12 +8,13 @@ import 'pdf_template_picks.dart';
 
 /// The design gallery: curated layout × color pairs, not a full cartesian
 /// product. Each pair appears once, in the category it suits best; in each
-/// tab the full-page art designs come first. The ten designs on the free
-/// layouts are free; the rest are Pro.
+/// tab the logo-header designs come first, then the other full-page art
+/// designs. The ten designs on the free layouts are free; the rest are Pro.
 abstract final class PdfTemplateCatalog {
   static final List<PdfTemplateCatalogEntry> entries = [
     for (final category in PdfTemplateCategory.values)
       for (final (layout, swatches) in [
+        ..._layouts(CanvasLogoPicks.all, category),
         ..._layouts(CanvasPicks.all, category),
         ..._layouts(PdfTemplatePicks.all, category),
       ])

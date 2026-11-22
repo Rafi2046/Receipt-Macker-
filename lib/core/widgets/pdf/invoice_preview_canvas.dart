@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../services/pdf/canvas/art_tones.dart';
 import '../../services/pdf/canvas/canvas_design.dart';
 import 'canvas_art_painter.dart';
+import 'invoice_preview_logo_head.dart';
 import 'invoice_preview_shared.dart';
 
 /// Gallery preview of a canvas design: the full-page art with the sample
@@ -24,6 +25,13 @@ class InvoicePreviewCanvas extends StatelessWidget {
   Widget build(BuildContext context) {
     final rgb = accent.toARGB32() & 0xFFFFFF;
     final tones = ArtTones('#${rgb.toRadixString(16).padLeft(6, '0')}');
+    if (design.hasLogoHead) {
+      return InvoicePreviewLogoHead(
+        design: design,
+        tones: tones,
+        accent: accent,
+      );
+    }
     final colors = _CanvasColors.of(design.skeleton, tones, accent);
     final side = design.marginSideMm * _perMm;
     return Stack(
@@ -147,6 +155,10 @@ class _CanvasColors {
         grand: accent,
         grandText: white,
       ),
+      // Drawn by InvoicePreviewLogoHead; only the dark colors differ.
+      CanvasSkeleton.brand ||
+      CanvasSkeleton.card ||
+      CanvasSkeleton.clean ||
       CanvasSkeleton.dark => _CanvasColors(
         title: _parse(tones.highlight),
         titleOnColor: false,

@@ -224,7 +224,20 @@ abstract final class PdfTemplateRenderer {
             PdfTemplate.lattice ||
             PdfTemplate.shard ||
             PdfTemplate.dusk ||
-            PdfTemplate.carbon => throw StateError('canvas'),
+            PdfTemplate.carbon ||
+            PdfTemplate.swoosh ||
+            PdfTemplate.slant ||
+            PdfTemplate.capsule ||
+            PdfTemplate.pixel ||
+            PdfTemplate.silk ||
+            PdfTemplate.confetti ||
+            PdfTemplate.plaque ||
+            PdfTemplate.trio ||
+            PdfTemplate.fold ||
+            PdfTemplate.linea ||
+            PdfTemplate.margin ||
+            PdfTemplate.quartz ||
+            PdfTemplate.pearl => throw StateError('canvas'),
           };
     final line = footer?.trim();
     if (line == null || line.isEmpty) return html;

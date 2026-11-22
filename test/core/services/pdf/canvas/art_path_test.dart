@@ -19,7 +19,7 @@ void main() {
       final design = CanvasDesigns.of(t);
       if (design == null) continue;
       expect(design.shapes, isNotEmpty, reason: t.id);
-      for (final ArtShape shape in design.shapes) {
+      for (final ArtShape shape in design.allShapes) {
         final d = shape.d;
         if (d == null) continue;
         expect(
@@ -34,9 +34,9 @@ void main() {
     }
   });
 
-  test('sixteen layouts are full-page art designs', () {
+  test('twenty-nine layouts are full-page art designs', () {
     final canvas = PdfTemplate.values.where((t) => CanvasDesigns.of(t) != null);
-    expect(canvas, hasLength(16));
+    expect(canvas, hasLength(29));
     expect(canvas.every((t) => t.requiresPro), isTrue);
   });
 }

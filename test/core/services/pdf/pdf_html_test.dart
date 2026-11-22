@@ -133,7 +133,9 @@ void main() {
   });
 
   test('template ids are stable and unknown ids fall back', () {
-    expect(PdfTemplate.values, hasLength(42));
+    expect(PdfTemplate.values, hasLength(55));
+    expect(PdfTemplate.fromId('swoosh'), PdfTemplate.swoosh);
+    expect(PdfTemplate.fromId('pearl'), PdfTemplate.pearl);
     expect(PdfTemplate.fromId('nocturne'), PdfTemplate.nocturne);
     expect(PdfTemplate.fromId('aurora'), PdfTemplate.aurora);
     expect(PdfTemplate.fromId('impact'), PdfTemplate.impact);

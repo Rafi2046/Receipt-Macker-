@@ -13,6 +13,20 @@ class CanvasArtPainter extends CustomPainter {
   final CanvasDesign design;
   final ArtTones tones;
 
+  /// A `#RRGGBB` (or `#RRGGBBAA`) tone as an opaque color.
+  static Color colorOf(String hex) => _color(hex);
+
+  /// Draws [shapes] in canvas units; the caller sets the transform.
+  static void paintShapes(
+    Canvas canvas,
+    Iterable<ArtShape> shapes,
+    ArtTones tones,
+  ) {
+    for (final shape in shapes) {
+      _paintShape(canvas, shape, tones);
+    }
+  }
+
   static Color _color(String hex) {
     final clean = hex.replaceAll('#', '');
     final rgb = int.tryParse(clean.substring(0, 6), radix: 16) ?? 0;
@@ -30,13 +44,11 @@ class CanvasArtPainter extends CustomPainter {
       ..save()
       ..clipRect(Offset.zero & size)
       ..scale(scale);
-    for (final shape in design.shapes) {
-      _paintShape(canvas, shape);
-    }
+    paintShapes(canvas, design.shapes, tones);
     canvas.restore();
   }
 
-  void _paintShape(Canvas canvas, ArtShape shape) {
+  static void _paintShape(Canvas canvas, ArtShape shape, ArtTones tones) {
     final paint = Paint()
       ..color = _color(tones.hex(shape.tone)).withValues(alpha: shape.opacity)
       ..isAntiAlias = true;

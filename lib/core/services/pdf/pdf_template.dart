@@ -41,7 +41,20 @@ enum PdfTemplate {
   lattice('lattice'),
   shard('shard'),
   dusk('dusk'),
-  carbon('carbon');
+  carbon('carbon'),
+  swoosh('swoosh'),
+  slant('slant'),
+  capsule('capsule'),
+  pixel('pixel'),
+  silk('silk'),
+  confetti('confetti'),
+  plaque('plaque'),
+  trio('trio'),
+  fold('fold'),
+  linea('linea'),
+  margin('margin'),
+  quartz('quartz'),
+  pearl('pearl');
 
   const PdfTemplate(this.id);
 

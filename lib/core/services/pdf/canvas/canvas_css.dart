@@ -32,7 +32,11 @@ html, body { background: transparent; }
 ''';
 
   static String skeleton(CanvasDesign design) => switch (design.skeleton) {
-    CanvasSkeleton.sheet => '',
+    // The logo-first skeletons are styled by CanvasLogoCss.
+    CanvasSkeleton.sheet ||
+    CanvasSkeleton.brand ||
+    CanvasSkeleton.card ||
+    CanvasSkeleton.clean => '',
     CanvasSkeleton.band => _band,
     CanvasSkeleton.dark => _dark,
   };

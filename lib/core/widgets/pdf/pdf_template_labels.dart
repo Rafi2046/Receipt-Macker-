@@ -49,6 +49,19 @@ extension PdfTemplateLabels on AppLocalizations {
     PdfTemplate.shard => templateShard,
     PdfTemplate.dusk => templateDusk,
     PdfTemplate.carbon => templateCarbon,
+    PdfTemplate.swoosh => templateSwoosh,
+    PdfTemplate.slant => templateSlant,
+    PdfTemplate.capsule => templateCapsule,
+    PdfTemplate.pixel => templatePixel,
+    PdfTemplate.silk => templateSilk,
+    PdfTemplate.confetti => templateConfetti,
+    PdfTemplate.plaque => templatePlaque,
+    PdfTemplate.trio => templateTrio,
+    PdfTemplate.fold => templateFold,
+    PdfTemplate.linea => templateLinea,
+    PdfTemplate.margin => templateMargin,
+    PdfTemplate.quartz => templateQuartz,
+    PdfTemplate.pearl => templatePearl,
   };
 
   String templateDesc(PdfTemplate t) => switch (t) {
@@ -94,6 +107,19 @@ extension PdfTemplateLabels on AppLocalizations {
     PdfTemplate.shard => templateShardDesc,
     PdfTemplate.dusk => templateDuskDesc,
     PdfTemplate.carbon => templateCarbonDesc,
+    PdfTemplate.swoosh => templateSwooshDesc,
+    PdfTemplate.slant => templateSlantDesc,
+    PdfTemplate.capsule => templateCapsuleDesc,
+    PdfTemplate.pixel => templatePixelDesc,
+    PdfTemplate.silk => templateSilkDesc,
+    PdfTemplate.confetti => templateConfettiDesc,
+    PdfTemplate.plaque => templatePlaqueDesc,
+    PdfTemplate.trio => templateTrioDesc,
+    PdfTemplate.fold => templateFoldDesc,
+    PdfTemplate.linea => templateLineaDesc,
+    PdfTemplate.margin => templateMarginDesc,
+    PdfTemplate.quartz => templateQuartzDesc,
+    PdfTemplate.pearl => templatePearlDesc,
   };
 
   /// The name of a `BrandSwatch` by its id; the id itself when unknown.

@@ -131,6 +131,43 @@ abstract final class ArtPatterns {
     ];
   }
 
+  /// A field of small squares, brightest near the right edge and fading
+  /// out to the left. Always the same tiles for the same [seed].
+  static List<ArtShape> tiles({
+    required double left,
+    required double top,
+    required double right,
+    required double bottom,
+    required ArtTone tone,
+    double cell = 40,
+    double gap = 5,
+    int seed = 5,
+    double strength = 1,
+    bool firstPageOnly = false,
+  }) {
+    final random = math.Random(seed);
+    final shapes = <ArtShape>[];
+    for (var x = left; x < right; x += cell) {
+      for (var y = top; y < bottom; y += cell) {
+        final fade = (x - left) / (right - left);
+        final opacity = strength * fade * (0.12 + random.nextDouble() * 0.5);
+        if (opacity < 0.04) continue;
+        final x2 = x + cell - gap;
+        final y2 = y + cell - gap;
+        shapes.add(
+          ArtShape.path(
+            'M${_n(x)} ${_n(y)} L${_n(x2)} ${_n(y)} L${_n(x2)} ${_n(y2)} '
+            'L${_n(x)} ${_n(y2)} Z',
+            tone: tone,
+            opacity: double.parse(opacity.toStringAsFixed(2)),
+            firstPageOnly: firstPageOnly,
+          ),
+        );
+      }
+    }
+    return shapes;
+  }
+
   static double _dist((double, double) a, (double, double) b) =>
       math.pow(a.$1 - b.$1, 2) + math.pow(a.$2 - b.$2, 2).toDouble();
 }

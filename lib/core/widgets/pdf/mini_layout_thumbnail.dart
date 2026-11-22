@@ -118,7 +118,20 @@ class MiniLayoutThumbnail extends StatelessWidget {
       PdfTemplate.lattice ||
       PdfTemplate.shard ||
       PdfTemplate.dusk ||
-      PdfTemplate.carbon => const SizedBox.shrink(),
+      PdfTemplate.carbon ||
+      PdfTemplate.swoosh ||
+      PdfTemplate.slant ||
+      PdfTemplate.capsule ||
+      PdfTemplate.pixel ||
+      PdfTemplate.silk ||
+      PdfTemplate.confetti ||
+      PdfTemplate.plaque ||
+      PdfTemplate.trio ||
+      PdfTemplate.fold ||
+      PdfTemplate.linea ||
+      PdfTemplate.margin ||
+      PdfTemplate.quartz ||
+      PdfTemplate.pearl => const SizedBox.shrink(),
     };
   }
 }

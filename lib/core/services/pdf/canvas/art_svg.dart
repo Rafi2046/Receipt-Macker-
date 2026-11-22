@@ -12,16 +12,55 @@ abstract final class ArtSvg {
   }) {
     final w = ArtShape.width.toInt();
     final h = ArtShape.height.toInt();
-    final body = StringBuffer(
-      '<rect width="$w" height="$h" fill="${tones.hex(design.base)}"/>',
+    return _uri(
+      [
+        for (final s in design.shapes)
+          if (firstPage || !s.firstPageOnly) s,
+      ],
+      tones,
+      width: w,
+      height: h,
+      aspect: 'xMidYMid slice',
+      background:
+          '<rect width="$w" height="$h" '
+          'fill="${tones.hex(design.base)}"/>',
     );
-    for (final s in design.shapes) {
-      if (s.firstPageOnly && !firstPage) continue;
+  }
+
+  /// The art inside a brand header, covering it from the right.
+  static String headUri(CanvasDesign design, ArtTones tones) => _uri(
+    design.headShapes,
+    tones,
+    width: CanvasDesign.headWidth.toInt(),
+    height: CanvasDesign.headHeight.toInt(),
+    aspect: 'xMaxYMid slice',
+  );
+
+  /// A brand header's lower edge, stretched to the strip.
+  static String edgeUri(CanvasDesign design, ArtTones tones) => _uri(
+    design.edgeShapes,
+    tones,
+    width: CanvasDesign.edgeWidth.toInt(),
+    height: CanvasDesign.edgeHeight.toInt(),
+    aspect: 'none',
+  );
+
+  static String _uri(
+    List<ArtShape> shapes,
+    ArtTones tones, {
+    required int width,
+    required int height,
+    required String aspect,
+    String background = '',
+  }) {
+    final body = StringBuffer(background);
+    for (final s in shapes) {
       body.write(_shape(s, tones));
     }
     final svg =
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 $w $h" '
-        'preserveAspectRatio="xMidYMid slice">$body</svg>';
+        '<svg xmlns="http://www.w3.org/2000/svg" '
+        'viewBox="0 0 $width $height" '
+        'preserveAspectRatio="$aspect">$body</svg>';
     return 'data:image/svg+xml,${Uri.encodeComponent(svg)}';
   }
 
