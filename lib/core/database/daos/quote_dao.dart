@@ -1,3 +1,5 @@
+import '../../constants/app_constants.dart';
+
 import 'package:drift/drift.dart';
 
 import '../../../features/invoices/domain/logic/invoice_number_generator.dart';
@@ -77,7 +79,7 @@ class QuoteDao extends DatabaseAccessor<AppDatabase> with _$QuoteDaoMixin {
 
   Future<QuoteNumberingRow> numberingFor(
     String profileId, {
-    String defaultPrefix = 'QUO-',
+    String defaultPrefix = AppConstants.defaultEstimatePrefix,
   }) async {
     final existing = await (select(
       quoteNumberingTable,

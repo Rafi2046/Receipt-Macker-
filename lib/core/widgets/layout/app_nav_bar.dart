@@ -29,6 +29,7 @@ class AppNavBar extends StatelessWidget {
   static const _icons = [
     (AppIcons.dashboard, AppIcons.dashboardFilled),
     (AppIcons.invoice, AppIcons.invoiceFilled),
+    (AppIcons.quote, AppIcons.quoteFilled),
     (AppIcons.clients, AppIcons.clientFilled),
     (AppIcons.more, AppIcons.moreFilled),
   ];
@@ -56,7 +57,7 @@ class AppNavBar extends StatelessWidget {
     const slot = AppSizes.navItemSize;
     const gap = AppSpacing.sm;
     const rim = AppSpacing.sm * 2 + AppSizes.borderWidth * 2;
-    // 3 unselected + create + 4 fixed gaps between 5 items.
+    // Unselected tabs + create, with a fixed gap before each item.
     final reserved = slot * _icons.length + gap * _icons.length;
     final room = constraints.maxWidth - rim - reserved;
     final needed = NavBarTab.pillWidthFor(context, labels);

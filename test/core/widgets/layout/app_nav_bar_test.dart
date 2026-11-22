@@ -7,7 +7,13 @@ import '../../../helpers/pump_app.dart';
 void main() {
   Widget bar({
     int index = 0,
-    List<String> labels = const ['Home', 'Invoices', 'Clients', 'More'],
+    List<String> labels = const [
+      'Home',
+      'Invoices',
+      'Estimates',
+      'Clients',
+      'More',
+    ],
     ValueChanged<int>? onSelected,
     VoidCallback? onCreate,
   }) => Align(
@@ -15,7 +21,7 @@ void main() {
     child: AppNavBar(
       index: index,
       labels: labels,
-      createLabel: 'New invoice',
+      createLabel: 'Create new',
       onSelected: onSelected ?? (_) {},
       onCreate: onCreate ?? () {},
     ),
@@ -27,6 +33,7 @@ void main() {
     // The pill gets room for its whole label, not a sliver of it.
     expect(tester.getSize(find.text('Invoices')).width, greaterThan(40));
     expect(find.text('Home'), findsNothing);
+    expect(find.text('Estimates'), findsNothing);
     expect(find.text('Clients'), findsNothing);
   });
 
@@ -37,14 +44,17 @@ void main() {
       bar(onSelected: (i) => selected = i, onCreate: () => created = true),
     );
     await tester.tap(find.bySemanticsLabel('Clients'));
-    await tester.tap(find.byTooltip('New invoice'));
-    expect(selected, 2);
+    await tester.tap(find.byTooltip('Create new'));
+    expect(selected, 3);
     expect(created, isTrue);
   });
 
   testWidgets('a Bangla label fits on a narrow phone at 2x', (tester) async {
     await tester.pumpApp(
-      bar(index: 2, labels: const ['হোম', 'ইনভয়েস', 'ক্লায়েন্ট', 'আরও']),
+      bar(
+        index: 3,
+        labels: const ['হোম', 'ইনভয়েস', 'কোটেশন', 'ক্লায়েন্ট', 'আরও'],
+      ),
       language: 'bn',
       textScale: 2,
       surface: const Size(360, 740),
@@ -70,7 +80,7 @@ void main() {
     expect(tester.getSize(find.text('Home')).width, greaterThan(40));
 
     await tester.pumpApp(
-      bar(index: 3),
+      bar(index: 4),
       surface: const Size(411, 800),
       settle: false,
     );
@@ -96,8 +106,8 @@ void main() {
     }
 
     final home = await dockAt(0);
-    final clients = await dockAt(2);
-    final more = await dockAt(3);
+    final clients = await dockAt(3);
+    final more = await dockAt(4);
     expect(clients, home);
     expect(more, home);
   });

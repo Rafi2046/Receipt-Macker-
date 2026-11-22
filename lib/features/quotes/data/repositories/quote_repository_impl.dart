@@ -68,7 +68,7 @@ class QuoteRepositoryImpl implements QuoteRepository {
     );
     await _dao.bumpNumbering(
       profileId: profileId,
-      prefix: 'QUO-',
+      prefix: AppConstants.defaultEstimatePrefix,
       savedNumber: number,
     );
     final saved = await _dao.findById(quote.id);

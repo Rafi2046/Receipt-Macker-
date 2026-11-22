@@ -39,7 +39,7 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
           value.nextSequence,
           padding: AppConstants.invoiceNumberPadding,
         ),
-        Err() => 'QUO-0001',
+        Err() => '${AppConstants.defaultEstimatePrefix}0001',
       };
       final prefs = ref.read(appPreferencesProvider);
       final profile = (await ref.read(businessProfileRepositoryProvider).load())

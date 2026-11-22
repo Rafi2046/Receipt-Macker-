@@ -42,10 +42,6 @@ class QuoteListView extends ConsumerWidget {
     final hasAdvanced = async.value?.hasAdvancedFilters ?? false;
     return AppScaffold(
       title: l10n.quotesTitle,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.pushNamed(RouteNames.quoteNew),
-        child: const Icon(AppIcons.add),
-      ),
       body: async.when(
         skipLoadingOnReload: true,
         data: (state) => SearchableList(

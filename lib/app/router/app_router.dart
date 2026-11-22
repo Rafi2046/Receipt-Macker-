@@ -60,6 +60,7 @@ GoRouter appRouter(Ref ref) {
             ],
           ),
           StatefulShellBranch(routes: [invoiceRoutes]),
+          StatefulShellBranch(routes: [quoteRoutes]),
           StatefulShellBranch(routes: [_clientRoutes]),
           StatefulShellBranch(
             routes: [
@@ -113,7 +114,6 @@ GoRouter appRouter(Ref ref) {
         builder: (_, _) => const TermsView(),
       ),
       _itemRoutes,
-      quoteRoutes,
       if (kDebugMode) ..._debugRoutes,
     ],
   );

@@ -14,6 +14,7 @@ abstract final class AppIcons {
   static const IconData addRounded = Icons.add_rounded;
   static const IconData invoice = Icons.receipt_long_outlined;
   static const IconData quote = Icons.request_quote_outlined;
+  static const IconData quoteFilled = Icons.request_quote_rounded;
   static const IconData receipt = Icons.receipt_outlined;
   static const IconData client = Icons.person_outline;
   static const IconData clientAdd = Icons.person_add_alt_1_outlined;
@@ -63,6 +64,7 @@ abstract final class AppIcons {
   static const IconData pro = Icons.workspace_premium_outlined;
   static const IconData proBadge = Icons.workspace_premium_rounded;
   static const IconData lock = Icons.lock_outline;
+  static const IconData watchAd = Icons.smart_display_outlined;
   static const IconData privacy = Icons.shield_outlined;
   static const IconData terms = Icons.description_outlined;
   static const IconData template = Icons.dashboard_customize_outlined;

@@ -14,6 +14,9 @@ abstract final class AppConstants {
   static const String defaultInvoicePrefix = 'INV-';
   static const int invoiceNumberPadding = 4;
   static const String defaultReceiptPrefix = 'RCPT-';
+
+  /// Estimate (quote) numbers. Existing users keep their saved prefix.
+  static const String defaultEstimatePrefix = 'EST-';
   static const int receiptNumberPadding = 4;
   static const int defaultDueDays = 7;
   static const List<int> dueDayPresets = [0, 7, 15, 30];

@@ -5,6 +5,7 @@ import '../purchases/purchase_providers.dart';
 import '../service_providers.dart';
 import 'ad_presenter.dart';
 import 'interstitial_policy.dart';
+import 'rewarded_ad_presenter.dart';
 import 'running_under_test.dart';
 
 /// Counts a finished share or save, then maybe shows an interstitial.
@@ -48,6 +49,12 @@ final adPresenterProvider = Provider<AdPresenter>((ref) {
   final presenter = MobileAdPresenter();
   ref.onDispose(presenter.dispose);
   return presenter;
+});
+
+/// Rewarded ads, used to unlock a Pro choice once (a custom color).
+final rewardedAdPresenterProvider = Provider<RewardedAdPresenter>((ref) {
+  if (runningUnderTest) return const NoopRewardedAdPresenter();
+  return MobileRewardedAdPresenter();
 });
 
 /// True after the consent form and the Mobile Ads SDK are ready.
