@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../../utils/hex_color.dart';
 import 'brand_swatch.dart';
 import 'canvas/canvas_designs.dart';
 import 'canvas/canvas_template.dart';
@@ -46,7 +47,8 @@ abstract final class PdfTemplateRenderer {
     String? footer,
     String? accentColor,
   }) {
-    final hex = accentColor ?? BrandSwatch.coral.hex;
+    // The accent goes into CSS; only a real #RRGGBB is let through.
+    final hex = HexColor.normalize(accentColor ?? '') ?? BrandSwatch.coral.hex;
     final soft = BrandSwatch.softFor(hex);
 
     // Premium layouts share their base CSS and sections (PdfBlocks).

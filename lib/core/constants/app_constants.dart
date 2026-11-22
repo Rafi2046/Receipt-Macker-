@@ -39,7 +39,6 @@ abstract final class AppConstants {
   /// Free-tier limits: 10 clients, 20 catalog items. Pro is unlimited.
   static const int freeClientLimit = 10;
   static const int freeItemLimit = 20;
-  static const int freeRecordLimit = 20;
 
   /// Free PDFs include a "Made with QuickBill" line. Pro removes it.
   /// Working default until the owner says otherwise.

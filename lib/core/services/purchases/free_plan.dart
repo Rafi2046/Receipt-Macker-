@@ -10,9 +10,6 @@ abstract final class FreePlan {
   static bool canAddItem({required bool isPro, required int count}) =>
       isPro || count < AppConstants.freeItemLimit;
 
-  static bool canAdd({required bool isPro, required int count}) =>
-      isPro || count < AppConstants.freeRecordLimit;
-
   /// [adUnlockedId] is the one Pro template a free user opened with a
   /// rewarded ad; it stays usable until they pick another template.
   static bool canUse(

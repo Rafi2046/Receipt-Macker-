@@ -3,8 +3,11 @@ import 'dart:typed_data';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/errors/failure.dart';
 import '../../../../core/errors/result.dart';
+import '../../../../core/services/image_picker_service.dart';
 import '../../../../core/services/service_providers.dart';
+import '../../../../core/utils/app_logger.dart';
 import '../../../../core/utils/id_generator.dart';
 import '../../domain/logic/business_profile_validator.dart';
 import '../../domain/logic/profile_field_access.dart';
@@ -75,7 +78,21 @@ class ProfileFormViewModel extends _$ProfileFormViewModel {
 
   Future<void> pickLogo() async {
     _set((f) => f.copyWith(isPickingImage: true));
-    final picked = await ref.read(imagePickerServiceProvider).pickFromGallery();
+    final PickedImage? picked;
+    try {
+      picked = await ref.read(imagePickerServiceProvider).pickFromGallery();
+    } on Exception catch (e, st) {
+      // The gallery can fail (no picker app, a cancelled permission); the
+      // form must not stay busy.
+      AppLogger.error('pick logo', e, st);
+      _set(
+        (f) => f.copyWith(
+          isPickingImage: false,
+          failure: UnexpectedFailure(cause: e, stackTrace: st),
+        ),
+      );
+      return;
+    }
     _set((f) => f.copyWith(isPickingImage: false));
     if (picked == null) return;
     await _storeImage(ProfileImageKind.logo, picked.bytes, picked.extension);

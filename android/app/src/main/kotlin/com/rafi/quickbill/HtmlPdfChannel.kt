@@ -64,6 +64,11 @@ class HtmlPdfChannel(private val activity: Activity, messenger: BinaryMessenger)
             alpha = 0f
             // The PDF must not grow with the phone's font size setting.
             settings.textZoom = TEXT_ZOOM_NORMAL
+            // Everything (fonts, logo) is embedded in the HTML. The view
+            // never needs the network or the file system.
+            settings.blockNetworkLoads = true
+            settings.allowFileAccess = false
+            settings.allowContentAccess = false
         }
         root.addView(view, ViewGroup.LayoutParams(LAYOUT_WIDTH, LAYOUT_HEIGHT))
         val done = {

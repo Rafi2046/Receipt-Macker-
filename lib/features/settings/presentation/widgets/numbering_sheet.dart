@@ -5,6 +5,7 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/formatters.dart';
+import '../../../../core/utils/money_input_parser.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/inputs/app_text_field.dart';
 import '../view_models/app_settings_view_model.dart';
@@ -61,7 +62,9 @@ class _BodyState extends ConsumerState<_Body> {
     final vm = ref.read(appSettingsViewModelProvider.notifier);
     final ok = await vm.updateNumbering(
       prefix: _prefix.text,
-      nextSequence: int.tryParse(_next.text) ?? 1,
+      // Bangla digits are fine to type here.
+      nextSequence:
+          int.tryParse(MoneyInputParser.normalize(_next.text).trim()) ?? 0,
     );
     if (!mounted) return;
     if (ok) {
