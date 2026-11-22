@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_icons.dart';
+import '../../../../core/services/ads/list_ad_banner.dart';
 import '../../../../core/services/purchases/free_plan.dart';
 import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
@@ -30,6 +31,8 @@ class ItemListView extends ConsumerWidget {
     final items = ref.watch(itemListViewModelProvider);
     final showFab = items.value?.isEmpty == false;
     return AppScaffold(
+      // A list screen: the one place a banner ad may show (CLAUDE §9.2).
+      bottomBar: const ListAdBanner(),
       title: l10n.itemsTitle,
       floatingActionButton: showFab
           ? AppFab(

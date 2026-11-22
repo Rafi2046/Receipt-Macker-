@@ -10,6 +10,7 @@ import 'package:receipt_maker/core/constants/app_constants.dart';
 import 'package:receipt_maker/core/errors/result.dart';
 import 'package:receipt_maker/core/services/service_providers.dart';
 import 'package:receipt_maker/core/services/url_launch_service.dart';
+import 'package:receipt_maker/features/business_profile/providers.dart';
 import 'package:receipt_maker/features/invoices/domain/models/invoice_numbering.dart';
 import 'package:receipt_maker/features/invoices/providers.dart';
 import 'package:receipt_maker/features/settings/presentation/views/privacy_policy_view.dart';
@@ -63,6 +64,9 @@ void main() {
         overrides: [
           appPreferencesProvider.overrideWithValue(FakeAppPreferences()),
           invoiceRepositoryProvider.overrideWithValue(repo),
+          currentBusinessProfileProvider.overrideWith(
+            (ref) => Stream.value(null),
+          ),
         ],
         child: MaterialApp.router(
           theme: AppTheme.light(),

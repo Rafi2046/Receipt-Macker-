@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:receipt_maker/core/widgets/layout/nav_bar_tab.dart';
 import 'package:receipt_maker/features/business_profile/data/mappers/business_profile_mapper.dart';
 import 'package:receipt_maker/features/business_profile/domain/models/business_profile.dart';
 import 'package:receipt_maker/features/clients/data/mappers/client_mapper.dart';
@@ -73,7 +74,7 @@ void main() {
     tester,
   ) async {
     await openHome(tester);
-    await tap(tester, find.byTooltip('Invoices'));
+    await tap(tester, find.widgetWithText(NavBarTab, 'Invoices'));
     expect(find.text('No invoices yet'), findsOneWidget);
 
     await tap(tester, find.text('Create your first invoice'));
@@ -118,7 +119,7 @@ void main() {
 
   testWidgets('leaving a new invoice with changes asks first', (tester) async {
     await openHome(tester);
-    await tap(tester, find.byTooltip('Invoices'));
+    await tap(tester, find.widgetWithText(NavBarTab, 'Invoices'));
     await tap(tester, find.text('Create your first invoice'));
     await tap(tester, find.text('Items'));
     await tap(tester, find.text('Logo design'));
@@ -132,7 +133,7 @@ void main() {
     tester.platformDispatcher.textScaleFactorTestValue = 2;
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     await openHome(tester, language: 'bn');
-    await tap(tester, find.byTooltip('ইনভয়েস'));
+    await tap(tester, find.widgetWithText(NavBarTab, 'ইনভয়েস'));
     await tap(tester, find.text('প্রথম ইনভয়েস তৈরি করুন'));
     // The editor list builds lazily, so bring the items section into view.
     final addItem = find.text('পণ্য বা সেবা যোগ করুন');

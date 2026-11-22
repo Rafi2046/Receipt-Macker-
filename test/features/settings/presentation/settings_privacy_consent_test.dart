@@ -5,6 +5,7 @@ import 'package:receipt_maker/core/errors/result.dart';
 import 'package:receipt_maker/core/services/ads/consent_service.dart';
 import 'package:receipt_maker/core/services/purchases/purchase_providers.dart';
 import 'package:receipt_maker/core/services/service_providers.dart';
+import 'package:receipt_maker/features/business_profile/providers.dart';
 import 'package:receipt_maker/features/invoices/domain/models/invoice_numbering.dart';
 import 'package:receipt_maker/features/invoices/providers.dart';
 import 'package:receipt_maker/features/settings/presentation/views/settings_view.dart';
@@ -47,6 +48,9 @@ void main() {
       overrides: [
         appPreferencesProvider.overrideWithValue(fakePrefs),
         invoiceRepositoryProvider.overrideWithValue(mockInvoiceRepo),
+        currentBusinessProfileProvider.overrideWith(
+          (ref) => Stream.value(null),
+        ),
         proStatusProvider.overrideWith(() => FakeProStatus(false)),
         consentServiceProvider.overrideWithValue(fakeConsent),
       ],
@@ -74,6 +78,9 @@ void main() {
       overrides: [
         appPreferencesProvider.overrideWithValue(fakePrefs),
         invoiceRepositoryProvider.overrideWithValue(mockInvoiceRepo),
+        currentBusinessProfileProvider.overrideWith(
+          (ref) => Stream.value(null),
+        ),
         proStatusProvider.overrideWith(() => FakeProStatus(true)),
         consentServiceProvider.overrideWithValue(fakeConsent),
       ],

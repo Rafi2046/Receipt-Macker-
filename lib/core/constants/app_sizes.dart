@@ -6,9 +6,10 @@ abstract final class AppSizes {
   static const double navBarHeight = 80;
 
   /// Floating tab dock: compact circles inside a padded rim.
-  static const double navDockHeight = 56;
+  static const double navDockHeight = 64;
+  static const double navCreateSize = 52;
   static const double navItemSize = 36;
-  static const double navIconSize = 20;
+  static const double navIconSize = 22;
   static const double topBarHeight = 56;
   static const double topBarButton = 40;
   static const double minTapTarget = 48;

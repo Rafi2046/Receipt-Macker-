@@ -6,16 +6,16 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
-import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
+import '../../../../core/services/clock.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/display/avatar_initials.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
-import '../../../../core/widgets/layout/app_menu_host.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../business_profile/providers.dart';
+import '../../domain/models/day_part.dart';
 import '../home_snapshot.dart';
 import '../view_models/home_view_model.dart';
 import '../widgets/home_empty_card.dart';
@@ -95,18 +95,35 @@ class _HomeHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final profile = ref.watch(currentBusinessProfileProvider).asData?.value;
+    final part = DayPart.at(ref.watch(clockProvider)());
+    final greeting = switch (part) {
+      DayPart.morning => l10n.greetingMorning,
+      DayPart.afternoon => l10n.greetingAfternoon,
+      DayPart.evening => l10n.greetingEvening,
+    };
     return Row(
       children: [
-        IconButton(
-          tooltip: l10n.menuOpen,
-          onPressed: AppMenuHost.maybeOf(context),
-          icon: Icon(AppIcons.menu, color: context.appColors.textPrimary),
-        ),
         Expanded(
-          child: Text(
-            l10n.navHome,
-            style: context.textStyles.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w700,
+          child: Padding(
+            padding: const EdgeInsets.only(left: AppSpacing.xs),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  greeting,
+                  style: context.textStyles.bodyMedium?.copyWith(
+                    color: context.appColors.textSecondary,
+                  ),
+                ),
+                Text(
+                  snapshot.businessName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.textStyles.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

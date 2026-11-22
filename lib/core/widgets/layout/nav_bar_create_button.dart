@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../constants/app_icons.dart';
+import '../../constants/app_opacity.dart';
 import '../../constants/app_sizes.dart';
+import '../../constants/app_spacing.dart';
 
-/// Compact create-invoice circle at the end of [AppNavBar].
+/// The round create button in the middle of [AppNavBar].
 class NavBarCreateButton extends StatelessWidget {
   const NavBarCreateButton({
     required this.tooltip,
@@ -20,19 +22,31 @@ class NavBarCreateButton extends StatelessWidget {
     final colors = context.appColors;
     return Tooltip(
       message: tooltip,
-      child: Material(
-        color: colors.primary,
-        shape: const CircleBorder(),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onPressed,
-          customBorder: const CircleBorder(),
-          child: SizedBox.square(
-            dimension: AppSizes.navItemSize,
-            child: Icon(
-              AppIcons.addRounded,
-              color: colors.onPrimary,
-              size: AppSizes.navIconSize,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: colors.primary.withValues(alpha: AppOpacity.shadow * 4),
+              blurRadius: AppSpacing.md,
+              offset: const Offset(0, AppSpacing.xs),
+            ),
+          ],
+        ),
+        child: Material(
+          color: colors.primary,
+          shape: const CircleBorder(),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: onPressed,
+            customBorder: const CircleBorder(),
+            child: SizedBox.square(
+              dimension: AppSizes.navCreateSize,
+              child: Icon(
+                AppIcons.addRounded,
+                color: colors.onPrimary,
+                size: AppSizes.iconMd,
+              ),
             ),
           ),
         ),

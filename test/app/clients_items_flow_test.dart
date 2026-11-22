@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:receipt_maker/core/widgets/layout/nav_bar_tab.dart';
 import 'package:receipt_maker/features/business_profile/data/mappers/business_profile_mapper.dart';
 import 'package:receipt_maker/features/business_profile/domain/models/business_profile.dart';
 
@@ -43,9 +44,29 @@ void main() {
 
   Finder field(String label) => find.widgetWithText(TextField, label);
 
+  /// Opens the Settings tab, then the [row] under Business. The list is
+  /// lazy, so the row is scrolled into the middle before the tap.
+  Future<void> openFromSettings(
+    WidgetTester tester, {
+    required String settings,
+    required String row,
+  }) async {
+    await tap(tester, find.widgetWithText(NavBarTab, settings));
+    final target = find.text(row);
+    await tester.scrollUntilVisible(
+      target,
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await Scrollable.ensureVisible(tester.element(target), alignment: 0.5);
+    await settle(tester);
+    await tester.tap(target);
+    await settle(tester);
+  }
+
   testWidgets('client: add, find, edit, delete', (tester) async {
     await openHome(tester);
-    await tap(tester, find.byTooltip('Clients'));
+    await openFromSettings(tester, settings: 'Settings', row: 'Clients');
     expect(find.text('No clients yet'), findsOneWidget);
 
     await tap(tester, find.text('Add your first client'));
@@ -97,19 +118,7 @@ void main() {
 
   testWidgets('item: add with price and tax, shown in Bangla', (tester) async {
     await openHome(tester, language: 'bn');
-    await tap(tester, find.byTooltip('আরও'));
-    // The More menu is a lazy list; at 2x the row starts off screen, and
-    // once built it can still sit under the bottom bar, so centre it.
-    await tester.scrollUntilVisible(
-      find.text('পণ্য ও সেবা'),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
-    final itemsRow = find.text('পণ্য ও সেবা');
-    await Scrollable.ensureVisible(tester.element(itemsRow), alignment: 0.5);
-    await settle(tester);
-    await tester.tap(itemsRow);
-    await settle(tester);
+    await openFromSettings(tester, settings: 'সেটিংস', row: 'পণ্য ও সেবা');
     await tap(tester, find.text('প্রথম পণ্য বা সেবা যোগ করুন'));
 
     // Labels sit above the fields: name, description, price, quantity,
@@ -142,28 +151,19 @@ void main() {
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     await openHome(tester, language: 'bn');
 
-    await tap(tester, find.byTooltip('ক্লায়েন্ট'));
+    await openFromSettings(tester, settings: 'সেটিংস', row: 'ক্লায়েন্ট');
     await tap(tester, find.text('প্রথম ক্লায়েন্ট যোগ করুন'));
     await tap(tester, find.text('সংরক্ষণ করুন'));
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -2000));
     await settle(tester);
     expect(tester.takeException(), isNull);
-    Navigator.of(tester.element(find.byType(Scrollable).first)).pop();
-    await settle(tester);
+    // Close the editor, then the client list, back to Settings.
+    for (var i = 0; i < 2; i++) {
+      Navigator.of(tester.element(find.byType(Scrollable).first)).pop();
+      await settle(tester);
+    }
 
-    await tap(tester, find.byTooltip('আরও'));
-    // The More menu is a lazy list; at 2x the row starts off screen, and
-    // once built it can still sit under the bottom bar, so centre it.
-    await tester.scrollUntilVisible(
-      find.text('পণ্য ও সেবা'),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
-    final itemsRow = find.text('পণ্য ও সেবা');
-    await Scrollable.ensureVisible(tester.element(itemsRow), alignment: 0.5);
-    await settle(tester);
-    await tester.tap(itemsRow);
-    await settle(tester);
+    await openFromSettings(tester, settings: 'সেটিংস', row: 'পণ্য ও সেবা');
     await tap(tester, find.text('প্রথম পণ্য বা সেবা যোগ করুন'));
     await tap(tester, find.text('সংরক্ষণ করুন'));
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -2000));

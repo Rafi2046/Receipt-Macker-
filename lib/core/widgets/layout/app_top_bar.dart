@@ -6,11 +6,10 @@ import '../../constants/app_icons.dart';
 import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 import '../../utils/extensions/l10n_extension.dart';
-import 'app_menu_host.dart';
 import 'top_bar_button.dart';
 
-/// Page header that blends into the page. A tab root shows a menu button
-/// and large left-aligned title; a pushed screen shows a round back button
+/// Page header that blends into the page. A tab root shows a large
+/// left-aligned title; a pushed screen shows a round back button
 /// and a centered title. Once content scrolls under it ([scrolled]) the bar
 /// takes the surface color and a hairline.
 class AppTopBar extends StatelessWidget {
@@ -68,16 +67,9 @@ class _RootBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final openMenu = AppMenuHost.maybeOf(context);
     return Row(
       children: [
-        if (openMenu != null)
-          IconButton(
-            tooltip: l10n.menuOpen,
-            onPressed: openMenu,
-            icon: Icon(AppIcons.menu, color: context.appColors.textPrimary),
-          ),
+        const SizedBox(width: AppSpacing.xs),
         Expanded(
           child: Semantics(
             header: true,

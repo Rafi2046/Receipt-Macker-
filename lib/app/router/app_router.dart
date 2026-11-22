@@ -8,7 +8,6 @@ import '../../features/clients/presentation/views/client_detail_view.dart';
 import '../../features/clients/presentation/views/client_editor_view.dart';
 import '../../features/clients/presentation/views/client_list_view.dart';
 import '../../features/dashboard/presentation/views/home_view.dart';
-import '../../features/dashboard/presentation/views/more_view.dart';
 import '../../features/debug/presentation/views/design_directions_view.dart';
 import '../../features/debug/presentation/views/theme_preview_view.dart';
 import '../../features/debug/presentation/views/widget_gallery_view.dart';
@@ -62,13 +61,12 @@ GoRouter appRouter(Ref ref) {
           ),
           StatefulShellBranch(routes: [invoiceRoutes]),
           StatefulShellBranch(routes: [quoteRoutes]),
-          StatefulShellBranch(routes: [_clientRoutes]),
           StatefulShellBranch(
             routes: [
               GoRoute(
-                name: RouteNames.more,
-                path: RouteNames.morePath,
-                builder: (_, _) => const MoreView(),
+                name: RouteNames.settings,
+                path: RouteNames.settingsPath,
+                builder: (_, _) => const SettingsView(),
               ),
             ],
           ),
@@ -83,11 +81,6 @@ GoRouter appRouter(Ref ref) {
         name: RouteNames.businessProfile,
         path: RouteNames.businessProfilePath,
         builder: (_, _) => const BusinessProfileView(),
-      ),
-      GoRoute(
-        name: RouteNames.settings,
-        path: RouteNames.settingsPath,
-        builder: (_, _) => const SettingsView(),
       ),
       GoRoute(
         name: RouteNames.backup,
@@ -119,6 +112,7 @@ GoRouter appRouter(Ref ref) {
         path: RouteNames.termsPath,
         builder: (_, _) => const TermsView(),
       ),
+      _clientRoutes,
       _itemRoutes,
       if (kDebugMode) ..._debugRoutes,
     ],

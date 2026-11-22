@@ -62,6 +62,8 @@ class _ListAdBannerState extends ConsumerState<ListAdBanner> {
 
   @override
   Widget build(BuildContext context) {
+    // Widget tests never load ads, so they need no Pro or ads state here.
+    if (runningUnderTest) return const SizedBox.shrink();
     ref.listen(adsReadyProvider, (previous, next) {
       if (next) _load();
     });
