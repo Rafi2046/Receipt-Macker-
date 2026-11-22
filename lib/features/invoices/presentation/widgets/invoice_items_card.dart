@@ -8,12 +8,12 @@ import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/extensions/validation_message_extension.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/layout/app_card.dart';
+import '../../../../core/widgets/layout/editor_row.dart';
 import '../../../../core/widgets/layout/ticket_divider.dart';
 import '../../domain/models/invoice_field.dart';
 import '../view_models/invoice_editor_state.dart';
 import 'editor_add_dot.dart';
 import 'editor_amount_row.dart';
-import 'editor_row.dart';
 import 'line_item_row.dart';
 
 /// The invoice's lines under an "Items" row that adds one, then the

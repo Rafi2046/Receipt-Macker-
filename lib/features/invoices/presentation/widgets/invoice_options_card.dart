@@ -6,8 +6,8 @@ import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/layout/app_card.dart';
+import '../../../../core/widgets/layout/editor_row.dart';
 import '../../domain/models/invoice.dart';
-import 'editor_row.dart';
 
 /// Currency, payment method, signature and terms: one row each, showing
 /// what is set.

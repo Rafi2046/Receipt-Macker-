@@ -9,10 +9,10 @@ import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/layout/editor_row.dart';
 import '../../../../core/widgets/layout/searchable_list.dart';
 import '../../../clients/clients.dart';
 import 'editor_add_dot.dart';
-import 'editor_row.dart';
 import 'picker_page_frame.dart';
 
 /// Full-screen list of saved clients to search and pick, under "New

@@ -52,7 +52,7 @@ void main() {
       ],
     );
 
-    expect(find.text('Ad Privacy Settings'), findsNWidgets(2));
+    expect(find.text('Ad Privacy Settings'), findsOneWidget);
     expect(
       find.text('Manage your advertising consent preferences'),
       findsOneWidget,

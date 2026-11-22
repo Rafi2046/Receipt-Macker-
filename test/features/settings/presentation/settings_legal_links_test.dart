@@ -47,7 +47,7 @@ void main() {
         ],
       );
 
-      expect(find.text('About & Legal'), findsOneWidget);
+      expect(find.text('ABOUT & LEGAL'), findsOneWidget);
       expect(find.text('Privacy Policy'), findsOneWidget);
       expect(find.text('Terms of Service'), findsOneWidget);
 

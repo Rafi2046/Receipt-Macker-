@@ -8,9 +8,9 @@ import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/buttons/app_icon_button.dart';
 import '../../../../core/widgets/layout/app_card.dart';
+import '../../../../core/widgets/layout/editor_row.dart';
 import '../../domain/models/bill_to.dart';
 import 'editor_add_dot.dart';
-import 'editor_row.dart';
 
 /// Who the invoice is from (the business) and who it is for (the client).
 class InvoicePartiesCard extends StatelessWidget {

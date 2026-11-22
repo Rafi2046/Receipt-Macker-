@@ -9,10 +9,10 @@ import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/display/amount_text.dart';
 import '../../../../core/widgets/layout/app_card.dart';
+import '../../../../core/widgets/layout/editor_row.dart';
 import '../../../../core/widgets/layout/ticket_divider.dart';
 import '../../domain/models/invoice_totals.dart';
 import 'editor_amount_row.dart';
-import 'editor_row.dart';
 
 /// Discount, tax and shipping as they stand, then the total on a ticket
 /// stub (and paid / balance once a payment exists). Tap to change them.

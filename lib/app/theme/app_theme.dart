@@ -42,6 +42,9 @@ abstract final class AppTheme {
       fontFamily: AppTextStyles.fontFamily,
       fontFamilyFallback: AppTextStyles.fontFamilyFallback,
       textTheme: textTheme,
+      // A phone app has no mouse; some phones report touch as hover, and a
+      // hover tint would then stick on the last row touched.
+      hoverColor: c.surface.withValues(alpha: 0),
       scaffoldBackgroundColor: c.background,
       extensions: [c],
       materialTapTargetSize: MaterialTapTargetSize.padded,

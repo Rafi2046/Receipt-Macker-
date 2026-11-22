@@ -1049,5 +1049,11 @@
   "colorProTitle": "Custom colors are Pro",
   "colorProBody": "Watch a short ad to use one custom color now, or go Pro to use any color, any time.",
   "colorWatchAd": "Watch an ad · use once",
-  "colorAdUnavailable": "No ad is ready right now. Try again in a moment, or go Pro."
+  "colorAdUnavailable": "No ad is ready right now. Try again in a moment, or go Pro.",
+  "settingsTaxNone": "None",
+  "settingsNumberingNext": "Next: {number}",
+  "@settingsNumberingNext": {"placeholders": {"number": {"type": "String"}}},
+  "settingsNumberingTitle": "Invoice numbers",
+  "settingsDataSection": "Data & privacy",
+  "settingsTaxInclusiveHint": "Prices you enter already include tax"
 }

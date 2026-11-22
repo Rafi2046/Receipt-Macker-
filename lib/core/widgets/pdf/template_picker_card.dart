@@ -76,8 +76,6 @@ class _TemplatePickerCardState extends ConsumerState<TemplatePickerCard> {
         children: [
           InkWell(
             onTap: _openCatalog,
-            // Some phones report touch as hover; a hover tint would stick.
-            hoverColor: colors.surface.withValues(alpha: 0),
             borderRadius: const BorderRadius.vertical(
               top: Radius.circular(AppRadius.md),
             ),

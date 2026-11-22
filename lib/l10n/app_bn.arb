@@ -881,5 +881,10 @@
   "colorProTitle": "নিজের রং প্রো ফিচার",
   "colorProBody": "ছোট একটা বিজ্ঞাপন দেখে এখন একবার নিজের রং ব্যবহার করুন, অথবা প্রো নিয়ে যেকোনো রং যখন খুশি ব্যবহার করুন।",
   "colorWatchAd": "বিজ্ঞাপন দেখে একবার ব্যবহার করুন",
-  "colorAdUnavailable": "এই মুহূর্তে কোনো বিজ্ঞাপন নেই। একটু পরে আবার চেষ্টা করুন, অথবা প্রো নিন।"
+  "colorAdUnavailable": "এই মুহূর্তে কোনো বিজ্ঞাপন নেই। একটু পরে আবার চেষ্টা করুন, অথবা প্রো নিন।",
+  "settingsTaxNone": "নেই",
+  "settingsNumberingNext": "পরবর্তী: {number}",
+  "settingsNumberingTitle": "ইনভয়েস নম্বর",
+  "settingsDataSection": "ডেটা ও গোপনীয়তা",
+  "settingsTaxInclusiveHint": "আপনার লেখা দামে ট্যাক্স ধরা আছে"
 }

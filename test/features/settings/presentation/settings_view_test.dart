@@ -18,48 +18,84 @@ void main() {
   setUp(() {
     mockInvoiceRepo = MockInvoiceRepository();
     fakePrefs = FakeAppPreferences();
-
     when(() => mockInvoiceRepo.getNumbering()).thenAnswer(
       (_) async => const Ok(InvoiceNumbering(prefix: 'INV-', nextSequence: 5)),
     );
-    when(() => mockInvoiceRepo.getHighestSequence('INV-'))
-        .thenAnswer((_) async => const Ok(4));
+    when(
+      () => mockInvoiceRepo.getHighestSequence(any()),
+    ).thenAnswer((_) async => const Ok(4));
+    when(
+      () => mockInvoiceRepo.updateNumbering(
+        prefix: any(named: 'prefix'),
+        nextSequence: any(named: 'nextSequence'),
+      ),
+    ).thenAnswer((_) async => const Ok(null));
   });
 
-  testWidgets('renders settings view in English', (tester) async {
-    await tester.pumpApp(
-      const SettingsView(),
-      surface: const Size(800, 1400),
-      overrides: [
-        appPreferencesProvider.overrideWithValue(fakePrefs),
-        invoiceRepositoryProvider.overrideWithValue(mockInvoiceRepo),
-      ],
-    );
+  Future<void> pump(
+    WidgetTester tester, {
+    String language = 'en',
+    double textScale = 1,
+  }) => tester.pumpApp(
+    const SettingsView(),
+    language: language,
+    textScale: textScale,
+    surface: const Size(400, 1400),
+    overrides: [
+      appPreferencesProvider.overrideWithValue(fakePrefs),
+      invoiceRepositoryProvider.overrideWithValue(mockInvoiceRepo),
+    ],
+  );
 
+  testWidgets('shows grouped rows with current values', (tester) async {
+    await pump(tester);
     expect(find.text('Settings'), findsOneWidget);
-    expect(find.text('Appearance & Language'), findsOneWidget);
+    expect(find.text('APPEARANCE & LANGUAGE'), findsOneWidget);
+    expect(find.text('App language'), findsOneWidget);
     expect(find.text('English'), findsOneWidget);
-    expect(find.text('বাংলা'), findsOneWidget);
-    expect(find.text('Default invoice terms'), findsOneWidget);
-    expect(find.text('Invoice numbering'), findsOneWidget);
-    expect(find.text('Save numbering'), findsOneWidget);
+    expect(find.text('DEFAULT INVOICE TERMS'), findsOneWidget);
+    expect(find.text('Next: INV-0005'), findsOneWidget);
   });
 
-  testWidgets('renders settings view in Bangla', (tester) async {
-    await tester.pumpApp(
-      const SettingsView(),
-      language: 'bn',
-      surface: const Size(800, 1400),
-      overrides: [
-        appPreferencesProvider.overrideWithValue(fakePrefs),
-        invoiceRepositoryProvider.overrideWithValue(mockInvoiceRepo),
-      ],
+  testWidgets('language row opens a sheet and saves the pick', (
+    tester,
+  ) async {
+    await pump(tester);
+    await tester.tap(find.text('App language'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('বাংলা'));
+    await tester.pumpAndSettle();
+    expect(fakePrefs.languageCode, 'bn');
+  });
+
+  testWidgets('numbering sheet rejects a used number and saves a new one', (
+    tester,
+  ) async {
+    await pump(tester);
+    await tester.tap(find.text('Invoice numbers'));
+    await tester.pumpAndSettle();
+    final next = find.widgetWithText(TextField, '5');
+    await tester.enterText(next, '3');
+    await tester.tap(find.text('Save numbering'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Next number must be higher than existing invoices'),
+      findsOneWidget,
     );
 
+    await tester.enterText(find.widgetWithText(TextField, '3'), '20');
+    await tester.tap(find.text('Save numbering'));
+    await tester.pumpAndSettle();
+    verify(
+      () => mockInvoiceRepo.updateNumbering(prefix: 'INV-', nextSequence: 20),
+    ).called(1);
+    expect(find.text('Invoice numbering updated'), findsOneWidget);
+    expect(find.text('Next: INV-0020'), findsOneWidget);
+  });
+
+  testWidgets('fits in Bangla at 2x font', (tester) async {
+    await pump(tester, language: 'bn', textScale: 2);
     expect(find.text('সেটিংস'), findsOneWidget);
-    expect(find.text('চেহারা ও ভাষা'), findsOneWidget);
-    expect(find.text('চালানের ডিফল্ট শর্ত'), findsOneWidget);
-    expect(find.text('চালান নম্বর নির্ধারণ'), findsOneWidget);
-    expect(find.text('নম্বর সংরক্ষণ করুন'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }

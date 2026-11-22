@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../../app/theme/app_colors.dart';
-import '../../../../core/constants/app_icons.dart';
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/constants/app_spacing.dart';
-import '../../../../core/widgets/display/icon_badge.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../constants/app_icons.dart';
+import '../../constants/app_sizes.dart';
+import '../../constants/app_spacing.dart';
+import '../display/icon_badge.dart';
 
-/// One tappable row of the invoice editor: an icon (on a tinted badge when
+/// One tappable row of a card (editors, settings): an icon (on a tinted badge when
 /// [tone] is set), a title with an optional subtitle, an optional [value]
 /// on the right, and a chevron or another [trailing] widget.
 class EditorRow extends StatelessWidget {
@@ -17,6 +17,7 @@ class EditorRow extends StatelessWidget {
     this.value,
     this.tone,
     this.trailing,
+    this.iconSize = AppSizes.iconMd,
     this.hasError = false,
     this.onTap,
     super.key,
@@ -28,6 +29,9 @@ class EditorRow extends StatelessWidget {
   final String? value;
   final Color? tone;
   final Widget? trailing;
+
+  /// Size of a plain icon (one without a [tone] badge).
+  final double iconSize;
 
   /// Shows the subtitle in the danger color.
   final bool hasError;
@@ -55,8 +59,9 @@ class EditorRow extends StatelessWidget {
               if (tone != null)
                 IconBadge(icon: icon, color: tone)
               else
-                Icon(icon, color: colors.textPrimary, size: AppSizes.iconMd),
+                Icon(icon, color: colors.textPrimary, size: iconSize),
               Expanded(
+                flex: 3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: AppSpacing.xxs,
@@ -81,8 +86,10 @@ class EditorRow extends StatelessWidget {
                   ],
                 ),
               ),
+              // The title gets the larger share; a long value is cut short.
               if (value != null)
                 Expanded(
+                  flex: 2,
                   child: Text(
                     value,
                     maxLines: 1,

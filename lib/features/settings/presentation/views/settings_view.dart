@@ -1,33 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../../app/router/route_names.dart';
-import '../../../../app/theme/app_colors.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
-import '../../../../core/services/ads/consent_service.dart';
-import '../../../../core/services/purchases/purchase_providers.dart';
-import '../../../../core/services/url_launch_service.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
-import '../../../../core/utils/formatters.dart';
-import '../../../../core/widgets/buttons/app_button.dart';
+import '../../../../core/widgets/display/pro_upgrade_banner.dart';
 import '../../../../core/widgets/feedback/app_snackbar.dart';
-import '../../../../core/widgets/inputs/app_text_field.dart';
-import '../../../../core/widgets/inputs/currency_picker_field.dart';
-import '../../../../core/widgets/inputs/dropdown_field.dart';
-import '../../../../core/widgets/inputs/percent_field.dart';
-import '../../../../core/widgets/layout/app_card.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
-import '../../../../core/widgets/layout/section_header.dart';
-import '../../domain/models/app_language.dart';
-import '../../domain/models/app_theme_preference.dart';
 import '../view_models/app_settings_view_model.dart';
+import '../widgets/settings_appearance_group.dart';
+import '../widgets/settings_debug_group.dart';
+import '../widgets/settings_defaults_group.dart';
+import '../widgets/settings_links_group.dart';
+import '../widgets/settings_numbering_group.dart';
 
-/// Full app settings screen: Language, Theme, Defaults, and Invoice Numbering.
+/// App settings as grouped cards of rows; each row opens a sheet or page.
 class SettingsView extends ConsumerStatefulWidget {
   const SettingsView({super.key});
 
@@ -36,66 +24,28 @@ class SettingsView extends ConsumerStatefulWidget {
 }
 
 class _SettingsViewState extends ConsumerState<SettingsView> {
-  late final TextEditingController _prefixController;
-  late final TextEditingController _seqController;
-
   @override
   void initState() {
     super.initState();
-    _prefixController = TextEditingController();
-    _seqController = TextEditingController();
-
-    // Load numbering once the widget binds.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(appSettingsViewModelProvider.notifier).loadNumbering().then((_) {
-        if (!mounted) return;
-        final state = ref.read(appSettingsViewModelProvider);
-        _prefixController.text = state.invoicePrefix;
-        _seqController.text = '${state.nextInvoiceSequence}';
-      });
+      ref.read(appSettingsViewModelProvider.notifier).loadNumbering();
     });
-  }
-
-  @override
-  void dispose() {
-    _prefixController.dispose();
-    _seqController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final state = ref.watch(appSettingsViewModelProvider);
-    final vm = ref.read(appSettingsViewModelProvider.notifier);
-    final format = AppFormatters(Localizations.localeOf(context).languageCode);
-
     ref.listen(appSettingsViewModelProvider.select((s) => s.numberingSaved), (
       _,
       saved,
     ) {
-      if (saved) {
-        AppSnackbar.show(
-          context,
-          l10n.settingsNumberingSaved,
-          tone: AppSnackbarTone.success,
-        );
-        vm.clearFeedback();
-      }
-    });
-
-    ref.listen(appSettingsViewModelProvider.select((s) => s.failure), (
-      _,
-      failure,
-    ) {
-      if (failure != null) {
-        AppSnackbar.show(
-          context,
-          l10n.settingsNumberingInvalid,
-          tone: AppSnackbarTone.error,
-        );
-        vm.clearFeedback();
-      }
+      if (!saved) return;
+      AppSnackbar.show(
+        context,
+        l10n.settingsNumberingSaved,
+        tone: AppSnackbarTone.success,
+      );
+      ref.read(appSettingsViewModelProvider.notifier).clearFeedback();
     });
 
     return AppScaffold(
@@ -103,339 +53,23 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.pagePadding,
-          AppSpacing.pagePadding,
+          AppSpacing.sm,
           AppSpacing.pagePadding,
           AppSizes.fabClearance,
         ),
-        children: [
-          // 1. Appearance & Language
-          SectionHeader(title: l10n.settingsAppearance),
-          const SizedBox(height: AppSpacing.sm),
-          AppCard(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.settingsLanguage,
-                  style: context.textStyles.titleSmall,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                SegmentedButton<AppLanguage>(
-                  segments: [
-                    ButtonSegment(
-                      value: AppLanguage.en,
-                      label: Text(l10n.languageEnglish),
-                    ),
-                    ButtonSegment(
-                      value: AppLanguage.bn,
-                      label: Text(l10n.languageBangla),
-                    ),
-                  ],
-                  selected: {state.language},
-                  onSelectionChanged: (selected) {
-                    if (selected.isNotEmpty) {
-                      vm.setLanguage(selected.first);
-                    }
-                  },
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                Text(l10n.settingsTheme, style: context.textStyles.titleSmall),
-                const SizedBox(height: AppSpacing.sm),
-                SegmentedButton<AppThemePreference>(
-                  segments: [
-                    ButtonSegment(
-                      value: AppThemePreference.system,
-                      label: Text(l10n.settingsThemeSystem),
-                    ),
-                    ButtonSegment(
-                      value: AppThemePreference.light,
-                      label: Text(l10n.settingsThemeLight),
-                    ),
-                    ButtonSegment(
-                      value: AppThemePreference.dark,
-                      label: Text(l10n.settingsThemeDark),
-                    ),
-                  ],
-                  selected: {state.theme},
-                  onSelectionChanged: (selected) {
-                    if (selected.isNotEmpty) {
-                      vm.setTheme(selected.first);
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sectionGap),
-
-          // 2. Default Terms
-          SectionHeader(title: l10n.settingsDefaults),
-          const SizedBox(height: AppSpacing.sm),
-          AppCard(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CurrencyPickerField(
-                  label: l10n.studioDefaultCurrency,
-                  value: state.defaultCurrency,
-                  onChanged: vm.setDefaultCurrency,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                DropdownField<int>(
-                  label: l10n.settingsDueDays,
-                  value: state.defaultDueDays,
-                  options: [
-                    for (final days in AppConstants.dueDayPresets)
-                      (
-                        days,
-                        days == 0
-                            ? l10n.dueOnReceipt
-                            : l10n.dueInDays(format.integer(days)),
-                      ),
-                  ],
-                  onChanged: vm.setDefaultDueDays,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                PercentField(
-                  label: l10n.settingsTaxRate,
-                  basisPoints: state.defaultTaxRateBasisPoints,
-                  onChanged: vm.setDefaultTaxRateBasisPoints,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                SwitchListTile.adaptive(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    l10n.settingsTaxInclusive,
-                    style: context.textStyles.bodyMedium,
-                  ),
-                  value: state.defaultTaxInclusive,
-                  activeTrackColor: context.appColors.primary,
-                  onChanged: (val) => vm.setDefaultTaxInclusive(value: val),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sectionGap),
-
-          // 3. Invoice Numbering
-          SectionHeader(title: l10n.settingsNumbering),
-          const SizedBox(height: AppSpacing.sm),
-          AppCard(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppTextField(
-                  label: l10n.settingsPrefix,
-                  controller: _prefixController,
-                  textCapitalization: TextCapitalization.characters,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                AppTextField(
-                  label: l10n.settingsNextNumber,
-                  controller: _seqController,
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  l10n.settingsNumberingHelp(
-                    format.integer(state.highestInvoiceSequence),
-                  ),
-                  style: context.textStyles.bodySmall?.copyWith(
-                    color: context.appColors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                AppButton(
-                  label: l10n.settingsSaveNumbering,
-                  isLoading: state.isSaving,
-                  onPressed: () {
-                    final prefix = _prefixController.text;
-                    final seq = int.tryParse(_seqController.text) ?? 1;
-                    vm.updateNumbering(prefix: prefix, nextSequence: seq);
-                  },
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sectionGap),
-
-          // 4. Backup & Data
-          SectionHeader(title: l10n.backupTitle),
-          const SizedBox(height: AppSpacing.sm),
-          AppCard(
-            onTap: () => context.pushNamed(RouteNames.backup),
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-              vertical: AppSpacing.md,
-            ),
-            child: Row(
-              children: [
-                Icon(AppIcons.backup, color: context.appColors.primary),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text(
-                    l10n.backupTitle,
-                    style: context.textStyles.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                Icon(
-                  AppIcons.chevronRight,
-                  color: context.appColors.textSecondary,
-                ),
-              ],
-            ),
-          ),
-
-          // 5. Privacy & Consent (shown when required)
-          if (ref.watch(privacyOptionsRequiredProvider).value ?? false) ...[
-            const SizedBox(height: AppSpacing.sectionGap),
-            SectionHeader(title: l10n.privacyConsentTitle),
-            const SizedBox(height: AppSpacing.sm),
-            AppCard(
-              onTap: () async {
-                await ref.read(consentServiceProvider).showPrivacyOptionsForm();
-                ref.invalidate(privacyOptionsRequiredProvider);
-              },
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.lg,
-                vertical: AppSpacing.md,
-              ),
-              child: Row(
-                children: [
-                  Icon(AppIcons.privacy, color: context.appColors.primary),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.privacyConsentTitle,
-                          style: context.textStyles.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.xxs),
-                        Text(
-                          l10n.privacyConsentSubtitle,
-                          style: context.textStyles.bodySmall?.copyWith(
-                            color: context.appColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Icon(
-                    AppIcons.chevronRight,
-                    color: context.appColors.textSecondary,
-                  ),
-                ],
-              ),
-            ),
-          ],
-
-          // 6. About & Legal
-          const SizedBox(height: AppSpacing.sectionGap),
-          SectionHeader(title: l10n.legalSectionTitle),
-          const SizedBox(height: AppSpacing.sm),
-          AppCard(
-            onTap: () =>
-                UrlLaunchService.openUrl(AppConstants.privacyPolicyUrl),
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-              vertical: AppSpacing.md,
-            ),
-            child: Row(
-              children: [
-                Icon(AppIcons.privacy, color: context.appColors.primary),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text(
-                    l10n.settingsPrivacyPolicy,
-                    style: context.textStyles.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                Icon(
-                  AppIcons.chevronRight,
-                  color: context.appColors.textSecondary,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          AppCard(
-            onTap: () =>
-                UrlLaunchService.openUrl(AppConstants.termsOfServiceUrl),
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-              vertical: AppSpacing.md,
-            ),
-            child: Row(
-              children: [
-                Icon(AppIcons.terms, color: context.appColors.primary),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text(
-                    l10n.settingsTermsOfService,
-                    style: context.textStyles.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                Icon(
-                  AppIcons.chevronRight,
-                  color: context.appColors.textSecondary,
-                ),
-              ],
-            ),
-          ),
+        children: const [
+          ProUpgradeBanner(),
+          SizedBox(height: AppSpacing.sectionGap),
+          SettingsAppearanceGroup(),
+          SizedBox(height: AppSpacing.sectionGap),
+          SettingsDefaultsGroup(),
+          SizedBox(height: AppSpacing.sectionGap),
+          SettingsNumberingGroup(),
+          SizedBox(height: AppSpacing.sectionGap),
+          SettingsLinksGroup(),
           if (kDebugMode) ...[
-            const SizedBox(height: AppSpacing.xl),
-            const SectionHeader(title: 'Developer Test Mode'),
-            const SizedBox(height: AppSpacing.sm),
-            AppCard(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.lg,
-                vertical: AppSpacing.md,
-              ),
-              child: Row(
-                children: [
-                  Icon(AppIcons.pro, color: context.appColors.secondary),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Unlock All Pro Features',
-                          style: context.textStyles.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          'Unlocks all templates, removes watermark and ads',
-                          style: context.textStyles.bodySmall?.copyWith(
-                            color: context.appColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Switch.adaptive(
-                    value: ref.watch(proStatusProvider),
-                    onChanged: (val) => ref
-                        .read(proStatusProvider.notifier)
-                        .setUnlocked(value: val),
-                  ),
-                ],
-              ),
-            ),
+            SizedBox(height: AppSpacing.sectionGap),
+            SettingsDebugGroup(),
           ],
         ],
       ),

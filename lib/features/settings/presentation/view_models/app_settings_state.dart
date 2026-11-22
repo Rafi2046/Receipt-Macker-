@@ -23,4 +23,10 @@ abstract class AppSettingsState with _$AppSettingsState {
     Failure? failure,
     @Default(false) bool numberingSaved,
   }) = _AppSettingsState;
+
+  const AppSettingsState._();
+
+  /// The number the next invoice gets, e.g. `INV-0003`.
+  String get nextInvoiceNumber =>
+      '$invoicePrefix${nextInvoiceSequence.toString().padLeft(AppConstants.invoiceNumberPadding, '0')}';
 }

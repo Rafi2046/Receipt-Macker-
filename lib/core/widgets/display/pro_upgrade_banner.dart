@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../app/router/route_names.dart';
-import '../../../../app/theme/app_colors.dart';
-import '../../../../core/constants/app_icons.dart';
-import '../../../../core/constants/app_radius.dart';
-import '../../../../core/constants/app_spacing.dart';
-import '../../../../core/services/purchases/purchase_providers.dart';
-import '../../../../core/utils/extensions/l10n_extension.dart';
+import '../../../app/router/route_names.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../constants/app_icons.dart';
+import '../../constants/app_radius.dart';
+import '../../constants/app_spacing.dart';
+import '../../services/purchases/purchase_providers.dart';
+import '../../utils/extensions/l10n_extension.dart';
 
-/// Pro upgrade strip for the menu. No countdown — CLAUDE §9.1.
-class AppMenuProBanner extends ConsumerWidget {
-  const AppMenuProBanner({this.onNavigate, super.key});
+/// Pro upgrade strip (menu, settings); shows the active state for Pro. No countdown — CLAUDE §9.1.
+class ProUpgradeBanner extends ConsumerWidget {
+  const ProUpgradeBanner({this.onNavigate, super.key});
 
   final VoidCallback? onNavigate;
 

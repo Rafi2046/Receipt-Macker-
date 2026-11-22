@@ -12,13 +12,13 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/services/url_launch_service.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
+import '../../../../core/widgets/display/pro_upgrade_banner.dart';
 import '../../../../core/widgets/layout/menu_link_group.dart';
 import '../../../../core/widgets/layout/menu_link_row.dart';
 import '../../../../core/widgets/layout/section_header.dart';
 import '../../../business_profile/providers.dart';
 import '../../../debug/presentation/view_models/sample_data_view_model.dart';
 import 'app_menu_header.dart';
-import 'app_menu_pro_banner.dart';
 
 /// Shared menu content for the side drawer and the More tab.
 class AppMenuBody extends ConsumerWidget {
@@ -57,7 +57,7 @@ class AppMenuBody extends ConsumerWidget {
           onEdit: () => _go(context, RouteNames.businessProfile),
         ),
         const SizedBox(height: AppSpacing.lg),
-        AppMenuProBanner(onNavigate: onNavigate),
+        ProUpgradeBanner(onNavigate: onNavigate),
         const SizedBox(height: AppSpacing.lg),
         SectionHeader(title: l10n.menuSectionBusiness),
         const SizedBox(height: AppSpacing.sm),

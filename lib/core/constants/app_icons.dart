@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// Icon choices used across the app, so each concept has one icon.
 abstract final class AppIcons {
@@ -33,9 +34,9 @@ abstract final class AppIcons {
   static const IconData search = Icons.search;
   static const IconData filter = Icons.filter_list_rounded;
   static const IconData language = Icons.translate;
-  static const IconData themeLight = Icons.light_mode_outlined;
-  static const IconData themeDark = Icons.dark_mode_outlined;
-  static const IconData themeSystem = Icons.brightness_auto_outlined;
+  static const IconData themeLight = LucideIcons.sun;
+  static const IconData themeDark = LucideIcons.moon;
+  static const IconData themeSystem = LucideIcons.sunMoon;
   static const IconData date = Icons.calendar_today_outlined;
   static const IconData dropdown = Icons.expand_more;
   static const IconData chevronRight = Icons.chevron_right;
@@ -70,7 +71,23 @@ abstract final class AppIcons {
   static const IconData template = Icons.dashboard_customize_outlined;
   static const IconData adjust = Icons.tune_rounded;
   static const IconData currency = Icons.paid_outlined;
+  static const IconData tax = Icons.percent_rounded;
+  static const IconData taxInclusive = Icons.price_check_rounded;
+  static const IconData numbering = Icons.tag_rounded;
   static const IconData paymentMethod = Icons.credit_card_outlined;
   static const IconData notes = Icons.sticky_note_2_outlined;
   static const IconData preview = Icons.visibility_outlined;
+
+  // Settings rows: Lucide line icons, drawn plain in the text color.
+  static const IconData setLanguage = LucideIcons.languages;
+  static const IconData setCurrency = LucideIcons.circleDollarSign;
+  static const IconData setDueDate = LucideIcons.calendarClock;
+  static const IconData setTax = LucideIcons.percent;
+  static const IconData setTaxInclusive = LucideIcons.receiptText;
+  static const IconData setNumbering = LucideIcons.hash;
+  static const IconData setBackup = LucideIcons.cloudUpload;
+  static const IconData setConsent = LucideIcons.shieldCheck;
+  static const IconData setPrivacy = LucideIcons.shield;
+  static const IconData setTerms = LucideIcons.fileText;
+  static const IconData setDebug = LucideIcons.crown;
 }
