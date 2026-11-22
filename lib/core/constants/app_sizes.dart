@@ -26,6 +26,11 @@ abstract final class AppSizes {
   static const double signatureStroke = 2.5;
   static const double languageCardHeight = 72;
   static const double swatch = 56;
+  static const double accentDot = 32;
+  static const double accentDotBadge = 14;
+  static const double colorTrackHeight = 14;
+  static const double colorPreviewWidth = 84;
+  static const double colorPreviewHeight = 112;
   static const double swatchWidth = 96;
   static const double borderWidth = 1;
   static const double selectedBorderWidth = 2;

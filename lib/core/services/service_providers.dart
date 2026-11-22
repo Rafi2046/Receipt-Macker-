@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'contact_picker_service.dart';
 import 'file_save_service.dart';
+import 'image_color_service.dart';
 import 'image_picker_service.dart';
 import 'image_storage_service.dart';
 import 'pdf/html_pdf_converter.dart';
@@ -24,6 +25,9 @@ AppPreferences appPreferences(Ref ref) =>
 @Riverpod(keepAlive: true)
 ImageStorageService imageStorageService(Ref ref) =>
     ImageStorageService(getApplicationDocumentsDirectory);
+
+@Riverpod(keepAlive: true)
+ImageColorService imageColorService(Ref ref) => ImageColorService();
 
 @Riverpod(keepAlive: true)
 ImagePickerService imagePickerService(Ref ref) => ImagePickerService();

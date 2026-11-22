@@ -102,7 +102,9 @@ class QuoteEditorForm extends ConsumerWidget {
       children: [
         QuoteHeaderCard(draft: draft, vm: vm),
         const SizedBox(height: AppSpacing.md),
-        const TemplatePickerCard(),
+        TemplatePickerCard(
+          logoAccentHex: ref.watch(logoAccentHexProvider).value,
+        ),
         const SizedBox(height: AppSpacing.md),
         AppCard(
           onTap: () => context.pushNamed(RouteNames.businessProfile),

@@ -10,6 +10,7 @@ import 'package:receipt_maker/core/services/pdf/models/rendered_pdf.dart';
 import 'package:receipt_maker/core/services/pdf/pdf_raster_service.dart';
 import 'package:receipt_maker/core/services/pdf/pdf_template.dart';
 import 'package:receipt_maker/core/services/service_providers.dart';
+import 'package:receipt_maker/features/business_profile/providers.dart';
 import 'package:receipt_maker/features/invoices/domain/repositories/invoice_pdf_repository.dart';
 import 'package:receipt_maker/features/invoices/presentation/views/invoice_pdf_view.dart';
 import 'package:receipt_maker/features/invoices/providers.dart';
@@ -59,6 +60,7 @@ void main() {
     overrides: [
       invoicePdfRepositoryProvider.overrideWithValue(repo),
       pdfRasterServiceProvider.overrideWithValue(raster),
+      logoAccentHexProvider.overrideWith((ref) async => null),
       appPreferencesProvider.overrideWithValue(
         FakeAppPreferences(languageCode: language),
       ),

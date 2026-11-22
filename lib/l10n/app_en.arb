@@ -1033,5 +1033,14 @@
   "privacyConsentSubtitle": "Manage your advertising consent preferences",
   "legalSectionTitle": "About & Legal",
   "settingsPrivacyPolicy": "Privacy Policy",
-  "settingsTermsOfService": "Terms of Service"
+  "settingsTermsOfService": "Terms of Service",
+  "accentColorTitle": "Invoice color",
+  "accentColorHint": "Used on every invoice, quote and receipt",
+  "accentLogoColor": "Logo color",
+  "accentCustomColor": "Custom color",
+  "customColorHue": "Color",
+  "customColorShade": "Shade",
+  "customColorHex": "Hex code",
+  "customColorInvalid": "Enter a color code like #1E6FD9",
+  "customColorApply": "Use this color"
 }

@@ -105,7 +105,9 @@ class InvoiceEditorForm extends ConsumerWidget {
           ),
         ),
         const _Gap(),
-        const TemplatePickerCard(),
+        TemplatePickerCard(
+          logoAccentHex: ref.watch(logoAccentHexProvider).value,
+        ),
         const _Gap(),
         InvoicePartiesCard(
           businessName: profile?.name ?? '',

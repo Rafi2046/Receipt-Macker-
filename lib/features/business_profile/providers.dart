@@ -24,3 +24,14 @@ Stream<BusinessProfile?> currentBusinessProfile(Ref ref) =>
 @riverpod
 Future<String> profileImagePath(Ref ref, String relativePath) =>
     ref.watch(businessProfileRepositoryProvider).resolveImagePath(relativePath);
+
+/// The logo's main color as `#RRGGBB`, offered as an invoice accent; null
+/// without a logo or when the logo has no clear color.
+@riverpod
+Future<String?> logoAccentHex(Ref ref) async {
+  final profile = await ref.watch(currentBusinessProfileProvider.future);
+  final logo = profile?.logoPath;
+  if (logo == null || logo.isEmpty) return null;
+  final path = await ref.watch(profileImagePathProvider(logo).future);
+  return ref.watch(imageColorServiceProvider).dominantHex(path);
+}

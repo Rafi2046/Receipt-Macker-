@@ -1,3 +1,5 @@
+import '../../utils/hex_color.dart';
+
 /// Curated brand colors for PDF invoice and receipt templates. Each one
 /// carries the tones a premium layout needs: a soft wash, a deep shade for
 /// gradients and dark panels, and a contrasting pair for small highlights.
@@ -219,14 +221,33 @@ class BrandSwatch {
 
   static BrandSwatch fromHex(String? hex) => _exact(hex) ?? coral;
 
-  static String softFor(String? hex) =>
-      _exact(hex)?.softHex ?? '${(hex ?? '').trim()}15';
+  /// Whether [hex] is one of the curated colors (not a custom one).
+  static bool isPreset(String? hex) =>
+      hex == null || hex.isEmpty || _exact(hex) != null;
+
+  /// A light wash of [hex]: ours when known, else 92% toward white.
+  static String softFor(String? hex) {
+    final known = _exact(hex)?.softHex;
+    if (known != null) return known;
+    final clean = HexColor.normalize(hex ?? '');
+    return clean == null ? coral.softHex : HexColor.mix(clean, _white, 0.92);
+  }
 
   /// A darker shade of [hex]: ours when known, else 40% toward black.
   static String deepFor(String? hex) =>
       _exact(hex)?.deepHex ?? _darken((hex ?? '').trim());
 
-  static String pairFor(String? hex) => _exact(hex)?.pairHex ?? fallbackPairHex;
+  /// A highlight for [hex]: ours when known; for a custom color gold,
+  /// or dark slate when the color is itself yellow or orange.
+  static String pairFor(String? hex) {
+    final known = _exact(hex)?.pairHex;
+    if (known != null) return known;
+    final (h, s, _) = HexColor.toHsl(hex ?? '');
+    final warm = s > 0.3 && h >= 25 && h <= 70;
+    return warm ? coral.pairHex : fallbackPairHex;
+  }
+
+  static const String _white = '#FFFFFF';
 
   static String _darken(String hex) {
     final value = int.tryParse(hex.replaceAll('#', ''), radix: 16);

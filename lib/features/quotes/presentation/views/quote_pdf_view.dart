@@ -77,6 +77,7 @@ class QuotePdfView extends ConsumerWidget {
             template: state.template,
             languageCode: state.languageCode,
             brandAccentColor: state.brandAccentColor,
+            logoAccentHex: ref.watch(logoAccentHexProvider).value,
             pageSize: state.pageSize,
             onPageSize: vm.setPageSize,
             enabled: !state.isRendering,

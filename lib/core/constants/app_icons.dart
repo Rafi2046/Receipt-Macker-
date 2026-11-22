@@ -54,6 +54,8 @@ abstract final class AppIcons {
   static const IconData back = Icons.arrow_back_ios_new_rounded;
   static const IconData forward = Icons.arrow_forward;
   static const IconData check = Icons.check;
+  static const IconData palette = Icons.palette_outlined;
+  static const IconData logoColor = Icons.auto_awesome;
   static const IconData pdf = Icons.picture_as_pdf_outlined;
   static const IconData download = Icons.download_outlined;
   static const IconData backup = Icons.backup_outlined;

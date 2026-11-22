@@ -3,92 +3,176 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../constants/app_icons.dart';
+import '../../constants/app_radius.dart';
 import '../../constants/app_spacing.dart';
 import '../../services/pdf/brand_swatch.dart';
 import '../../services/pdf/pdf_template.dart';
-import '../../services/pdf/pdf_template_catalog.dart';
-import '../../services/pdf/pdf_template_catalog_entry.dart';
 import '../../services/purchases/purchase_providers.dart';
 import '../../services/service_providers.dart';
+import '../../utils/color_from_hex.dart';
 import '../../utils/extensions/l10n_extension.dart';
 import '../layout/app_card.dart';
+import '../layout/app_divider.dart';
+import 'accent_color_row.dart';
 import 'mini_layout_thumbnail.dart';
+import 'pdf_template_labels.dart';
 import 'template_catalog_picker.dart';
 
-/// A "Templates" row showing the current PDF design; opens the template
-/// catalog. The choice is stored in app preferences (one for every
-/// document).
+/// The document design in an editor: the current template (opens the
+/// catalog) and the invoice color right under it. Both are stored in app
+/// preferences, so they apply to every document.
 class TemplatePickerCard extends ConsumerStatefulWidget {
-  const TemplatePickerCard({super.key});
+  const TemplatePickerCard({this.logoAccentHex, super.key});
+
+  /// The logo's main color, offered first in the color row.
+  final String? logoAccentHex;
 
   @override
   ConsumerState<TemplatePickerCard> createState() => _TemplatePickerCardState();
 }
 
 class _TemplatePickerCardState extends ConsumerState<TemplatePickerCard> {
-  PdfTemplateCatalogEntry? _entry;
+  late PdfTemplate _layout;
+  late String _accentHex;
 
-  Color _accent(String hex) {
-    final clean = hex.replaceAll('#', '');
-    final val = int.tryParse(clean, radix: 16) ?? 0xFF5738;
-    return Color(0xFF000000 | val);
+  @override
+  void initState() {
+    super.initState();
+    final prefs = ref.read(appPreferencesProvider);
+    _layout = PdfTemplate.fromId(prefs.pdfTemplate);
+    _accentHex = prefs.brandAccentColor ?? BrandSwatch.coral.hex;
   }
 
-  PdfTemplateCatalogEntry _resolved() {
-    if (_entry != null) return _entry!;
+  Future<void> _openCatalog() async {
     final prefs = ref.read(appPreferencesProvider);
-    return PdfTemplateCatalog.resolve(
-      layout: PdfTemplate.fromId(prefs.pdfTemplate),
-      accentHex: prefs.brandAccentColor ?? BrandSwatch.coral.hex,
-    );
-  }
-
-  Future<void> _open() async {
-    final prefs = ref.read(appPreferencesProvider);
-    final isPro = ref.read(proStatusProvider);
-    final current = _resolved();
     final entry = await TemplateCatalogPicker.open(
       context,
-      selectedLayout: current.layout,
-      selectedAccentHex: current.accentHex,
-      isPro: isPro,
+      selectedLayout: _layout,
+      selectedAccentHex: _accentHex,
+      isPro: ref.read(proStatusProvider),
     );
     if (entry == null || !mounted) return;
     await prefs.setPdfTemplate(entry.layout.id);
     await prefs.setBrandAccentColor(entry.accentHex);
-    setState(() => _entry = entry);
+    setState(() {
+      _layout = entry.layout;
+      _accentHex = entry.accentHex;
+    });
+  }
+
+  Future<void> _setAccent(String hex) async {
+    setState(() => _accentHex = hex);
+    await ref.read(appPreferencesProvider).setBrandAccentColor(hex);
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final colors = context.appColors;
-    final entry = _resolved();
-
     return AppCard(
-      onTap: _open,
-      child: Row(
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Icon(AppIcons.template, color: colors.textPrimary),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Text(
-              l10n.editorTemplates,
-              style: context.textStyles.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
+          InkWell(
+            onTap: _openCatalog,
+            // Some phones report touch as hover; a hover tint would stick.
+            hoverColor: colors.surface.withValues(alpha: 0),
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(AppRadius.md),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Row(
+                children: [
+                  Icon(AppIcons.template, color: colors.textPrimary),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: _Title(
+                      title: l10n.editorTemplates,
+                      subtitle: l10n.templateName(_layout),
+                    ),
+                  ),
+                  MiniLayoutThumbnail(
+                    template: _layout,
+                    accentColor: colorFromHex(
+                      _accentHex,
+                      fallback: colors.primary,
+                    ),
+                    width: 44,
+                    height: 58,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Icon(AppIcons.chevronRight, color: colors.textSecondary),
+                ],
               ),
             ),
           ),
-          MiniLayoutThumbnail(
-            template: entry.layout,
-            accentColor: _accent(entry.accentHex),
-            width: 44,
-            height: 58,
+          const AppDivider(spacing: 0),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.md,
+              AppSpacing.sm,
+              AppSpacing.xs,
+            ),
+            child: Row(
+              children: [
+                Icon(AppIcons.palette, color: colors.textPrimary),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: _Title(
+                    title: l10n.accentColorTitle,
+                    subtitle: l10n.accentColorHint,
+                  ),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(width: AppSpacing.sm),
-          Icon(AppIcons.chevronRight, color: colors.textSecondary),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.sm,
+              0,
+              AppSpacing.sm,
+              AppSpacing.sm,
+            ),
+            child: AccentColorRow(
+              selectedHex: _accentHex,
+              template: _layout,
+              logoHex: widget.logoAccentHex,
+              onSelected: _setAccent,
+            ),
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _Title extends StatelessWidget {
+  const _Title({required this.title, required this.subtitle});
+
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: context.textStyles.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Text(
+          subtitle,
+          style: context.textStyles.bodySmall?.copyWith(
+            color: context.appColors.textSecondary,
+          ),
+        ),
+      ],
     );
   }
 }

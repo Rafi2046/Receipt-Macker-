@@ -865,5 +865,14 @@
   "privacyConsentSubtitle": "বিজ্ঞাপনের সম্মতি সংক্রান্ত পছন্দসমূহ পরিবর্তন করুন",
   "legalSectionTitle": "আইনি ও তথ্যাবলী",
   "settingsPrivacyPolicy": "গোপনীয়তা নীতি",
-  "settingsTermsOfService": "ব্যবহারের শর্তাবলী"
+  "settingsTermsOfService": "ব্যবহারের শর্তাবলী",
+  "accentColorTitle": "ইনভয়েসের রং",
+  "accentColorHint": "সব ইনভয়েস, কোটেশন ও রসিদে ব্যবহার হবে",
+  "accentLogoColor": "লোগোর রং",
+  "accentCustomColor": "নিজের রং",
+  "customColorHue": "রং",
+  "customColorShade": "হালকা–গাঢ়",
+  "customColorHex": "হেক্স কোড",
+  "customColorInvalid": "#1E6FD9 এর মতো রঙের কোড লিখুন",
+  "customColorApply": "এই রং ব্যবহার করুন"
 }

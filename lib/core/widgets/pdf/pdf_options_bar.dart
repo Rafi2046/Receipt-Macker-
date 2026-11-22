@@ -5,10 +5,10 @@ import '../../../l10n/gen/app_localizations.dart';
 import '../../constants/app_icons.dart';
 import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
-import '../../services/pdf/brand_swatch.dart';
 import '../../services/pdf/pdf_page_size.dart';
 import '../../services/pdf/pdf_template.dart';
 import '../../utils/extensions/l10n_extension.dart';
+import 'accent_color_row.dart';
 import 'pdf_template_labels.dart';
 
 /// Template, color accent and language choice above a PDF preview.
@@ -21,6 +21,7 @@ class PdfOptionsBar extends StatelessWidget {
     this.onOpenStudio,
     this.onAccentColor,
     this.brandAccentColor,
+    this.logoAccentHex,
     this.pageSize = PdfPageSize.a4,
     this.onPageSize,
     this.enabled = true,
@@ -34,6 +35,9 @@ class PdfOptionsBar extends StatelessWidget {
   final VoidCallback? onOpenStudio;
   final ValueChanged<String>? onAccentColor;
   final String? brandAccentColor;
+
+  /// The logo's main color, offered first in the color row.
+  final String? logoAccentHex;
   final PdfPageSize pageSize;
 
   /// Shows the paper size choice when set.
@@ -48,12 +52,6 @@ class PdfOptionsBar extends StatelessWidget {
 
   static const String _en = 'en';
   static const String _bn = 'bn';
-
-  static Color _colorFromHex(String hex) {
-    final clean = hex.replaceAll('#', '');
-    final val = int.tryParse(clean, radix: 16) ?? 0xFF5738;
-    return Color(0xFF000000 | val);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,38 +109,14 @@ class PdfOptionsBar extends StatelessWidget {
               ],
             ),
           ),
-          if (onAccentColor != null) ...[
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  for (final swatch in BrandSwatch.values) ...[
-                    GestureDetector(
-                      onTap: enabled ? () => onAccentColor!(swatch.hex) : null,
-                      child: Container(
-                        width: 22,
-                        height: 22,
-                        decoration: BoxDecoration(
-                          color: _colorFromHex(swatch.hex),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color:
-                                (brandAccentColor ?? BrandSwatch.coral.hex)
-                                        .toLowerCase() ==
-                                    swatch.hex.toLowerCase()
-                                ? context.appColors.textPrimary
-                                : Colors.transparent,
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.xs),
-                  ],
-                ],
-              ),
+          if (onAccentColor case final onAccent?)
+            AccentColorRow(
+              selectedHex: brandAccentColor,
+              template: template,
+              logoHex: logoAccentHex,
+              enabled: enabled,
+              onSelected: onAccent,
             ),
-          ],
           Text(l10n.pdfLanguageLabel, style: label),
           Wrap(
             spacing: AppSpacing.sm,
