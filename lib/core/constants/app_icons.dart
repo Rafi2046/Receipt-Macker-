@@ -91,24 +91,8 @@ abstract final class AppIcons {
   static const IconData setTerms = LucideIcons.fileText;
   static const IconData setDebug = LucideIcons.crown;
 
-  // Legal and support pages (Lucide).
-  static const IconData privacyHero = LucideIcons.shieldCheck;
-  static const IconData termsHero = LucideIcons.scrollText;
+  // Support page (Lucide).
   static const IconData supportHero = LucideIcons.lifeBuoy;
-  static const IconData onDevice = LucideIcons.smartphone;
-  static const IconData backupFile = LucideIcons.archive;
-  static const IconData ads = LucideIcons.megaphone;
-  static const IconData purchase = LucideIcons.creditCard;
-  static const IconData analytics = LucideIcons.activity;
-  static const IconData photos = LucideIcons.image;
-  static const IconData deleteData = LucideIcons.trash2;
-  static const IconData policyChanges = LucideIcons.history;
-  static const IconData appUse = LucideIcons.fileCheck;
-  static const IconData proPlan = LucideIcons.crown;
-  static const IconData trial = LucideIcons.gift;
-  static const IconData cancelPlan = LucideIcons.circleX;
-  static const IconData documents = LucideIcons.fileText;
-  static const IconData noWarranty = LucideIcons.info;
   static const IconData mail = LucideIcons.mail;
   static const IconData copy = LucideIcons.copy;
   static const IconData faq = LucideIcons.messageCircleQuestion;

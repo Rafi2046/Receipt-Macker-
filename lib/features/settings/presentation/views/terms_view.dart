@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/constants/app_icons.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/formatters.dart';
 import '../widgets/legal_hero.dart';
@@ -18,42 +17,17 @@ class TermsView extends StatelessWidget {
     return LegalPage(
       title: l10n.termsTitle,
       hero: LegalHero(
-        icon: AppIcons.termsHero,
         title: l10n.termsTitle,
         intro: l10n.termsIntro,
         note: l10n.legalUpdated(format.date(AppConstants.legalUpdatedOn)),
       ),
       sections: [
-        (
-          icon: AppIcons.appUse,
-          title: l10n.termsUseTitle,
-          body: l10n.termsUseBody,
-        ),
-        (
-          icon: AppIcons.proPlan,
-          title: l10n.termsProTitle,
-          body: l10n.termsProBody,
-        ),
-        (
-          icon: AppIcons.trial,
-          title: l10n.termsTrialTitle,
-          body: l10n.termsTrialBody,
-        ),
-        (
-          icon: AppIcons.cancelPlan,
-          title: l10n.termsCancelTitle,
-          body: l10n.termsCancelBody,
-        ),
-        (
-          icon: AppIcons.documents,
-          title: l10n.termsContentTitle,
-          body: l10n.termsContentBody,
-        ),
-        (
-          icon: AppIcons.noWarranty,
-          title: l10n.termsWarrantyTitle,
-          body: l10n.termsWarrantyBody,
-        ),
+        (title: l10n.termsUseTitle, body: l10n.termsUseBody),
+        (title: l10n.termsProTitle, body: l10n.termsProBody),
+        (title: l10n.termsTrialTitle, body: l10n.termsTrialBody),
+        (title: l10n.termsCancelTitle, body: l10n.termsCancelBody),
+        (title: l10n.termsContentTitle, body: l10n.termsContentBody),
+        (title: l10n.termsWarrantyTitle, body: l10n.termsWarrantyBody),
       ],
     );
   }

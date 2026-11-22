@@ -81,13 +81,13 @@ void main() {
 
     await tester.tap(find.text('Privacy Policy'));
     await tester.pumpAndSettle();
-    expect(find.text('Your data stays on your phone'), findsOneWidget);
+    expect(find.text('1. Your data stays on your phone'), findsOneWidget);
     await tester.pageBack();
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Terms of Service'));
     await tester.pumpAndSettle();
-    expect(find.text('QuickBill Pro'), findsWidgets);
+    expect(find.text('2. QuickBill Pro'), findsOneWidget);
     await tester.pageBack();
     await tester.pumpAndSettle();
 
@@ -103,7 +103,7 @@ void main() {
       const PrivacyPolicyView(),
       surface: const Size(400, 4000),
     );
-    for (final title in [
+    const titles = [
       'Your data stays on your phone',
       'Backups are your files',
       'Ads',
@@ -112,8 +112,10 @@ void main() {
       'Photos and contacts',
       'Deleting your data',
       'Changes to this policy',
-    ]) {
-      expect(find.text(title), findsOneWidget, reason: title);
+    ];
+    for (var i = 0; i < titles.length; i++) {
+      final heading = '${i + 1}. ${titles[i]}';
+      expect(find.text(heading), findsOneWidget, reason: heading);
     }
     expect(find.text(AppConstants.supportEmail), findsOneWidget);
   });
