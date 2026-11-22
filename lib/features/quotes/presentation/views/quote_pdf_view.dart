@@ -38,9 +38,9 @@ class QuotePdfView extends ConsumerWidget {
         ?.draft
         .number;
     final business = ref.read(currentBusinessProfileProvider).value?.name;
-    await ref.read(_provider.notifier).share(
-      subject: l10n.shareSubject(number ?? '', business ?? ''),
-    );
+    await ref
+        .read(_provider.notifier)
+        .share(subject: l10n.shareSubject(number ?? '', business ?? ''));
   }
 
   Future<void> _save(BuildContext context, WidgetRef ref) async {
@@ -100,7 +100,9 @@ class QuotePdfView extends ConsumerWidget {
             ),
             onLanguage: vm.setLanguage,
           ),
-          Expanded(child: _Pages(state: state, provider: _provider)),
+          Expanded(
+            child: _Pages(state: state, provider: _provider),
+          ),
         ],
       ),
       bottomBar: PdfActionBar(

@@ -53,7 +53,8 @@ class QuoteEditorView extends ConsumerWidget {
   }
 
   Future<void> _preview(BuildContext context, WidgetRef ref) async {
-    final needsSave = quoteId == null ||
+    final needsSave =
+        quoteId == null ||
         (ref.read(_provider).value?.hasUnsavedChanges ?? false);
     String? id = quoteId;
     if (needsSave) {
@@ -141,10 +142,8 @@ class QuoteEditorView extends ConsumerWidget {
             ],
           ),
           loading: () => const LoadingView(),
-          error: (e, _) => ErrorView.fromError(
-            e,
-            onRetry: () => ref.invalidate(_provider),
-          ),
+          error: (e, _) =>
+              ErrorView.fromError(e, onRetry: () => ref.invalidate(_provider)),
         ),
         bottomBarAboveKeyboard: true,
         bottomBar: form == null
@@ -159,9 +158,7 @@ class QuoteEditorView extends ConsumerWidget {
                           label: l10n.quotePreview,
                           icon: AppIcons.pdf,
                           variant: AppButtonVariant.secondary,
-                          onPressed: busy
-                              ? null
-                              : () => _preview(context, ref),
+                          onPressed: busy ? null : () => _preview(context, ref),
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),

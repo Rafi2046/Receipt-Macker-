@@ -42,13 +42,12 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
         Err() => 'QUO-0001',
       };
       final prefs = ref.read(appPreferencesProvider);
-      final profile =
-          (await ref.read(businessProfileRepositoryProvider).load()).valueOrNull;
+      final profile = (await ref.read(businessProfileRepositoryProvider).load())
+          .valueOrNull;
       final blank = Quote(
         id: IdGenerator.next(),
         number: number,
-        currencyCode:
-            prefs.defaultCurrency ?? AppConstants.defaultCurrencyCode,
+        currencyCode: prefs.defaultCurrency ?? AppConstants.defaultCurrencyCode,
         issueDate: today,
         validUntil: today.addDays(prefs.defaultDueDays),
         taxRateBasisPoints: prefs.defaultTaxRateBasisPoints,
@@ -89,8 +88,7 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
   void setValidUntil(CalendarDate date) =>
       _edit((d) => d.copyWith(validUntil: date));
 
-  void setCurrency(String code) =>
-      _edit((d) => d.copyWith(currencyCode: code));
+  void setCurrency(String code) => _edit((d) => d.copyWith(currencyCode: code));
 
   void setClient(Client client) => _set((f) {
     final draft = f.draft.copyWith(
@@ -154,7 +152,9 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
     final id = IdGenerator.next();
     _set((f) {
       final line = LineItem(id: id, name: '');
-      return f.copyWith(draft: f.draft.copyWith(lines: [...f.draft.lines, line]));
+      return f.copyWith(
+        draft: f.draft.copyWith(lines: [...f.draft.lines, line]),
+      );
     });
     return id;
   }

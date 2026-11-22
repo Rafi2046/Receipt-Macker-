@@ -16,11 +16,7 @@ import '../view_models/quote_editor_view_model.dart';
 
 /// Tappable summary of number + valid-until; opens details sheet.
 class QuoteHeaderCard extends StatelessWidget {
-  const QuoteHeaderCard({
-    required this.draft,
-    required this.vm,
-    super.key,
-  });
+  const QuoteHeaderCard({required this.draft, required this.vm, super.key});
 
   final Quote draft;
   final QuoteEditorViewModel vm;

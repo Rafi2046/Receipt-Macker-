@@ -25,11 +25,7 @@ import 'quote_notes_section.dart';
 import 'quote_template_card.dart';
 
 class QuoteEditorForm extends ConsumerWidget {
-  const QuoteEditorForm({
-    required this.quoteId,
-    required this.form,
-    super.key,
-  });
+  const QuoteEditorForm({required this.quoteId, required this.form, super.key});
 
   final String? quoteId;
   final QuoteEditorState form;
@@ -181,7 +177,10 @@ class QuoteEditorForm extends ConsumerWidget {
               const Divider(),
               Row(
                 children: [
-                  Text(l10n.totalSubtotal, style: context.textStyles.bodyMedium),
+                  Text(
+                    l10n.totalSubtotal,
+                    style: context.textStyles.bodyMedium,
+                  ),
                   const Spacer(),
                   Text(
                     format.currency(subtotal, draft.currencyCode),
@@ -214,10 +213,14 @@ class QuoteEditorForm extends ConsumerWidget {
         ),
         const SizedBox(height: AppSpacing.lg),
         SectionHeader(title: l10n.sectionAdjustments),
-        AppCard(child: QuoteAdjustmentsSection(draft: draft, vm: vm)),
+        AppCard(
+          child: QuoteAdjustmentsSection(draft: draft, vm: vm),
+        ),
         const SizedBox(height: AppSpacing.lg),
         SectionHeader(title: l10n.quoteSectionNotes),
-        AppCard(child: QuoteNotesSection(draft: draft, vm: vm)),
+        AppCard(
+          child: QuoteNotesSection(draft: draft, vm: vm),
+        ),
         const SizedBox(height: AppSpacing.lg),
         SectionHeader(title: l10n.quoteSectionStatus),
         AppCard(

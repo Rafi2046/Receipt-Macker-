@@ -150,9 +150,8 @@ class _QuoteFilterSheetState extends State<QuoteFilterSheet> {
                 child: DateField(
                   label: l10n.quoteFilterDateFrom,
                   value: _issueFrom?.toLocalDateTime(),
-                  onChanged: (d) => setState(
-                    () => _issueFrom = CalendarDate.fromLocal(d),
-                  ),
+                  onChanged: (d) =>
+                      setState(() => _issueFrom = CalendarDate.fromLocal(d)),
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
@@ -170,8 +169,7 @@ class _QuoteFilterSheetState extends State<QuoteFilterSheet> {
             const SizedBox(height: AppSpacing.xs),
             Text(
               [
-                if (_issueFrom != null)
-                  format.calendarDate(_issueFrom!),
+                if (_issueFrom != null) format.calendarDate(_issueFrom!),
                 if (_issueTo != null) format.calendarDate(_issueTo!),
               ].join(' – '),
               style: context.textStyles.bodySmall?.copyWith(
@@ -218,9 +216,7 @@ class _NavRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
         child: Row(
           children: [
-            Expanded(
-              child: Text(label, style: context.textStyles.bodyLarge),
-            ),
+            Expanded(child: Text(label, style: context.textStyles.bodyLarge)),
             Text(
               value,
               style: context.textStyles.bodyMedium?.copyWith(
