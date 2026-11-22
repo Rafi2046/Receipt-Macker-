@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Semantic colors. Brand: bottle green + gold (owner decision, M0).
+/// Semantic colors. Brand: a deep vermilion coral, used sparingly as the
+/// accent, with gold for Pro. Overdue uses its own red, never the brand.
 /// Widgets read these via `context.appColors`, never raw values.
 ///
 /// Status colors: draft = neutral, sent = info, partially paid = warning,
@@ -34,7 +35,7 @@ class AppColors extends ThemeExtension<AppColors> {
   });
 
   factory AppColors.light() => const AppColors(
-    primary: Color(0xFFFF5738),
+    primary: Color(0xFFD43D1C),
     onPrimary: Color(0xFFFFFFFF),
     secondary: Color(0xFF2563EB),
     onSecondary: Color(0xFFFFFFFF),
@@ -46,12 +47,12 @@ class AppColors extends ThemeExtension<AppColors> {
     textSecondary: Color(0xFF6B7280),
     success: Color(0xFF10B981),
     warning: Color(0xFFF59E0B),
-    danger: Color(0xFFFF5738),
+    danger: Color(0xFFDC2626),
     onDanger: Color(0xFFFFFFFF),
     info: Color(0xFF2563EB),
     neutral: Color(0xFF64748B),
-    heroStart: Color(0xFFFF6548),
-    heroEnd: Color(0xFFE54326),
+    heroStart: Color(0xFFDE4A28),
+    heroEnd: Color(0xFFBF3415),
     onHero: Color(0xFFFFFFFF),
     onHeroMuted: Color(0xEEFFFFFF),
     panel: Color(0xFF111827),
@@ -62,7 +63,7 @@ class AppColors extends ThemeExtension<AppColors> {
   /// Soft charcoal, not pure black: layered greys so cards lift off the
   /// page, a calmer coral, and white on coral like the light theme.
   factory AppColors.dark() => const AppColors(
-    primary: Color(0xFFE8654B),
+    primary: Color(0xFFDC4A2C),
     onPrimary: Color(0xFFFFFFFF),
     secondary: Color(0xFF7AA7F7),
     onSecondary: Color(0xFF121316),
@@ -74,8 +75,8 @@ class AppColors extends ThemeExtension<AppColors> {
     textSecondary: Color(0xFF9EA3AB),
     success: Color(0xFF4CC38A),
     warning: Color(0xFFE8B04B),
-    danger: Color(0xFFEF6B5B),
-    onDanger: Color(0xFFFFFFFF),
+    danger: Color(0xFFF2555A),
+    onDanger: Color(0xFF121316),
     info: Color(0xFF7AA7F7),
     neutral: Color(0xFF9EA3AB),
     heroStart: Color(0xFF24272C),

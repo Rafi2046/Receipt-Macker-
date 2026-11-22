@@ -22,7 +22,8 @@ class ProUpgradeBanner extends ConsumerWidget {
     final pro = ref.watch(proStatusProvider);
     final colors = context.appColors;
     return Material(
-      color: colors.primary,
+      // A deep panel with gold, so the brand color stays an accent.
+      color: colors.panel,
       borderRadius: AppRadius.card,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -38,7 +39,7 @@ class ProUpgradeBanner extends ConsumerWidget {
           padding: const EdgeInsets.all(AppSpacing.lg),
           child: Row(
             children: [
-              Icon(AppIcons.proBadge, color: colors.onPrimary),
+              Icon(AppIcons.proBadge, color: colors.warning),
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
@@ -47,14 +48,14 @@ class ProUpgradeBanner extends ConsumerWidget {
                     Text(
                       l10n.proMoreTitle,
                       style: context.textStyles.titleSmall?.copyWith(
-                        color: colors.onPrimary,
+                        color: colors.onPanel,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
                       pro ? l10n.proMoreActive : l10n.proMoreBody,
                       style: context.textStyles.bodySmall?.copyWith(
-                        color: colors.onPrimary.withValues(alpha: 0.9),
+                        color: colors.onPanelMuted,
                       ),
                     ),
                   ],
@@ -67,13 +68,13 @@ class ProUpgradeBanner extends ConsumerWidget {
                     vertical: AppSpacing.sm,
                   ),
                   decoration: BoxDecoration(
-                    color: colors.surface,
+                    color: colors.warning,
                     borderRadius: AppRadius.chip,
                   ),
                   child: Text(
                     l10n.proGet,
                     style: context.textStyles.labelLarge?.copyWith(
-                      color: colors.primary,
+                      color: colors.panel,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
