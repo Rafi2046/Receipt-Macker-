@@ -50,6 +50,7 @@ extension InvoiceRowMapper on InvoiceRow {
     stage: _stage(stage),
     totalMinor: totalMinor,
     paidMinor: paidMinor,
+    clientId: clientId,
     clientName: billToName,
   );
 }

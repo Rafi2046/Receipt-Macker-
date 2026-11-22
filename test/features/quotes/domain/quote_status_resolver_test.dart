@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:receipt_maker/core/utils/calendar_date.dart';
-import 'package:receipt_maker/features/quotes/domain/logic/quote_advanced_filters.dart';
+import 'package:receipt_maker/core/utils/document_filters.dart';
 import 'package:receipt_maker/features/quotes/domain/logic/quote_status_resolver.dart';
 import 'package:receipt_maker/features/quotes/domain/models/quote_list_filter.dart';
 import 'package:receipt_maker/features/quotes/domain/models/quote_status.dart';
@@ -108,32 +108,54 @@ void main() {
       issueDate: CalendarDate(2026, 11, 5),
     );
     expect(
-      const QuoteAdvancedFilters(clientId: 'c1').matches(row),
+      const DocumentFilters(clientId: 'c1').matches(
+        clientId: row.clientId,
+        currencyCode: row.currencyCode,
+        issueDate: row.issueDate,
+      ),
       isTrue,
     );
     expect(
-      const QuoteAdvancedFilters(clientId: 'c2').matches(row),
+      const DocumentFilters(clientId: 'c2').matches(
+        clientId: row.clientId,
+        currencyCode: row.currencyCode,
+        issueDate: row.issueDate,
+      ),
       isFalse,
     );
     expect(
-      const QuoteAdvancedFilters(currencyCode: 'USD').matches(row),
+      const DocumentFilters(currencyCode: 'USD').matches(
+        clientId: row.clientId,
+        currencyCode: row.currencyCode,
+        issueDate: row.issueDate,
+      ),
       isTrue,
     );
     expect(
-      const QuoteAdvancedFilters(currencyCode: 'BDT').matches(row),
+      const DocumentFilters(currencyCode: 'BDT').matches(
+        clientId: row.clientId,
+        currencyCode: row.currencyCode,
+        issueDate: row.issueDate,
+      ),
       isFalse,
     );
     expect(
-      QuoteAdvancedFilters(
+      DocumentFilters(
         issueFrom: CalendarDate(2026, 11, 1),
         issueTo: CalendarDate(2026, 11, 10),
-      ).matches(row),
+      ).matches(
+        clientId: row.clientId,
+        currencyCode: row.currencyCode,
+        issueDate: row.issueDate,
+      ),
       isTrue,
     );
     expect(
-      QuoteAdvancedFilters(
-        issueFrom: CalendarDate(2026, 11, 6),
-      ).matches(row),
+      DocumentFilters(issueFrom: CalendarDate(2026, 11, 6)).matches(
+        clientId: row.clientId,
+        currencyCode: row.currencyCode,
+        issueDate: row.issueDate,
+      ),
       isFalse,
     );
   });

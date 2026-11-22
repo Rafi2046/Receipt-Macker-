@@ -3,19 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
-import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
+import '../../../../core/widgets/buttons/filter_icon_button.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
 import '../../../../core/widgets/inputs/filter_pill.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../core/widgets/layout/searchable_list.dart';
+import '../../../invoices/presentation/widgets/document_filter_sheet.dart';
 import '../../domain/models/quote_list_filter.dart';
 import '../view_models/quote_list_view_model.dart';
-import '../widgets/quote_filter_sheet.dart';
 import '../widgets/quote_list_tile.dart';
 
 class QuoteListView extends ConsumerWidget {
@@ -24,7 +24,7 @@ class QuoteListView extends ConsumerWidget {
   Future<void> _openFilters(BuildContext context, WidgetRef ref) async {
     final state = ref.read(quoteListViewModelProvider).value;
     if (state == null) return;
-    final result = await QuoteFilterSheet.show(
+    final result = await DocumentFilterSheet.show(
       context,
       initial: state.advanced,
     );
@@ -57,8 +57,9 @@ class QuoteListView extends ConsumerWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _FilterIconButton(
+                  FilterIconButton(
                     active: hasAdvanced,
+                    tooltip: l10n.filterOpen,
                     onTap: () => _openFilters(context, ref),
                   ),
                   const SizedBox(width: AppSpacing.xs),
@@ -110,31 +111,3 @@ class QuoteListView extends ConsumerWidget {
   }
 }
 
-class _FilterIconButton extends StatelessWidget {
-  const _FilterIconButton({required this.active, required this.onTap});
-
-  final bool active;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Material(
-      color: active
-          ? colors.primary.withValues(alpha: 0.15)
-          : colors.surfaceAlt,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.sm),
-          child: Icon(
-            AppIcons.filter,
-            color: active ? colors.primary : colors.textSecondary,
-          ),
-        ),
-      ),
-    );
-  }
-}

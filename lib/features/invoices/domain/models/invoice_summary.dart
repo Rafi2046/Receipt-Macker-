@@ -17,6 +17,7 @@ abstract class InvoiceSummary with _$InvoiceSummary {
     required InvoiceStage stage,
     required int totalMinor,
     @Default(0) int paidMinor,
+    String? clientId,
     String? clientName,
   }) = _InvoiceSummary;
 }

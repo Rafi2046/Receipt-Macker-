@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/logic/quote_advanced_filters.dart';
+import '../../../../core/utils/document_filters.dart';
 import '../../domain/logic/quote_status_resolver.dart';
 import '../../domain/models/quote_list_filter.dart';
 import '../../providers.dart';
@@ -12,7 +12,7 @@ part 'quote_list_view_model.g.dart';
 class QuoteListViewModel extends _$QuoteListViewModel {
   String _query = '';
   QuoteListFilter _filter = QuoteListFilter.all;
-  QuoteAdvancedFilters _advanced = const QuoteAdvancedFilters();
+  DocumentFilters _advanced = const DocumentFilters();
 
   @override
   Stream<QuoteListState> build() {
@@ -22,7 +22,11 @@ class QuoteListViewModel extends _$QuoteListViewModel {
       final filtered = [
         for (final q in quotes)
           if (QuoteStatusResolver.matchesFilter(q, _filter) &&
-              _advanced.matches(q))
+              _advanced.matches(
+                clientId: q.clientId,
+                currencyCode: q.currencyCode,
+                issueDate: q.issueDate,
+              ))
             q,
       ];
       return QuoteListState(
@@ -44,13 +48,13 @@ class QuoteListViewModel extends _$QuoteListViewModel {
     ref.invalidateSelf();
   }
 
-  void setAdvancedFilters(QuoteAdvancedFilters advanced) {
+  void setAdvancedFilters(DocumentFilters advanced) {
     _advanced = advanced;
     ref.invalidateSelf();
   }
 
   void clearAdvancedFilters() {
-    _advanced = const QuoteAdvancedFilters();
+    _advanced = const DocumentFilters();
     ref.invalidateSelf();
   }
 }

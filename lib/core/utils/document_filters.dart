@@ -1,9 +1,9 @@
-import '../../../../core/utils/calendar_date.dart';
-import '../models/quote_summary.dart';
+import 'calendar_date.dart';
 
-/// Extra filters on the quotes list (with a status chip).
-class QuoteAdvancedFilters {
-  const QuoteAdvancedFilters({
+/// Extra filters on a document list (invoices, estimates): one client, one
+/// currency and an issue-date range. Empty means "show everything".
+class DocumentFilters {
+  const DocumentFilters({
     this.clientId,
     this.clientName,
     this.currencyCode,
@@ -12,6 +12,8 @@ class QuoteAdvancedFilters {
   });
 
   final String? clientId;
+
+  /// Shown in the filter sheet; not used for matching.
   final String? clientName;
   final String? currencyCode;
   final CalendarDate? issueFrom;
@@ -23,22 +25,26 @@ class QuoteAdvancedFilters {
       issueFrom == null &&
       issueTo == null;
 
-  bool matches(QuoteSummary summary) {
-    if (clientId != null && summary.clientId != clientId) return false;
-    if (currencyCode != null && summary.currencyCode != currencyCode) {
+  bool matches({
+    required String? clientId,
+    required String currencyCode,
+    required CalendarDate issueDate,
+  }) {
+    if (this.clientId != null && clientId != this.clientId) return false;
+    if (this.currencyCode != null && currencyCode != this.currencyCode) {
       return false;
     }
-    if (issueFrom != null && summary.issueDate.key < issueFrom!.key) {
-      return false;
-    }
-    if (issueTo != null && summary.issueDate.key > issueTo!.key) return false;
+    final from = issueFrom;
+    if (from != null && issueDate.key < from.key) return false;
+    final to = issueTo;
+    if (to != null && issueDate.key > to.key) return false;
     return true;
   }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is QuoteAdvancedFilters &&
+      other is DocumentFilters &&
           clientId == other.clientId &&
           clientName == other.clientName &&
           currencyCode == other.currencyCode &&

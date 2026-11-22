@@ -1107,5 +1107,11 @@
   "supportFaq4Q": "Can I change my invoice numbers?",
   "supportFaq4A": "Yes. Open Settings › Invoice numbers to change the prefix and the next number.",
   "supportFaq5Q": "Is my data uploaded anywhere?",
-  "supportFaq5A": "No. Everything stays on your phone unless you share a PDF or export a backup yourself."
+  "supportFaq5A": "No. Everything stays on your phone unless you share a PDF or export a backup yourself.",
+  "periodTitle": "Period",
+  "periodThisMonth": "This month",
+  "periodLastMonth": "Last month",
+  "periodThisYear": "This year",
+  "periodAllTime": "All time",
+  "filterOpen": "More filters"
 }

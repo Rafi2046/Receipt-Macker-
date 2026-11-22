@@ -6,18 +6,22 @@ import '../../../../app/router/route_names.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
+import '../../../../core/widgets/buttons/filter_icon_button.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
 import '../../../../core/widgets/inputs/filter_pill.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../core/widgets/layout/searchable_list.dart';
-import '../../domain/models/invoice_status.dart';
+import '../../domain/models/invoice_list_filter.dart';
 import '../view_models/invoice_list_state.dart';
 import '../view_models/invoice_list_view_model.dart';
+import '../widgets/document_filter_sheet.dart';
 import '../widgets/invoice_list_tile.dart';
+import '../widgets/invoice_overview_section.dart';
 
-/// All invoices, newest first, searchable and filterable.
+/// All invoices, newest first: an overview of the chosen period, status
+/// chips, more filters, search and the list.
 class InvoiceListView extends ConsumerWidget {
   const InvoiceListView({super.key});
 
@@ -40,37 +44,20 @@ class InvoiceListView extends ConsumerWidget {
   }
 }
 
-enum _InvoiceFilter { all, unpaid, overdue, paid }
-
-class _InvoiceList extends ConsumerStatefulWidget {
+class _InvoiceList extends ConsumerWidget {
   const _InvoiceList({required this.state});
 
   final InvoiceListState state;
 
   @override
-  ConsumerState<_InvoiceList> createState() => _InvoiceListState();
-}
-
-class _InvoiceListState extends ConsumerState<_InvoiceList> {
-  _InvoiceFilter _filter = _InvoiceFilter.all;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final filtered = widget.state.entries.where((entry) {
-      return switch (_filter) {
-        _InvoiceFilter.all => true,
-        _InvoiceFilter.unpaid => entry.status != InvoiceStatus.paid,
-        _InvoiceFilter.overdue => entry.status == InvoiceStatus.overdue,
-        _InvoiceFilter.paid => entry.status == InvoiceStatus.paid,
-      };
-    }).toList();
-
+    final vm = ref.read(invoiceListViewModelProvider.notifier);
     return SearchableList(
       searchHint: l10n.invoicesSearchHint,
-      query: widget.state.query,
-      onSearch: ref.read(invoiceListViewModelProvider.notifier).search,
-      isEmpty: widget.state.isEmpty,
+      query: state.query,
+      onSearch: vm.search,
+      isEmpty: state.isEmpty,
       header: Padding(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.pagePadding,
@@ -78,35 +65,19 @@ class _InvoiceListState extends ConsumerState<_InvoiceList> {
           AppSpacing.pagePadding,
           AppSpacing.sm,
         ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              FilterPill(
-                label: l10n.filterAll,
-                selected: _filter == _InvoiceFilter.all,
-                onTap: () => setState(() => _filter = _InvoiceFilter.all),
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              FilterPill(
-                label: l10n.filterUnpaid,
-                selected: _filter == _InvoiceFilter.unpaid,
-                onTap: () => setState(() => _filter = _InvoiceFilter.unpaid),
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              FilterPill(
-                label: l10n.filterOverdue,
-                selected: _filter == _InvoiceFilter.overdue,
-                onTap: () => setState(() => _filter = _InvoiceFilter.overdue),
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              FilterPill(
-                label: l10n.filterPaid,
-                selected: _filter == _InvoiceFilter.paid,
-                onTap: () => setState(() => _filter = _InvoiceFilter.paid),
-              ),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: AppSpacing.md,
+          children: [
+            InvoiceOverviewSection(
+              overview: state.overview,
+              period: state.period,
+              filter: state.filter,
+              onPeriod: vm.setPeriod,
+              onFilter: vm.setFilter,
+            ),
+            _FilterBar(state: state),
+          ],
         ),
       ),
       empty: EmptyState(
@@ -117,9 +88,9 @@ class _InvoiceListState extends ConsumerState<_InvoiceList> {
         onAction: () => context.pushNamed(RouteNames.invoiceNew),
       ),
       cards: true,
-      itemCount: filtered.length,
+      itemCount: state.entries.length,
       itemBuilder: (context, i) {
-        final entry = filtered[i];
+        final entry = state.entries[i];
         return InvoiceListTile(
           entry: entry,
           onTap: () => context.pushNamed(
@@ -128,6 +99,52 @@ class _InvoiceListState extends ConsumerState<_InvoiceList> {
           ),
         );
       },
+    );
+  }
+}
+
+/// The filter button, then one pill per status.
+class _FilterBar extends ConsumerWidget {
+  const _FilterBar({required this.state});
+
+  final InvoiceListState state;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final vm = ref.read(invoiceListViewModelProvider.notifier);
+    String label(InvoiceListFilter f) => switch (f) {
+      InvoiceListFilter.all => l10n.filterAll,
+      InvoiceListFilter.draft => l10n.statusDraft,
+      InvoiceListFilter.unpaid => l10n.filterUnpaid,
+      InvoiceListFilter.partiallyPaid => l10n.statusPartiallyPaid,
+      InvoiceListFilter.overdue => l10n.filterOverdue,
+      InvoiceListFilter.paid => l10n.filterPaid,
+    };
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        spacing: AppSpacing.xs,
+        children: [
+          FilterIconButton(
+            active: state.hasAdvancedFilters,
+            tooltip: l10n.filterOpen,
+            onTap: () async {
+              final picked = await DocumentFilterSheet.show(
+                context,
+                initial: state.advanced,
+              );
+              if (picked != null) vm.setAdvancedFilters(picked);
+            },
+          ),
+          for (final f in InvoiceListFilter.values)
+            FilterPill(
+              label: label(f),
+              selected: state.filter == f,
+              onTap: () => vm.setFilter(f),
+            ),
+        ],
+      ),
     );
   }
 }
