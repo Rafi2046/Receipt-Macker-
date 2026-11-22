@@ -962,5 +962,10 @@
   "paywallChipNoFooter": "PDF-এ ফুটার নেই",
   "paywallChipClients": "যত খুশি ক্লায়েন্ট",
   "paywallChipItems": "যত খুশি পণ্য",
-  "proWelcomeLead": "ধন্যবাদ। সবকিছু খুলে গেছে।"
+  "proWelcomeLead": "ধন্যবাদ। সবকিছু খুলে গেছে।",
+  "proBenefitDesigns": "প্রতিটি লেআউট, প্রতিটি রঙে।",
+  "proBenefitColors": "প্রতিটি ইনভয়েস আপনার ব্র্যান্ডের সাথে মিলিয়ে নিন।",
+  "proBenefitNoAds": "শুরু থেকে শেষ পর্যন্ত পরিষ্কার অ্যাপ।",
+  "proBenefitNoFooter": "আপনার PDF-এ শুধু আপনার নামই থাকবে।",
+  "proBenefitUnlimited": "ব্যবসার যত দরকার, তত সংরক্ষণ করুন।"
 }

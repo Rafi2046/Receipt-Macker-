@@ -15,7 +15,7 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../widgets/paywall_slides.dart';
 import '../widgets/pro_badge.dart';
-import '../widgets/pro_unlocked_tile.dart';
+import '../widgets/pro_benefit_list.dart';
 
 /// Shown right after a purchase: a welcome, what Pro unlocked, and a link
 /// to manage the subscription in Google Play (CLAUDE §9.1).
@@ -27,15 +27,15 @@ class ProWelcomeView extends StatelessWidget {
     final l10n = context.l10n;
     final colors = context.appColors;
     final format = AppFormatters(Localizations.localeOf(context).languageCode);
-    final unlocked = <(IconData, String)>[
+    final benefits = <(String, String)>[
       (
-        AppIcons.template,
         l10n.proUnlockedTemplates(format.integer(FreePlan.designCount)),
+        l10n.proBenefitDesigns,
       ),
-      (AppIcons.palette, l10n.proUnlockedColors),
-      (AppIcons.noAds, l10n.proUnlockedNoAds),
-      (AppIcons.noFooter, l10n.proUnlockedNoFooter),
-      (AppIcons.unlimited, l10n.proUnlockedUnlimited),
+      (l10n.proUnlockedColors, l10n.proBenefitColors),
+      (l10n.proUnlockedNoAds, l10n.proBenefitNoAds),
+      (l10n.proUnlockedNoFooter, l10n.proBenefitNoFooter),
+      (l10n.proUnlockedUnlimited, l10n.proBenefitUnlimited),
     ];
     return PopScope(
       // Back goes home, not to the paywall that was just completed.
@@ -81,25 +81,7 @@ class ProWelcomeView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
-              ProUnlockedTile(
-                icon: unlocked.first.$1,
-                label: unlocked.first.$2,
-              ),
-              for (var i = 1; i < unlocked.length; i += 2) ...[
-                const SizedBox(height: AppSpacing.sm),
-                IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: AppSpacing.sm,
-                    children: [
-                      for (final (icon, label) in unlocked.skip(i).take(2))
-                        Expanded(
-                          child: ProUnlockedTile(icon: icon, label: label),
-                        ),
-                    ],
-                  ),
-                ),
-              ],
+              ProBenefitList(benefits: benefits),
               const SizedBox(height: AppSpacing.md),
               Text(
                 l10n.proManage,

@@ -88,11 +88,7 @@ class _BodyState extends State<_Body> {
         mainAxisSize: MainAxisSize.min,
         spacing: AppSpacing.md,
         children: [
-          Icon(
-            AppIcons.proBadge,
-            size: AppSizes.iconXl,
-            color: colors.warning,
-          ),
+          Icon(AppIcons.proBadge, size: AppSizes.iconXl, color: colors.warning),
           Text(
             widget.title,
             textAlign: TextAlign.center,

@@ -1137,5 +1137,10 @@
   "paywallChipNoFooter": "No footer on PDFs",
   "paywallChipClients": "Unlimited clients",
   "paywallChipItems": "Unlimited items",
-  "proWelcomeLead": "Thank you. Everything is unlocked."
+  "proWelcomeLead": "Thank you. Everything is unlocked.",
+  "proBenefitDesigns": "Every layout, in every color.",
+  "proBenefitColors": "Match every invoice to your brand.",
+  "proBenefitNoAds": "A clean app from start to finish.",
+  "proBenefitNoFooter": "Your PDFs carry only your name.",
+  "proBenefitUnlimited": "Save as many as your business needs."
 }

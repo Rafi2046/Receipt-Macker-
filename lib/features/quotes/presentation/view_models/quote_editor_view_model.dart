@@ -1,19 +1,25 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/errors/failure.dart';
 import '../../../../core/errors/result.dart';
 import '../../../../core/services/service_providers.dart';
 import '../../../../core/utils/calendar_date.dart';
+import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/id_generator.dart';
 import '../../../business_profile/business_profile.dart';
 import '../../../clients/domain/models/client.dart';
 import '../../../invoices/domain/logic/invoice_calculator.dart';
+import '../../../invoices/domain/logic/invoice_drafting.dart';
 import '../../../invoices/domain/logic/invoice_number_generator.dart';
+import '../../../invoices/domain/logic/invoice_validator.dart';
 import '../../../invoices/domain/models/bill_to.dart';
 import '../../../invoices/domain/models/discount.dart';
+import '../../../invoices/domain/models/discount_type.dart';
 import '../../../invoices/domain/models/line_item.dart';
 import '../../../invoices/providers.dart';
 import '../../../items/domain/models/item.dart';
+import '../../../items/domain/models/item_discount_type.dart';
 import '../../domain/logic/quote_to_invoice.dart';
 import '../../domain/models/quote.dart';
 import '../../domain/models/quote_status.dart';
@@ -88,7 +94,24 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
   void setValidUntil(CalendarDate date) =>
       _edit((d) => d.copyWith(validUntil: date));
 
-  void setCurrency(String code) => _edit((d) => d.copyWith(currencyCode: code));
+  /// Switches currency keeping each amount's face value (৳500.00 becomes
+  /// ¥500), the same way the invoice editor does.
+  void setCurrency(String code) => _edit((d) => _withCurrency(d, code));
+
+  static Quote _withCurrency(Quote d, String code) {
+    if (code == d.currencyCode) return d;
+    final rescaled = QuoteToInvoice.asInvoice(d).withCurrency(
+      code,
+      fromDecimals: AppFormatters.currencyDecimalDigits(d.currencyCode),
+      toDecimals: AppFormatters.currencyDecimalDigits(code),
+    );
+    return d.copyWith(
+      currencyCode: code,
+      lines: rescaled.lines,
+      shippingMinor: rescaled.shippingMinor,
+      discount: rescaled.discount,
+    );
+  }
 
   void setClient(Client client) => _set((f) {
     final draft = f.draft.copyWith(
@@ -129,24 +152,34 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
   void setPaymentInstructions(String value) =>
       _edit((d) => d.copyWith(paymentInstructions: value));
 
+  /// Adds a catalog item as a line. The first item sets the currency. An
+  /// item priced in another currency comes in with no price (and no flat
+  /// discount), so a wrong amount is never copied silently.
   void addItem(Item item) => _set((f) {
+    var draft = f.draft;
+    if (draft.lines.isEmpty) draft = _withCurrency(draft, item.currencyCode);
+    final foreign = item.currencyCode != draft.currencyCode;
     final line = LineItem(
       id: IdGenerator.next(),
       name: item.name,
       description: item.description,
       unit: item.unit,
-      unitPriceMinor: item.unitPriceMinor,
+      unitPriceMinor: foreign ? 0 : item.unitPriceMinor,
       quantityMilli: item.defaultQuantityMilli,
+      discount: switch (item.discountType) {
+        null => null,
+        ItemDiscountType.percent => Discount(
+          type: DiscountType.percent,
+          value: item.discountValue,
+        ),
+        ItemDiscountType.flat =>
+          foreign
+              ? null
+              : Discount(type: DiscountType.flat, value: item.discountValue),
+      },
       itemId: item.id,
     );
-    return f.copyWith(
-      draft: f.draft.copyWith(
-        lines: [...f.draft.lines, line],
-        currencyCode: f.draft.lines.isEmpty
-            ? item.currencyCode
-            : f.draft.currencyCode,
-      ),
-    );
+    return f.copyWith(draft: draft.copyWith(lines: [...draft.lines, line]));
   });
 
   String addBlankLine() {
@@ -203,22 +236,30 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
     final form = _form;
     if (form == null || form.isBusy) return null;
     _set((f) => f.copyWith(isSaving: true, failure: null));
+    final saved = await _persist(form.draft);
+    _set((f) => f.copyWith(isSaving: false));
+    return saved;
+  }
+
+  /// Validates and stores [draft]; on an error it sets the failure and
+  /// returns null. It does not touch the busy flags, so both [save] and
+  /// [convertToInvoice] can use it.
+  Future<Quote?> _persist(Quote draft) async {
+    final check = InvoiceValidator.validate(QuoteToInvoice.asInvoice(draft));
+    if (!check.isValid) {
+      final field = check.fields.keys.firstOrNull?.name ?? 'lines';
+      _set((f) => f.copyWith(failure: ValidationFailure(field)));
+      return null;
+    }
     final result = await ref
         .read(quoteRepositoryProvider)
-        .save(form.draft.copyWith(updatedAt: DateTime.now().toUtc()));
+        .save(draft.copyWith(updatedAt: DateTime.now().toUtc()));
     switch (result) {
       case Ok(:final value):
-        _set(
-          (f) => f.copyWith(
-            draft: value,
-            initial: value,
-            isNew: false,
-            isSaving: false,
-          ),
-        );
+        _set((f) => f.copyWith(draft: value, initial: value, isNew: false));
         return value;
       case Err(:final failure):
-        _set((f) => f.copyWith(isSaving: false, failure: failure));
+        _set((f) => f.copyWith(failure: failure));
         return null;
     }
   }
@@ -230,7 +271,7 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
       return form.draft.convertedInvoiceId;
     }
     _set((f) => f.copyWith(isConverting: true, failure: null));
-    final saved = await save();
+    final saved = await _persist(form.draft);
     if (saved == null) {
       _set((f) => f.copyWith(isConverting: false));
       return null;
@@ -257,7 +298,13 @@ class QuoteEditorViewModel extends _$QuoteEditorViewModel {
           status: QuoteStatus.approved,
           updatedAt: now,
         );
-        await ref.read(quoteRepositoryProvider).save(linked);
+        final link = await ref.read(quoteRepositoryProvider).save(linked);
+        if (link case Err(:final failure)) {
+          // The invoice exists; say so rather than let a second convert
+          // make a duplicate.
+          _set((f) => f.copyWith(isConverting: false, failure: failure));
+          return value.id;
+        }
         _set(
           (f) =>
               f.copyWith(draft: linked, initial: linked, isConverting: false),

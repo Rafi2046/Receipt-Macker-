@@ -23,6 +23,10 @@ class PlayPurchaseRepository implements PurchaseRepository {
   late final StreamSubscription<List<PurchaseDetails>> _subscription;
   final List<void Function(List<PurchaseDetails>)> _listeners = [];
 
+  /// Called whenever Play reports a paid Pro purchase, also outside a
+  /// buy or restore call.
+  void Function()? onProGranted;
+
   static const Duration _buyTimeout = Duration(minutes: 2);
   static const Duration _restoreTimeout = Duration(seconds: 8);
 
@@ -49,10 +53,7 @@ class PlayPurchaseRepository implements PurchaseRepository {
       for (final purchase in purchases) {
         if (purchase.productID != productId) continue;
         if (purchase.status == PurchaseStatus.pending) continue;
-        final ok =
-            purchase.status == PurchaseStatus.purchased ||
-            purchase.status == PurchaseStatus.restored;
-        if (!completer.isCompleted) completer.complete(ok);
+        if (!completer.isCompleted) completer.complete(_owned(purchase));
       }
     }
 
@@ -79,10 +80,7 @@ class PlayPurchaseRepository implements PurchaseRepository {
     final completer = Completer<bool?>();
     void take(List<PurchaseDetails> purchases) {
       final active = purchases.any(
-        (purchase) =>
-            _ids.contains(purchase.productID) &&
-            (purchase.status == PurchaseStatus.purchased ||
-                purchase.status == PurchaseStatus.restored),
+        (purchase) => _ids.contains(purchase.productID) && _owned(purchase),
       );
       if (!completer.isCompleted) completer.complete(active);
     }
@@ -108,7 +106,31 @@ class PlayPurchaseRepository implements PurchaseRepository {
     for (final listener in [..._listeners]) {
       listener(purchases);
     }
+    // A slow payment can finish after the buy screen gave up waiting.
+    final grant = onProGranted;
+    if (grant != null &&
+        purchases.any((p) => _ids.contains(p.productID) && _owned(p))) {
+      grant();
+    }
   }
+
+  /// Paid for and owned. Play reports a purchase still waiting for payment
+  /// (cash, slow methods) as "restored" when queried, so the Play purchase
+  /// state is checked too; a pending one must not unlock Pro.
+  static bool _owned(PurchaseDetails purchase) {
+    final statusOk =
+        purchase.status == PurchaseStatus.purchased ||
+        purchase.status == PurchaseStatus.restored;
+    if (!statusOk) return false;
+    if (purchase is GooglePlayPurchaseDetails) {
+      return isPaid(purchase.billingClientPurchase.purchaseState);
+    }
+    return true;
+  }
+
+  /// True only for Play's PURCHASED state.
+  static bool isPaid(PurchaseStateWrapper state) =>
+      state == PurchaseStateWrapper.purchased;
 
   List<ProPlan> _plans(List<ProductDetails> products) {
     final plans = <ProPlan>[];

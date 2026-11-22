@@ -10,7 +10,12 @@ import 'purchase_repository.dart';
 
 /// Overridden in tests. The phone uses Play Billing.
 final purchaseRepositoryProvider = Provider<PurchaseRepository>((ref) {
-  final repository = PlayPurchaseRepository(InAppPurchase.instance);
+  final repository = PlayPurchaseRepository(InAppPurchase.instance)
+    ..onProGranted = () {
+      if (!ref.read(proStatusProvider)) {
+        ref.read(proStatusProvider.notifier).setUnlocked(value: true);
+      }
+    };
   ref.onDispose(repository.dispose);
   return repository;
 });
