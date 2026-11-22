@@ -28,6 +28,9 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.heroEnd,
     required this.onHero,
     required this.onHeroMuted,
+    required this.panel,
+    required this.onPanel,
+    required this.onPanelMuted,
   });
 
   factory AppColors.light() => const AppColors(
@@ -51,6 +54,9 @@ class AppColors extends ThemeExtension<AppColors> {
     heroEnd: Color(0xFFE54326),
     onHero: Color(0xFFFFFFFF),
     onHeroMuted: Color(0xEEFFFFFF),
+    panel: Color(0xFF111827),
+    onPanel: Color(0xFFFFFFFF),
+    onPanelMuted: Color(0xFF9CA3AF),
   );
 
   factory AppColors.dark() => const AppColors(
@@ -74,6 +80,9 @@ class AppColors extends ThemeExtension<AppColors> {
     heroEnd: Color(0xFF121721),
     onHero: Color(0xFFFFFFFF),
     onHeroMuted: Color(0xFF9CA3AF),
+    panel: Color(0xFF1C2433),
+    onPanel: Color(0xFFF9FAFB),
+    onPanelMuted: Color(0xFF94A3B8),
   );
 
   final Color primary, onPrimary, secondary, onSecondary;
@@ -81,6 +90,9 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color textPrimary, textSecondary;
   final Color success, warning, danger, onDanger, info, neutral;
   final Color heroStart, heroEnd, onHero, onHeroMuted;
+
+  /// A deep card that stays dark in both themes (Home's outstanding total).
+  final Color panel, onPanel, onPanelMuted;
 
   @override
   AppColors copyWith({
@@ -104,6 +116,9 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? heroEnd,
     Color? onHero,
     Color? onHeroMuted,
+    Color? panel,
+    Color? onPanel,
+    Color? onPanelMuted,
   }) => AppColors(
     primary: primary ?? this.primary,
     onPrimary: onPrimary ?? this.onPrimary,
@@ -125,6 +140,9 @@ class AppColors extends ThemeExtension<AppColors> {
     heroEnd: heroEnd ?? this.heroEnd,
     onHero: onHero ?? this.onHero,
     onHeroMuted: onHeroMuted ?? this.onHeroMuted,
+    panel: panel ?? this.panel,
+    onPanel: onPanel ?? this.onPanel,
+    onPanelMuted: onPanelMuted ?? this.onPanelMuted,
   );
 
   @override
@@ -152,6 +170,9 @@ class AppColors extends ThemeExtension<AppColors> {
       heroEnd: mix(heroEnd, other.heroEnd),
       onHero: mix(onHero, other.onHero),
       onHeroMuted: mix(onHeroMuted, other.onHeroMuted),
+      panel: mix(panel, other.panel),
+      onPanel: mix(onPanel, other.onPanel),
+      onPanelMuted: mix(onPanelMuted, other.onPanelMuted),
     );
   }
 }

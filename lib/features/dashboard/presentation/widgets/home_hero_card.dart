@@ -29,9 +29,9 @@ class HomeHeroCard extends StatelessWidget {
         : (snapshot.outstandingMinor == 0 ? 1.0 : 0.0);
 
     // Always a dark financial panel so light theme isn't a coral flood.
-    final panel = colors.textPrimary;
-    final onPanel = colors.surface;
-    final onPanelMuted = colors.textSecondary;
+    final panel = colors.panel;
+    final onPanel = colors.onPanel;
+    final onPanelMuted = colors.onPanelMuted;
 
     return DecoratedBox(
       decoration: BoxDecoration(
