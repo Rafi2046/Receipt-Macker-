@@ -43,8 +43,51 @@ class HomeView extends ConsumerWidget {
   }
 }
 
-class _HomeBody extends ConsumerWidget {
+class _HomeBody extends StatelessWidget {
   const _HomeBody({required this.snapshot});
+
+  final HomeSnapshot snapshot;
+
+  static const _side = EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.pagePadding,
+            AppSpacing.sm,
+            AppSpacing.pagePadding,
+            AppSpacing.lg,
+          ),
+          sliver: SliverList.list(
+            children: [
+              _HomeHeader(snapshot: snapshot),
+              const SizedBox(height: AppSpacing.md),
+              HomeHeroCard(snapshot: snapshot),
+              const SizedBox(height: AppSpacing.lg),
+              HomeOverviewRow(snapshot: snapshot),
+            ],
+          ),
+        ),
+        // The empty prompt stretches to the bottom so no blank band is left.
+        SliverPadding(
+          padding: _side.copyWith(bottom: AppSizes.fabClearance),
+          sliver: snapshot.hasInvoices
+              ? SliverToBoxAdapter(child: _Recent(snapshot: snapshot))
+              : const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: HomeEmptyCard(),
+                ),
+        ),
+      ],
+    );
+  }
+}
+
+class _HomeHeader extends ConsumerWidget {
+  const _HomeHeader({required this.snapshot});
 
   final HomeSnapshot snapshot;
 
@@ -52,68 +95,47 @@ class _HomeBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final profile = ref.watch(currentBusinessProfileProvider).asData?.value;
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.pagePadding,
-        AppSpacing.sm,
-        AppSpacing.pagePadding,
-        AppSizes.fabClearance,
-      ),
+    return Row(
       children: [
-        Row(
-          children: [
-            IconButton(
-              tooltip: l10n.menuOpen,
-              onPressed: AppMenuHost.maybeOf(context),
-              icon: Icon(AppIcons.menu, color: context.appColors.textPrimary),
+        IconButton(
+          tooltip: l10n.menuOpen,
+          onPressed: AppMenuHost.maybeOf(context),
+          icon: Icon(AppIcons.menu, color: context.appColors.textPrimary),
+        ),
+        Expanded(
+          child: Text(
+            l10n.navHome,
+            style: context.textStyles.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w700,
             ),
-            Expanded(
-              child: Text(
-                l10n.navHome,
-                style: context.textStyles.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            Tooltip(
-              message: l10n.homeEditProfile,
-              child: Material(
-                color: context.appColors.surface.withValues(alpha: 0),
-                shape: const CircleBorder(),
-                clipBehavior: Clip.antiAlias,
-                child: InkWell(
-                  key: const Key('home_profile_avatar_button'),
-                  onTap: () => context.pushNamed(RouteNames.businessProfile),
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: context.appColors.primary.withValues(
-                          alpha: 0.35,
-                        ),
-                        width: 1.5,
-                      ),
-                    ),
-                    child: _HomeAvatar(
-                      name: snapshot.businessName,
-                      logoPath: profile?.logoPath,
-                    ),
+          ),
+        ),
+        Tooltip(
+          message: l10n.homeEditProfile,
+          child: Material(
+            color: context.appColors.surface.withValues(alpha: 0),
+            shape: const CircleBorder(),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              key: const Key('home_profile_avatar_button'),
+              onTap: () => context.pushNamed(RouteNames.businessProfile),
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: context.appColors.primary.withValues(alpha: 0.35),
+                    width: 1.5,
                   ),
                 ),
+                child: _HomeAvatar(
+                  name: snapshot.businessName,
+                  logoPath: profile?.logoPath,
+                ),
               ),
             ),
-          ],
+          ),
         ),
-        const SizedBox(height: AppSpacing.md),
-        HomeHeroCard(snapshot: snapshot),
-        const SizedBox(height: AppSpacing.lg),
-        HomeOverviewRow(snapshot: snapshot),
-        const SizedBox(height: AppSpacing.lg),
-        if (snapshot.hasInvoices)
-          _Recent(snapshot: snapshot)
-        else
-          const HomeEmptyCard(),
       ],
     );
   }

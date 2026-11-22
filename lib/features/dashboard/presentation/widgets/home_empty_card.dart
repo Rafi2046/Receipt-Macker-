@@ -10,7 +10,8 @@ import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/feedback/empty_illustration.dart';
 import '../../../../core/widgets/layout/app_card.dart';
 
-/// Compact empty invoices prompt for Home (less vertical waste than EmptyState).
+/// Empty invoices prompt for Home. Content stays centred when the card is
+/// stretched to fill the remaining height.
 class HomeEmptyCard extends StatelessWidget {
   const HomeEmptyCard({super.key});
 
@@ -20,6 +21,7 @@ class HomeEmptyCard extends StatelessWidget {
     final colors = context.appColors;
     return AppCard(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const EmptyIllustration(icon: AppIcons.invoice),
           const SizedBox(height: AppSpacing.sm),
