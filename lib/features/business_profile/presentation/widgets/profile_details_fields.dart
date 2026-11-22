@@ -6,6 +6,7 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/utils/extensions/validation_message_extension.dart';
 import '../../../../core/widgets/inputs/app_text_field.dart';
+import '../../../../core/widgets/inputs/field_block.dart';
 import '../../../../core/widgets/layout/section_header.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../domain/logic/profile_field_access.dart';
@@ -22,6 +23,7 @@ class ProfileDetailsFields extends ConsumerWidget {
     this.fields,
     this.showIcons = true,
     this.optionalHint = false,
+    this.labelsAbove = false,
     super.key,
   });
 
@@ -34,6 +36,10 @@ class ProfileDetailsFields extends ConsumerWidget {
 
   /// Use the shared "Optional" hint for empty optional fields.
   final bool optionalHint;
+
+  /// Each label sits above its field (with a star on the name). Wrap the
+  /// form in a boxed `SoftInputTheme`.
+  final bool labelsAbove;
 
   static const List<ProfileField> _basic = [
     ProfileField.name,
@@ -59,13 +65,14 @@ class ProfileDetailsFields extends ConsumerWidget {
       field: f,
       showIcon: showIcons,
       optionalHint: optionalHint,
+      labelAbove: labelsAbove,
       onChanged: vm.updateField,
     );
     final custom = fields;
     if (custom != null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: AppSpacing.md,
+        spacing: labelsAbove ? AppSpacing.lg : AppSpacing.md,
         children: custom.map(field).toList(),
       );
     }
@@ -92,6 +99,7 @@ class _ProfileTextField extends StatelessWidget {
     required this.onChanged,
     required this.showIcon,
     required this.optionalHint,
+    required this.labelAbove,
   });
 
   final ProfileFormState form;
@@ -99,6 +107,7 @@ class _ProfileTextField extends StatelessWidget {
   final void Function(ProfileField field, String value) onChanged;
   final bool showIcon;
   final bool optionalHint;
+  final bool labelAbove;
 
   static const int _multiLines = 3;
 
@@ -116,9 +125,9 @@ class _ProfileTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final (label, hint) = _labels(l10n);
-    return AppTextField(
+    final input = AppTextField(
       key: ValueKey(field),
-      label: label,
+      label: labelAbove ? '' : label,
       hint: hint,
       initialValue: form.draft.valueOf(field),
       errorText: l10n.validationMessage(form.errorFor(field)),
@@ -131,6 +140,8 @@ class _ProfileTextField extends StatelessWidget {
           : TextInputAction.next,
       onChanged: (v) => onChanged(field, v),
     );
+    if (!labelAbove) return input;
+    return FieldBlock(label: label, required: _required, child: input);
   }
 
   (String, String?) _labels(AppLocalizations l10n) {
