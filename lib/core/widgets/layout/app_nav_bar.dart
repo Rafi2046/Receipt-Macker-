@@ -7,9 +7,11 @@ import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 import 'nav_bar_create_button.dart';
 import 'nav_bar_tab.dart';
+import 'notched_dock_painter.dart';
 
-/// Floating dock: two tabs, the create button in the middle, two tabs.
-/// Every tab shows its icon and label; the selected one is brand-tinted.
+/// Floating pill dock with a notch in the middle: two tabs, the create
+/// button floating in the notch, two tabs. The selected tab gets a colored
+/// circle that animates in.
 class AppNavBar extends StatelessWidget {
   const AppNavBar({
     required this.index,
@@ -33,8 +35,12 @@ class AppNavBar extends StatelessWidget {
     AppIcons.settings,
   ];
 
+  /// The notch leaves a small ring of space around the create button.
+  static const double _notchRadius = AppSizes.navCreateSize / 2 + AppSpacing.sm;
+
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     Widget tab(int i) => Expanded(
       child: NavBarTab(
         icon: _icons[i],
@@ -48,63 +54,53 @@ class AppNavBar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.pagePadding,
-          AppSpacing.xs,
+          0,
           AppSpacing.pagePadding,
           AppSpacing.md,
         ),
-        child: MediaQuery.withClampedTextScaling(
-          maxScaleFactor: 1.3,
-          child: _Dock(
-            child: Row(
-              children: [
-                tab(0),
-                tab(1),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm,
+        child: SizedBox(
+          height: AppSizes.navDockHeight + AppSizes.navCreateSize / 2,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned.fill(
+                top: AppSizes.navCreateSize / 2,
+                child: CustomPaint(
+                  painter: NotchedDockPainter(
+                    color: colors.surface,
+                    borderColor: colors.border,
+                    shadowColor: colors.textPrimary.withValues(
+                      alpha: AppOpacity.shadow * 3,
+                    ),
+                    notchRadius: _notchRadius,
                   ),
-                  child: NavBarCreateButton(
-                    tooltip: createLabel,
-                    onPressed: onCreate,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                    ),
+                    child: Row(
+                      children: [
+                        tab(0),
+                        tab(1),
+                        const SizedBox(width: _notchRadius * 2),
+                        tab(2),
+                        tab(3),
+                      ],
+                    ),
                   ),
                 ),
-                tab(2),
-                tab(3),
-              ],
-            ),
+              ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: NavBarCreateButton(
+                  tooltip: createLabel,
+                  onPressed: onCreate,
+                ),
+              ),
+            ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class _Dock extends StatelessWidget {
-  const _Dock({required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Container(
-      height: AppSizes.navDockHeight,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: const BorderRadius.all(Radius.circular(AppSpacing.xxl)),
-        border: Border.all(color: colors.border),
-        boxShadow: [
-          BoxShadow(
-            color: colors.textPrimary.withValues(
-              alpha: AppOpacity.shadow * 1.5,
-            ),
-            blurRadius: AppSpacing.xxl,
-            offset: const Offset(0, AppSpacing.sm),
-          ),
-        ],
-      ),
-      child: child,
     );
   }
 }

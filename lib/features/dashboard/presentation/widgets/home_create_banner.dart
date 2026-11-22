@@ -77,7 +77,7 @@ class HomeCreateBanner extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           const Icon(
-                            Icons.chevron_right,
+                            AppIcons.chevronRight,
                             size: 16,
                             color: Colors.white,
                           ),

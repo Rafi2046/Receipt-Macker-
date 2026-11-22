@@ -25,10 +25,13 @@ void main() {
     ),
   );
 
-  testWidgets('every tab shows its label', (tester) async {
+  testWidgets('every tab is named for screen readers and tooltips', (
+    tester,
+  ) async {
     await tester.pumpApp(bar(index: 1));
     for (final label in labels) {
-      expect(find.text(label), findsOneWidget);
+      expect(find.byTooltip(label), findsOneWidget);
+      expect(find.bySemanticsLabel(label), findsOneWidget);
     }
     expect(find.byType(NavBarTab), findsNWidgets(4));
   });
@@ -38,8 +41,11 @@ void main() {
   ) async {
     await tester.pumpApp(bar(), surface: const Size(411, 800));
     final create = tester.getCenter(find.byType(NavBarCreateButton)).dx;
-    expect(tester.getCenter(find.text('Invoices')).dx, lessThan(create));
-    expect(tester.getCenter(find.text('Estimates')).dx, greaterThan(create));
+    expect(tester.getCenter(find.byTooltip('Invoices')).dx, lessThan(create));
+    expect(
+      tester.getCenter(find.byTooltip('Estimates')).dx,
+      greaterThan(create),
+    );
     expect(create, closeTo(411 / 2, 4));
   });
 

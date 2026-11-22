@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/services/pdf/pdf_template.dart';
 import '../../../../core/services/url_launch_service.dart';
@@ -214,7 +215,8 @@ class _TestimonialCard extends StatelessWidget {
           Row(
             children: List.generate(
               5,
-              (_) => const Icon(Icons.star, size: 16, color: Color(0xFFF59E0B)),
+              (_) =>
+                  const Icon(AppIcons.star, size: 16, color: Color(0xFFF59E0B)),
             ),
           ),
           const SizedBox(height: AppSpacing.xs),

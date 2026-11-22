@@ -5,8 +5,8 @@ import '../../constants/app_durations.dart';
 import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 
-/// One destination in [AppNavBar]: a line icon over a short label. The
-/// selected tab is tinted with the brand color and shows a small dot.
+/// One destination in [AppNavBar]: a line icon. The selected tab sits in a
+/// brand-colored circle that grows in with a soft bounce.
 class NavBarTab extends StatelessWidget {
   const NavBarTab({
     required this.icon,
@@ -24,37 +24,51 @@ class NavBarTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final tint = selected ? colors.primary : colors.textSecondary;
     return Semantics(
       selected: selected,
       button: true,
       label: label,
       excludeSemantics: true,
-      child: InkResponse(
-        onTap: onTap,
-        radius: AppSizes.minTapTarget * 0.75,
-        child: SizedBox(
-          height: AppSizes.navDockHeight,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: AppSpacing.xxs,
-            children: [
-              AnimatedScale(
-                scale: selected ? 1.08 : 1,
+      child: Tooltip(
+        message: label,
+        child: InkResponse(
+          onTap: onTap,
+          radius: AppSizes.minTapTarget * 0.6,
+          child: SizedBox(
+            height: AppSizes.navDockHeight,
+            child: Center(
+              child: AnimatedScale(
+                scale: selected ? 1 : 0.9,
                 duration: AppDurations.medium,
-                child: Icon(icon, size: AppSizes.navIconSize, color: tint),
-              ),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: context.textStyles.labelSmall?.copyWith(
-                  color: tint,
-                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                curve: Curves.easeOutBack,
+                child: AnimatedContainer(
+                  duration: AppDurations.medium,
+                  curve: Curves.easeOutCubic,
+                  width: AppSizes.navSelectedSize,
+                  height: AppSizes.navSelectedSize,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: selected
+                        ? colors.primary
+                        : colors.primary.withValues(alpha: 0),
+                    boxShadow: selected
+                        ? [
+                            BoxShadow(
+                              color: colors.primary.withValues(alpha: 0.35),
+                              blurRadius: AppSpacing.md,
+                              offset: const Offset(0, AppSpacing.xs),
+                            ),
+                          ]
+                        : const [],
+                  ),
+                  child: Icon(
+                    icon,
+                    size: AppSizes.navIconSize,
+                    color: selected ? colors.onPrimary : colors.textSecondary,
+                  ),
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),

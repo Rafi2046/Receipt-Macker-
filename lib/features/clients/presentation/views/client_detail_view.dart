@@ -259,7 +259,7 @@ class _ProfileCard extends StatelessWidget {
               const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: AppButton(
-                  icon: Icons.chat_outlined,
+                  icon: AppIcons.chat,
                   label: l10n.clientActionWhatsApp,
                   variant: AppButtonVariant.secondary,
                   onPressed: onWhatsApp,
@@ -274,7 +274,7 @@ class _ProfileCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.xs),
             ],
             if (address.isNotEmpty) ...[
-              _InfoRow(icon: Icons.location_on_outlined, text: address),
+              _InfoRow(icon: AppIcons.address, text: address),
               const SizedBox(height: AppSpacing.xs),
             ],
             if (notes.isNotEmpty) ...[

@@ -224,7 +224,7 @@ class _TemplateStudioSheetState extends State<TemplateStudioSheet> {
                                 ),
                                 child: isSelected
                                     ? const Icon(
-                                        Icons.check,
+                                        AppIcons.check,
                                         size: 18,
                                         color: Colors.white,
                                       )
@@ -472,16 +472,16 @@ class _TemplateCard extends StatelessWidget {
                   color: colors.primary,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.check, size: 14, color: Colors.white),
+                child: const Icon(
+                  AppIcons.check,
+                  size: 14,
+                  color: Colors.white,
+                ),
               )
             else if (isLocked)
               Icon(AppIcons.lock, size: 18, color: colors.textSecondary)
             else
-              Icon(
-                Icons.radio_button_unchecked,
-                size: 18,
-                color: colors.border,
-              ),
+              Icon(AppIcons.unchecked, size: 18, color: colors.border),
           ],
         ),
       ),

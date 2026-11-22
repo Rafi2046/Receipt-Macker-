@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/services/purchases/pro_plan.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
@@ -53,7 +54,7 @@ class ProPlanCard extends StatelessWidget {
           if (yearly) ...[
             Row(
               children: [
-                Icon(Icons.star, size: 16, color: colors.primary),
+                Icon(AppIcons.star, size: 16, color: colors.primary),
                 const SizedBox(width: 4),
                 Text(
                   l10n.proBestValue,

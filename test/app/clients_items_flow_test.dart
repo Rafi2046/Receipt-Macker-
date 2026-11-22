@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:receipt_maker/core/widgets/layout/nav_bar_tab.dart';
 import 'package:receipt_maker/features/business_profile/data/mappers/business_profile_mapper.dart';
 import 'package:receipt_maker/features/business_profile/domain/models/business_profile.dart';
 
@@ -51,7 +50,7 @@ void main() {
     required String settings,
     required String row,
   }) async {
-    await tap(tester, find.widgetWithText(NavBarTab, settings));
+    await tap(tester, find.byTooltip(settings));
     final target = find.text(row);
     await tester.scrollUntilVisible(
       target,

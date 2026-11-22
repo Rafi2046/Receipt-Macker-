@@ -83,7 +83,7 @@ class PdfOptionsBar extends StatelessWidget {
                     visualDensity: VisualDensity.compact,
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                   ),
-                  icon: const Icon(Icons.palette_outlined, size: 16),
+                  icon: const Icon(AppIcons.palette, size: 16),
                   label: Text(l10n.templateStudioAction),
                   onPressed: enabled ? onOpenStudio : null,
                 ),
