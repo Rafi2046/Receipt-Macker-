@@ -2,6 +2,9 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 
+import '../../domain/models/backup_validation_exception.dart';
+import 'backup_archive_service.dart';
+
 /// Wraps [FilePicker] to pick backup .zip archives.
 class BackupFilePickerService {
   const BackupFilePickerService();
@@ -12,7 +15,14 @@ class BackupFilePickerService {
       allowedExtensions: ['zip'],
     );
     if (result.isEmpty) return null;
-    final file = result.first;
-    return file.xFile.readAsBytes();
+    final file = result.first.xFile;
+    // Refuse a huge file before reading it into memory.
+    if (await file.length() > BackupArchiveService.maxZipBytes) {
+      throw const BackupValidationException(
+        'Backup file is too large',
+        problem: BackupProblem.tooLarge,
+      );
+    }
+    return file.readAsBytes();
   }
 }

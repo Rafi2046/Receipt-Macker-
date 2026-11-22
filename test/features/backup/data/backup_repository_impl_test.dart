@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:archive/archive.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -9,7 +10,9 @@ import 'package:receipt_maker/core/database/app_database.dart';
 import 'package:receipt_maker/core/services/share_service.dart';
 import 'package:receipt_maker/core/utils/calendar_date.dart';
 import 'package:receipt_maker/features/backup/data/repositories/backup_repository_impl.dart';
+import 'package:receipt_maker/features/backup/data/services/backup_archive_service.dart';
 import 'package:receipt_maker/features/backup/data/services/backup_file_picker_service.dart';
+import 'package:receipt_maker/features/backup/domain/models/backup_validation_exception.dart';
 
 import '../../../helpers/fake_app_preferences.dart';
 
@@ -192,6 +195,64 @@ void main() {
     expect(await logoFile.readAsBytes(), [99, 88, 77]);
 
     await restoredDb.close();
+  });
+
+  test('a crafted entry cannot write outside the images folder', () async {
+    final zipBytes = await (await repository.createBackup()).readAsBytes();
+    final archive = ZipDecoder().decodeBytes(zipBytes)
+      ..addFile(ArchiveFile('images/../escaped.txt', 3, [1, 2, 3]))
+      ..addFile(ArchiveFile('images/nested/deep.png', 3, [1, 2, 3]));
+    final crafted = Uint8List.fromList(ZipEncoder().encode(archive));
+
+    await repository.restoreBackup(crafted);
+
+    expect(File('${tempDocDir.path}/escaped.txt').existsSync(), isFalse);
+    expect(
+      File('${tempDocDir.path}/images/nested/deep.png').existsSync(),
+      isFalse,
+    );
+    expect(BackupArchiveService.isSafeMediaName('images/logo_1.png'), isTrue);
+    expect(BackupArchiveService.isSafeMediaName('images/../x'), isFalse);
+    expect(BackupArchiveService.isSafeMediaName(r'images\x.png'), isFalse);
+  });
+
+  test('a file that is not a QuickBill database is refused and the live '
+      'data is untouched', () async {
+    final now = DateTime.utc(2026, 10, 2);
+    await db
+        .into(db.clientsTable)
+        .insert(
+          ClientsTableCompanion.insert(
+            id: 'keep',
+            name: 'Keep Me',
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
+    final good = await (await repository.createBackup()).readAsBytes();
+    final archive = ZipDecoder().decodeBytes(good);
+    final manifest = archive.findFile('manifest.json')!.content as List<int>;
+    // A real SQLite header with schema version 1, then garbage.
+    final fake = Uint8List(4096)
+      ..setAll(0, 'SQLite format 3'.codeUnits)
+      ..[63] = 1;
+    final bad = Archive()
+      ..addFile(ArchiveFile('manifest.json', manifest.length, manifest))
+      ..addFile(ArchiveFile('app.sqlite', fake.length, fake));
+
+    await expectLater(
+      repository.restoreBackup(Uint8List.fromList(ZipEncoder().encode(bad))),
+      throwsA(isA<BackupValidationException>()),
+    );
+
+    // The live database was never closed or replaced.
+    final clients = await db.select(db.clientsTable).get();
+    expect(clients.single.name, 'Keep Me');
+    final leftovers = tempDocDir
+        .listSync()
+        .map((e) => e.path)
+        .where((p) => p.contains('.restore') || p.contains('.bak'));
+    expect(leftovers, isEmpty);
   });
 
   test('shareBackup delegates to ShareService', () async {

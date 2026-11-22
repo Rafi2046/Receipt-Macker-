@@ -967,5 +967,9 @@
   "proBenefitColors": "প্রতিটি ইনভয়েস আপনার ব্র্যান্ডের সাথে মিলিয়ে নিন।",
   "proBenefitNoAds": "শুরু থেকে শেষ পর্যন্ত পরিষ্কার অ্যাপ।",
   "proBenefitNoFooter": "আপনার PDF-এ শুধু আপনার নামই থাকবে।",
-  "proBenefitUnlimited": "ব্যবসার যত দরকার, তত সংরক্ষণ করুন।"
+  "proBenefitUnlimited": "ব্যবসার যত দরকার, তত সংরক্ষণ করুন।",
+  "backupErrorInvalid": "এই ফাইলটি QuickBill ব্যাকআপ নয়, অথবা এটি নষ্ট। আপনার তথ্য বদলানো হয়নি।",
+  "backupErrorNewer": "এই ব্যাকআপটি নতুন QuickBill দিয়ে তৈরি। অ্যাপ আপডেট করে তারপর রিস্টোর করুন।",
+  "backupErrorTooLarge": "এই ফাইলটি QuickBill ব্যাকআপ হওয়ার পক্ষে অনেক বড়।",
+  "backupErrorFailed": "কাজটি হয়নি। আপনার তথ্য বদলানো হয়নি। আবার চেষ্টা করুন।"
 }

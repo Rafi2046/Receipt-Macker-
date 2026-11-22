@@ -74,7 +74,7 @@ void main() {
 
     final state = container.read(backupViewModelProvider);
     expect(state.isCreatingBackup, isFalse);
-    expect(state.errorMessage, contains('Write error'));
+    expect(state.errorMessage, BackupViewModel.errorFailed);
   });
 
   test(
@@ -111,7 +111,7 @@ void main() {
       final state = container.read(backupViewModelProvider);
       expect(state.pendingRestoreManifest, isNull);
       expect(state.pendingRestoreBytes, isNull);
-      expect(state.errorMessage, 'Invalid header');
+      expect(state.errorMessage, BackupViewModel.errorInvalid);
     },
   );
 

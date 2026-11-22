@@ -12,6 +12,7 @@ import '../../domain/models/backup_manifest.dart';
 import '../../domain/repositories/backup_repository.dart';
 import '../services/backup_archive_service.dart';
 import '../services/backup_file_picker_service.dart';
+import '../services/backup_restorer.dart';
 
 class BackupRepositoryImpl implements BackupRepository {
   BackupRepositoryImpl({
@@ -20,6 +21,7 @@ class BackupRepositoryImpl implements BackupRepository {
     required this.shareService,
     this.archiveService = const BackupArchiveService(),
     this.pickerService = const BackupFilePickerService(),
+    this.restorer = const BackupRestorer(),
     Future<Directory> Function()? documentsDirectory,
     Future<Directory> Function()? temporaryDirectory,
   }) : _documentsDirectory =
@@ -31,6 +33,7 @@ class BackupRepositoryImpl implements BackupRepository {
   final ShareService shareService;
   final BackupArchiveService archiveService;
   final BackupFilePickerService pickerService;
+  final BackupRestorer restorer;
   final Future<Directory> Function() _documentsDirectory;
   final Future<Directory> Function() _temporaryDirectory;
 
@@ -132,41 +135,22 @@ class BackupRepositoryImpl implements BackupRepository {
 
   @override
   Future<void> restoreBackup(Uint8List zipBytes) async {
-    // 1. Validate before touching live data.
+    // Validate before touching live data; the restorer then checks the
+    // database itself and swaps the files atomically.
     final result = archiveService.readAndValidateZip(
       zipBytes,
       currentSchemaVersion: db.schemaVersion,
     );
-
-    // 2. Close active database.
-    await db.close();
-
-    // 3. Replace live SQLite file and clean stale WAL / SHM files.
     final docDir = await _documentsDirectory();
-    final dbFile = File(
-      '${docDir.path}${Platform.pathSeparator}${AppConstants.databaseFileName}',
+    final sep = Platform.pathSeparator;
+    await restorer.restore(
+      liveDb: File('${docDir.path}$sep${AppConstants.databaseFileName}'),
+      liveImages: Directory('${docDir.path}$sep${ImageStorageService.folder}'),
+      dbBytes: result.dbBytes,
+      mediaFiles: result.mediaFiles,
+      schemaVersion: db.schemaVersion,
+      closeLive: db.close,
     );
-    final walFile = File('${dbFile.path}-wal');
-    final shmFile = File('${dbFile.path}-shm');
-
-    if (await walFile.exists()) await walFile.delete();
-    if (await shmFile.exists()) await shmFile.delete();
-    await dbFile.writeAsBytes(result.dbBytes, flush: true);
-
-    // 4. Overwrite images directory.
-    final imagesDir = Directory(
-      '${docDir.path}${Platform.pathSeparator}${ImageStorageService.folder}',
-    );
-    if (await imagesDir.exists()) {
-      await imagesDir.delete(recursive: true);
-    }
-    for (final entry in result.mediaFiles.entries) {
-      final file = File(
-        '${docDir.path}${Platform.pathSeparator}${entry.key.replaceAll('/', Platform.pathSeparator)}',
-      );
-      await file.parent.create(recursive: true);
-      await file.writeAsBytes(entry.value, flush: true);
-    }
   }
 
   @override

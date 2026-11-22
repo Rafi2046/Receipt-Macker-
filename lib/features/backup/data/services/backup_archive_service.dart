@@ -29,6 +29,20 @@ class BackupArchiveService {
     0x00,
   ];
 
+  /// Limits on what a backup may be: far above a real one, low enough to
+  /// stop a huge file or a zip bomb from exhausting memory.
+  static const int maxZipBytes = 200 * 1024 * 1024;
+  static const int maxEntries = 2000;
+  static const int maxEntryBytes = 100 * 1024 * 1024;
+
+  /// A stored image: `images/<name>` with no folders and no `..`.
+  static final RegExp _mediaName = RegExp(
+    r'^images/[A-Za-z0-9_-][A-Za-z0-9._-]*$',
+  );
+
+  /// Offset of the 4-byte big-endian `user_version` in a SQLite header.
+  static const int _userVersionOffset = 60;
+
   static const String manifestFileName = 'manifest.json';
   static const String dbFileName = 'app.sqlite';
 
@@ -66,6 +80,12 @@ class BackupArchiveService {
     Map<String, Uint8List> mediaFiles,
   })
   readAndValidateZip(Uint8List zipBytes, {required int currentSchemaVersion}) {
+    if (zipBytes.length > maxZipBytes) {
+      throw const BackupValidationException(
+        'Backup file is too large',
+        problem: BackupProblem.tooLarge,
+      );
+    }
     Archive archive;
     try {
       archive = ZipDecoder().decodeBytes(zipBytes);
@@ -73,6 +93,14 @@ class BackupArchiveService {
       throw BackupValidationException(
         'Invalid or corrupted zip archive',
         details: e.toString(),
+      );
+    }
+
+    if (archive.files.length > maxEntries ||
+        archive.files.any((f) => f.size > maxEntryBytes)) {
+      throw const BackupValidationException(
+        'Backup has too many or too large entries',
+        problem: BackupProblem.tooLarge,
       );
     }
 
@@ -99,6 +127,7 @@ class BackupArchiveService {
     if (manifest.schemaVersion > currentSchemaVersion) {
       throw BackupValidationException(
         'Backup from newer version (schema v${manifest.schemaVersion}) cannot be restored in this app (v$currentSchemaVersion). Please update QuickBill.',
+        problem: BackupProblem.newerVersion,
       );
     }
     if (manifest.schemaVersion < 1) {
@@ -128,16 +157,31 @@ class BackupArchiveService {
       );
     }
 
-    // 4. Extract media files
+    // 4. Extract media files. Only plain `images/<file>` names are taken,
+    // so an entry like `images/../x` cannot write outside the folder.
     final mediaFiles = <String, Uint8List>{};
     for (final file in archive.files) {
-      if (file.name == manifestFileName || file.name == dbFileName) continue;
-      if (file.name.startsWith('images/') || file.name.startsWith('images\\')) {
-        mediaFiles[file.name] = Uint8List.fromList(file.content as List<int>);
-      }
+      if (!file.isFile || !isSafeMediaName(file.name)) continue;
+      mediaFiles[file.name] = Uint8List.fromList(file.content as List<int>);
     }
 
     return (manifest: manifest, dbBytes: dbBytes, mediaFiles: mediaFiles);
+  }
+
+  /// True for `images/<file>`: no sub-folders, `..`, backslashes or
+  /// absolute paths.
+  static bool isSafeMediaName(String name) =>
+      _mediaName.hasMatch(name) && !name.contains('..');
+
+  /// The schema version stored inside the SQLite file itself, or null when
+  /// the file is too short to hold a header.
+  static int? userVersionOf(Uint8List dbBytes) {
+    if (dbBytes.length < _userVersionOffset + 4) return null;
+    return ByteData.sublistView(
+      dbBytes,
+      _userVersionOffset,
+      _userVersionOffset + 4,
+    ).getUint32(0);
   }
 
   bool _matchesSqliteHeader(Uint8List bytes) {

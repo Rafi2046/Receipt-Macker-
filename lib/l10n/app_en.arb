@@ -1142,5 +1142,9 @@
   "proBenefitColors": "Match every invoice to your brand.",
   "proBenefitNoAds": "A clean app from start to finish.",
   "proBenefitNoFooter": "Your PDFs carry only your name.",
-  "proBenefitUnlimited": "Save as many as your business needs."
+  "proBenefitUnlimited": "Save as many as your business needs.",
+  "backupErrorInvalid": "This file is not a QuickBill backup, or it is damaged. Your data was not changed.",
+  "backupErrorNewer": "This backup was made by a newer QuickBill. Update the app, then restore it.",
+  "backupErrorTooLarge": "This file is too large to be a QuickBill backup.",
+  "backupErrorFailed": "That did not work. Your data was not changed. Please try again."
 }
