@@ -1,8 +1,7 @@
-import '../../constants/app_constants.dart';
-
 import 'package:drift/drift.dart';
 
 import '../../../features/invoices/domain/logic/invoice_number_generator.dart';
+import '../../constants/app_constants.dart';
 import '../app_database.dart';
 import '../search_pattern.dart';
 import '../tables/quote_lines_table.dart';
