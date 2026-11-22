@@ -22,9 +22,8 @@ import '../widgets/home_empty_card.dart';
 import '../widgets/home_hero_card.dart';
 import '../widgets/home_invoice_row.dart';
 import '../widgets/home_overview_row.dart';
-import '../widgets/home_templates_carousel.dart';
 
-/// Home tab: outstanding hero, overview stats, recent or empty, templates.
+/// Home tab: outstanding hero, overview stats, then recent or empty.
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});
 
@@ -115,8 +114,6 @@ class _HomeBody extends ConsumerWidget {
           _Recent(snapshot: snapshot)
         else
           const HomeEmptyCard(),
-        const SizedBox(height: AppSpacing.lg),
-        const HomeTemplatesCarousel(),
       ],
     );
   }
