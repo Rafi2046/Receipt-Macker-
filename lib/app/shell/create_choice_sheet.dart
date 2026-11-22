@@ -14,6 +14,7 @@ abstract final class CreateChoiceSheet {
   static Future<void> show(BuildContext context) async {
     final route = await showModalBottomSheet<String>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       useSafeArea: true,
       showDragHandle: true,

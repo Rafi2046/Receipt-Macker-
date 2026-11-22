@@ -27,6 +27,7 @@ class QuoteLineSheet extends StatefulWidget {
   }) {
     return showModalBottomSheet<LineItem>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       useSafeArea: true,
       builder: (_) => QuoteLineSheet(line: line, currencyCode: currencyCode),

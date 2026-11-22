@@ -25,6 +25,7 @@ abstract final class CustomColorSheet {
   }) {
     return showModalBottomSheet<String>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       useSafeArea: true,
       showDragHandle: true,

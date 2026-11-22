@@ -18,6 +18,7 @@ abstract final class ProColorGateSheet {
   }) async {
     final result = await showModalBottomSheet<_Outcome>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       useSafeArea: true,
       showDragHandle: true,

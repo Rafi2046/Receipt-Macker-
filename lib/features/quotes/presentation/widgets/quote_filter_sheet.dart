@@ -27,6 +27,7 @@ class QuoteFilterSheet extends StatefulWidget {
   }) {
     return showModalBottomSheet<QuoteAdvancedFilters>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       useSafeArea: true,
       shape: const RoundedRectangleBorder(

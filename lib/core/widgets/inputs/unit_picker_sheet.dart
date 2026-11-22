@@ -25,6 +25,7 @@ Future<String?> showUnitPicker(
   };
   final picked = await showModalBottomSheet<_UnitPick>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     useSafeArea: true,
     showDragHandle: true,

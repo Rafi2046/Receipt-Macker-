@@ -24,6 +24,7 @@ class QuoteHeaderCard extends StatelessWidget {
   Future<void> _openDetails(BuildContext context) async {
     await showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       useSafeArea: true,
       builder: (_) => _QuoteDetailsSheet(draft: draft, vm: vm),

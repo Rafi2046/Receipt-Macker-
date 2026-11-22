@@ -33,6 +33,7 @@ class PaymentSheet extends ConsumerWidget {
   }) async {
     final saved = await showModalBottomSheet<bool>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       builder: (_) => PaymentSheet(invoiceId: invoiceId, paymentId: paymentId),
     );

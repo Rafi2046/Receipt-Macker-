@@ -20,6 +20,7 @@ abstract final class ChoiceSheet {
   }) {
     return showModalBottomSheet<T>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       useSafeArea: true,
       showDragHandle: true,

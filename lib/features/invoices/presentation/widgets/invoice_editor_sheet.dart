@@ -36,6 +36,7 @@ class InvoiceEditorSheet extends ConsumerWidget {
     required InvoiceSheetBuilder builder,
   }) => showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     useSafeArea: true,
     showDragHandle: true,

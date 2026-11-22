@@ -20,6 +20,7 @@ class SignaturePadSheet extends StatefulWidget {
   static Future<Uint8List?> show(BuildContext context) =>
       showModalBottomSheet<Uint8List>(
         context: context,
+        useRootNavigator: true,
         isScrollControlled: true,
         useSafeArea: true,
         builder: (_) => const SignaturePadSheet(),

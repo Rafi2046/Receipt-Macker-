@@ -15,6 +15,7 @@ abstract final class TaxRateSheet {
   }) {
     return showModalBottomSheet<TaxRatePick>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       useSafeArea: true,
       showDragHandle: true,

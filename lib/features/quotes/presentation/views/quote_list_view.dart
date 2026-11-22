@@ -5,21 +5,18 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_icons.dart';
-import '../../../../core/constants/app_radius.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
-import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/inputs/filter_pill.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../core/widgets/layout/searchable_list.dart';
-import '../../domain/logic/quote_status_resolver.dart';
 import '../../domain/models/quote_list_filter.dart';
-import '../../domain/models/quote_status.dart';
-import '../../domain/models/quote_summary.dart';
 import '../view_models/quote_list_view_model.dart';
 import '../widgets/quote_filter_sheet.dart';
+import '../widgets/quote_list_tile.dart';
 
 class QuoteListView extends ConsumerWidget {
   const QuoteListView({super.key});
@@ -68,7 +65,7 @@ class QuoteListView extends ConsumerWidget {
                   for (final filter in QuoteListFilter.values) ...[
                     if (filter != QuoteListFilter.values.first)
                       const SizedBox(width: AppSpacing.xs),
-                    _StatusChip(
+                    FilterPill(
                       label: switch (filter) {
                         QuoteListFilter.all => l10n.filterAll,
                         QuoteListFilter.pending => l10n.quoteStatusPending,
@@ -93,8 +90,9 @@ class QuoteListView extends ConsumerWidget {
             actionLabel: l10n.quotesEmptyAction,
             onAction: () => context.pushNamed(RouteNames.quoteNew),
           ),
+          cards: true,
           itemCount: state.quotes.length,
-          itemBuilder: (context, index) => _QuoteTile(
+          itemBuilder: (context, index) => QuoteListTile(
             summary: state.quotes[index],
             onTap: () => context.pushNamed(
               RouteNames.quoteEdit,
@@ -135,93 +133,6 @@ class _FilterIconButton extends StatelessWidget {
             AppIcons.filter,
             color: active ? colors.primary : colors.textSecondary,
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  const _StatusChip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return FilterChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onTap(),
-      selectedColor: colors.primary.withValues(alpha: 0.15),
-      checkmarkColor: colors.primary,
-      labelStyle: context.textStyles.labelLarge?.copyWith(
-        color: selected ? colors.primary : colors.textSecondary,
-        fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-      ),
-      side: BorderSide(color: selected ? colors.primary : colors.border),
-      backgroundColor: colors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: AppRadius.chip),
-    );
-  }
-}
-
-class _QuoteTile extends StatelessWidget {
-  const _QuoteTile({required this.summary, required this.onTap});
-
-  final QuoteSummary summary;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final colors = context.appColors;
-    final format = AppFormatters(Localizations.localeOf(context).languageCode);
-    final overdue = QuoteStatusResolver.isOverdue(
-      summary.status,
-      summary.validUntil,
-    );
-    final statusLabel = overdue
-        ? l10n.filterOverdue
-        : switch (summary.status) {
-            QuoteStatus.pending => l10n.quoteStatusPending,
-            QuoteStatus.approved => l10n.quoteStatusApproved,
-            QuoteStatus.rejected => l10n.quoteStatusCancelled,
-          };
-    final statusColor = overdue
-        ? colors.danger
-        : switch (summary.status) {
-            QuoteStatus.pending => colors.warning,
-            QuoteStatus.approved => colors.success,
-            QuoteStatus.rejected => colors.neutral,
-          };
-
-    return ListTile(
-      onTap: onTap,
-      title: Text(
-        summary.clientName ?? l10n.noClient,
-        style: context.textStyles.titleSmall?.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      subtitle: Text(
-        '${summary.number} · $statusLabel',
-        style: context.textStyles.bodySmall?.copyWith(
-          color: colors.textSecondary,
-        ),
-      ),
-      trailing: Text(
-        format.currency(summary.totalMinor, summary.currencyCode),
-        style: context.textStyles.titleSmall?.copyWith(
-          color: statusColor,
-          fontWeight: FontWeight.w700,
-          fontFeatures: const [FontFeature.tabularFigures()],
         ),
       ),
     );

@@ -18,6 +18,7 @@ Future<String?> showCurrencyPicker({
 }) {
   return showModalBottomSheet<String>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     useSafeArea: true,
     backgroundColor: context.appColors.surface,

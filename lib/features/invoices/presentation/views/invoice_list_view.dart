@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
-import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
 import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/inputs/filter_pill.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../core/widgets/layout/searchable_list.dart';
 import '../../domain/models/invoice_status.dart';
@@ -82,25 +82,25 @@ class _InvoiceListState extends ConsumerState<_InvoiceList> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              _FilterChip(
+              FilterPill(
                 label: l10n.filterAll,
                 selected: _filter == _InvoiceFilter.all,
                 onTap: () => setState(() => _filter = _InvoiceFilter.all),
               ),
               const SizedBox(width: AppSpacing.xs),
-              _FilterChip(
+              FilterPill(
                 label: l10n.filterUnpaid,
                 selected: _filter == _InvoiceFilter.unpaid,
                 onTap: () => setState(() => _filter = _InvoiceFilter.unpaid),
               ),
               const SizedBox(width: AppSpacing.xs),
-              _FilterChip(
+              FilterPill(
                 label: l10n.filterOverdue,
                 selected: _filter == _InvoiceFilter.overdue,
                 onTap: () => setState(() => _filter = _InvoiceFilter.overdue),
               ),
               const SizedBox(width: AppSpacing.xs),
-              _FilterChip(
+              FilterPill(
                 label: l10n.filterPaid,
                 selected: _filter == _InvoiceFilter.paid,
                 onTap: () => setState(() => _filter = _InvoiceFilter.paid),
@@ -128,46 +128,6 @@ class _InvoiceListState extends ConsumerState<_InvoiceList> {
           ),
         );
       },
-    );
-  }
-}
-
-class _FilterChip extends StatelessWidget {
-  const _FilterChip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        decoration: BoxDecoration(
-          color: selected
-              ? colors.primary.withValues(alpha: 0.12)
-              : colors.surfaceAlt,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: selected ? colors.primary : colors.border,
-            width: selected ? 1.5 : 1,
-          ),
-        ),
-        child: Text(
-          label,
-          style: context.textStyles.labelMedium?.copyWith(
-            color: selected ? colors.primary : colors.textSecondary,
-            fontWeight: selected ? FontWeight.bold : FontWeight.w500,
-          ),
-        ),
-      ),
     );
   }
 }
