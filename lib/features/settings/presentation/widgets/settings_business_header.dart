@@ -7,14 +7,15 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/app_icons.dart';
+import '../../../../core/constants/app_radius.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/display/avatar_initials.dart';
 import '../../../business_profile/business_profile.dart';
 
-/// The business at the top of Settings: logo (or initials), name and an
-/// Edit button that opens the business profile.
+/// Business identity card on Settings — tap opens the profile editor.
+/// Navigation back lives in the AppBar, not here.
 class SettingsBusinessHeader extends ConsumerWidget {
   const SettingsBusinessHeader({super.key});
 
@@ -26,42 +27,52 @@ class SettingsBusinessHeader extends ConsumerWidget {
     final trimmed = profile?.name.trim() ?? '';
     final name = trimmed.isEmpty ? l10n.businessUntitled : trimmed;
     void edit() => context.pushNamed(RouteNames.businessProfile);
-    return Row(
-      spacing: AppSpacing.md,
-      children: [
-        _Logo(name: name, logoPath: profile?.logoPath),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+
+    return Material(
+      color: colors.surface,
+      borderRadius: AppRadius.card,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: edit,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.md,
+          ),
+          child: Row(
+            spacing: AppSpacing.md,
             children: [
-              Text(
-                name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: context.textStyles.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
+              _Logo(name: name, logoPath: profile?.logoPath),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.textStyles.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      l10n.homeEditProfile,
+                      style: context.textStyles.bodySmall?.copyWith(
+                        color: colors.textSecondary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Text(
-                l10n.homeEditProfile,
-                style: context.textStyles.bodySmall?.copyWith(
-                  color: colors.textSecondary,
-                ),
+              Icon(
+                AppIcons.chevronRight,
+                size: AppSizes.iconSm,
+                color: colors.textSecondary,
               ),
             ],
           ),
         ),
-        OutlinedButton.icon(
-          onPressed: edit,
-          icon: const Icon(AppIcons.edit, size: AppSizes.iconSm),
-          label: Text(l10n.edit),
-          style: OutlinedButton.styleFrom(
-            foregroundColor: colors.textPrimary,
-            side: BorderSide(color: colors.border),
-            visualDensity: VisualDensity.compact,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -74,7 +85,7 @@ class _Logo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final initials = AvatarInitials(name: name, size: AppSizes.avatarLg);
+    final initials = AvatarInitials(name: name);
     final relative = logoPath;
     if (relative == null || relative.isEmpty) return initials;
     final absolute = ref.watch(profileImagePathProvider(relative)).value;
@@ -87,8 +98,8 @@ class _Logo extends ConsumerWidget {
       child: ClipOval(
         child: Image.file(
           File(absolute),
-          width: AppSizes.avatarLg,
-          height: AppSizes.avatarLg,
+          width: AppSizes.avatarMd,
+          height: AppSizes.avatarMd,
           fit: BoxFit.cover,
           errorBuilder: (_, _, _) => initials,
         ),

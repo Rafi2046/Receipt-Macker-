@@ -79,10 +79,10 @@ void main() {
     await pumpApp(tester);
     expect(find.text('RT'), findsOneWidget, reason: 'home avatar initials');
 
-    // The Home logo opens Settings; its Edit button opens the profile.
+    // The Home logo opens Settings; the business hero opens the profile.
     await tester.tap(find.byTooltip('Settings'));
     await settle(tester);
-    await tester.tap(find.text('Edit'));
+    await tester.tap(find.text('Edit business profile'));
     await settle(tester);
     expect(find.text('Business profile'), findsOneWidget);
 

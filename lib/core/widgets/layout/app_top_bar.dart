@@ -17,12 +17,17 @@ class AppTopBar extends StatelessWidget {
     required this.title,
     this.actions,
     this.scrolled = false,
+    this.showTitle = true,
     super.key,
   });
 
   final String title;
   final List<Widget>? actions;
   final bool scrolled;
+
+  /// When false, the title is kept for screen readers only (e.g. Settings
+  /// already leads with the business name below the bar).
+  final bool showTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +55,16 @@ class AppTopBar extends StatelessWidget {
             height: MediaQuery.textScalerOf(context)
                 .scale(AppSizes.topBarHeight),
             child: canPop
-                ? _PushedBar(title: title, actions: barActions)
-                : _RootBar(title: title, actions: barActions),
+                ? _PushedBar(
+                    title: title,
+                    actions: barActions,
+                    showTitle: showTitle,
+                  )
+                : _RootBar(
+                    title: title,
+                    actions: barActions,
+                    showTitle: showTitle,
+                  ),
           ),
         ),
       ),
@@ -60,10 +73,15 @@ class AppTopBar extends StatelessWidget {
 }
 
 class _RootBar extends StatelessWidget {
-  const _RootBar({required this.title, required this.actions});
+  const _RootBar({
+    required this.title,
+    required this.actions,
+    required this.showTitle,
+  });
 
   final String title;
   final List<Widget> actions;
+  final bool showTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -71,17 +89,19 @@ class _RootBar extends StatelessWidget {
       children: [
         const SizedBox(width: AppSpacing.xs),
         Expanded(
-          child: Semantics(
-            header: true,
-            child: Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: context.textStyles.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
+          child: showTitle
+              ? Semantics(
+                  header: true,
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textStyles.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                )
+              : Semantics(header: true, label: title, child: const SizedBox()),
         ),
         ...actions,
       ],
@@ -90,10 +110,15 @@ class _RootBar extends StatelessWidget {
 }
 
 class _PushedBar extends StatelessWidget {
-  const _PushedBar({required this.title, required this.actions});
+  const _PushedBar({
+    required this.title,
+    required this.actions,
+    required this.showTitle,
+  });
 
   final String title;
   final List<Widget> actions;
+  final bool showTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -104,18 +129,20 @@ class _PushedBar extends StatelessWidget {
         semanticLabel: context.l10n.back,
         onPressed: () => Navigator.of(context).maybePop(),
       ),
-      middle: Semantics(
-        header: true,
-        child: Text(
-          title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
-          style: context.textStyles.titleMedium?.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
+      middle: showTitle
+          ? Semantics(
+              header: true,
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: context.textStyles.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            )
+          : Semantics(header: true, label: title, child: const SizedBox()),
       trailing: actions.isEmpty
           ? null
           : Row(mainAxisSize: MainAxisSize.min, children: actions),

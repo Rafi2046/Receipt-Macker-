@@ -19,6 +19,7 @@ class AppScaffold extends StatefulWidget {
     this.bottomBar,
     this.padded = false,
     this.bottomBarAboveKeyboard = false,
+    this.showTitle = true,
     super.key,
   });
 
@@ -29,6 +30,11 @@ class AppScaffold extends StatefulWidget {
   final Widget? bottomBar;
   final bool padded;
   final bool bottomBarAboveKeyboard;
+
+  /// When false with a [title], the top bar still shows (back / actions) but
+  /// hides the visible title — useful when the page body already leads with
+  /// a strong identity (e.g. Settings + business name).
+  final bool showTitle;
 
   @override
   State<AppScaffold> createState() => _AppScaffoldState();
@@ -62,6 +68,7 @@ class _AppScaffoldState extends State<AppScaffold> {
               title: heading,
               actions: widget.actions,
               scrolled: _scrolled,
+              showTitle: widget.showTitle,
             ),
           Expanded(
             child: SafeArea(
