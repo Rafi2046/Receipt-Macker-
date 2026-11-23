@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/formatters.dart';
@@ -26,6 +27,7 @@ class LegalPage extends StatelessWidget {
     final format = AppFormatters(Localizations.localeOf(context).languageCode);
     return AppScaffold(
       title: title,
+      variant: AppBarVariant.pushed,
       body: ListView(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.xl,

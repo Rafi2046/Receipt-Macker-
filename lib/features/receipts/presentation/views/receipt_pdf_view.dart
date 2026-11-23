@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/errors/failure.dart';
@@ -73,6 +74,7 @@ class ReceiptPdfView extends ConsumerWidget {
     final ready = state.isReady;
     return AppScaffold(
       title: context.l10n.pdfPreviewTitle,
+      variant: AppBarVariant.pushed,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

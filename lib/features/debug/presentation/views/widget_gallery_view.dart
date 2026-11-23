@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
@@ -23,6 +24,7 @@ class WidgetGalleryView extends ConsumerWidget {
     final vm = ref.read(widgetGalleryViewModelProvider.notifier);
     return AppScaffold(
       title: l10n.galleryTitle,
+      variant: AppBarVariant.pushed,
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.pagePadding),
         children: [

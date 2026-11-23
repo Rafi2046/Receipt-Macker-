@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../l10n/gen/app_localizations.dart';
 import '../../constants/app_icons.dart';
+import '../../constants/app_radius.dart';
 import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 import '../../services/pdf/pdf_page_size.dart';
 import '../../services/pdf/pdf_template.dart';
 import '../../utils/extensions/l10n_extension.dart';
 import 'accent_color_row.dart';
+import 'pdf_page_size_menu.dart';
 import 'pdf_template_labels.dart';
 
-/// Template, color accent and language choice above a PDF preview.
+/// Compact template / accent / language toolbar above a PDF preview.
 class PdfOptionsBar extends StatelessWidget {
   const PdfOptionsBar({
     required this.template,
@@ -44,7 +46,7 @@ class PdfOptionsBar extends StatelessWidget {
   final ValueChanged<PdfPageSize>? onPageSize;
   final bool enabled;
 
-  static String _templateName(AppLocalizations l10n, PdfTemplate template) {
+  static String templateLabel(AppLocalizations l10n, PdfTemplate template) {
     final name = l10n.templateName(template);
     if (!template.requiresPro) return name;
     return '$name · ${l10n.templateProBadge}';
@@ -55,10 +57,7 @@ class PdfOptionsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final label = context.textStyles.labelLarge?.copyWith(
-      color: context.appColors.textSecondary,
-    );
+    final colors = context.appColors;
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.pagePadding,
@@ -66,120 +65,187 @@ class PdfOptionsBar extends StatelessWidget {
         AppSpacing.pagePadding,
         AppSpacing.sm,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: AppSpacing.xs,
-        children: [
-          Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: AppSpacing.xs,
-            runSpacing: AppSpacing.xs,
-            children: [
-              Text(l10n.pdfTemplateLabel, style: label),
-              if (onOpenStudio != null)
-                TextButton.icon(
-                  style: TextButton.styleFrom(
-                    visualDensity: VisualDensity.compact,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                  ),
-                  icon: const Icon(AppIcons.palette, size: 16),
-                  label: Text(l10n.templateStudioAction),
-                  onPressed: enabled ? onOpenStudio : null,
-                ),
-              if (onPageSize case final onPageSize?)
-                _PageSizeMenu(
-                  pageSize: pageSize,
-                  onSelected: enabled ? onPageSize : null,
-                ),
-            ],
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                for (final t in PdfTemplate.values) ...[
-                  ChoiceChip(
-                    label: Text(_templateName(l10n, t)),
-                    selected: t == template,
-                    onSelected: enabled ? (_) => onTemplate(t) : null,
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
-                ],
-              ],
-            ),
-          ),
-          if (onAccentColor case final onAccent?)
-            AccentColorRow(
-              selectedHex: brandAccentColor,
-              template: template,
-              logoHex: logoAccentHex,
-              enabled: enabled,
-              onSelected: onAccent,
-            ),
-          Text(l10n.pdfLanguageLabel, style: label),
-          Wrap(
+      child: Material(
+        color: colors.surface,
+        borderRadius: AppRadius.card,
+        clipBehavior: Clip.antiAlias,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: AppSpacing.sm,
             children: [
-              for (final (code, name) in [
-                (_en, l10n.languageEnglish),
-                (_bn, l10n.languageBangla),
-              ])
-                ChoiceChip(
-                  label: Text(name),
-                  selected: code == languageCode,
-                  onSelected: enabled ? (_) => onLanguage(code) : null,
+              _TemplateSummary(
+                template: template,
+                enabled: enabled,
+                onOpenStudio: onOpenStudio,
+                onTemplate: onTemplate,
+              ),
+              if (onAccentColor case final onAccent?)
+                AccentColorRow(
+                  selectedHex: brandAccentColor,
+                  template: template,
+                  logoHex: logoAccentHex,
+                  enabled: enabled,
+                  onSelected: onAccent,
                 ),
+              _LanguageAndSize(
+                languageCode: languageCode,
+                enabled: enabled,
+                onLanguage: onLanguage,
+                pageSize: pageSize,
+                onPageSize: onPageSize,
+                en: _en,
+                bn: _bn,
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
-/// The paper size as a compact menu button, so the bar stays short.
-class _PageSizeMenu extends StatelessWidget {
-  const _PageSizeMenu({required this.pageSize, required this.onSelected});
+class _TemplateSummary extends StatelessWidget {
+  const _TemplateSummary({
+    required this.template,
+    required this.enabled,
+    required this.onTemplate,
+    this.onOpenStudio,
+  });
 
-  final PdfPageSize pageSize;
-  final ValueChanged<PdfPageSize>? onSelected;
+  final PdfTemplate template;
+  final bool enabled;
+  final VoidCallback? onOpenStudio;
+  final ValueChanged<PdfTemplate> onTemplate;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return PopupMenuButton<PdfPageSize>(
-      tooltip: l10n.pdfPageSizeLabel,
-      enabled: onSelected != null,
-      initialValue: pageSize,
-      onSelected: onSelected,
+    final colors = context.appColors;
+    final label = PdfOptionsBar.templateLabel(l10n, template);
+    final openStudio = onOpenStudio;
+
+    if (openStudio != null) {
+      return Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: enabled ? openStudio : null,
+              borderRadius: AppRadius.input,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.textStyles.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          TextButton.icon(
+            style: TextButton.styleFrom(
+              visualDensity: VisualDensity.compact,
+              foregroundColor: colors.primary,
+            ),
+            icon: const Icon(AppIcons.palette, size: AppSizes.iconSm),
+            label: Text(l10n.templateStudioAction),
+            onPressed: enabled ? openStudio : null,
+          ),
+        ],
+      );
+    }
+
+    return PopupMenuButton<PdfTemplate>(
+      enabled: enabled,
+      initialValue: template,
+      tooltip: l10n.pdfTemplateLabel,
+      onSelected: onTemplate,
       itemBuilder: (context) => [
-        for (final size in PdfPageSize.values)
-          PopupMenuItem(value: size, child: Text(l10n.pageSizeName(size))),
+        for (final t in PdfTemplate.values)
+          PopupMenuItem(
+            value: t,
+            child: Text(PdfOptionsBar.templateLabel(l10n, t)),
+          ),
       ],
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: AppSpacing.md,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: AppSpacing.xs,
           children: [
-            Icon(
-              AppIcons.pageSize,
-              size: AppSizes.iconSm,
-              color: context.appColors.primary,
-            ),
-            Text(
-              l10n.pageSizeName(pageSize),
-              style: context.textStyles.labelLarge?.copyWith(
-                color: context.appColors.primary,
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: context.textStyles.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
+            ),
+            Icon(
+              AppIcons.dropdown,
+              size: AppSizes.iconSm,
+              color: colors.textSecondary,
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _LanguageAndSize extends StatelessWidget {
+  const _LanguageAndSize({
+    required this.languageCode,
+    required this.enabled,
+    required this.onLanguage,
+    required this.pageSize,
+    required this.en,
+    required this.bn,
+    this.onPageSize,
+  });
+
+  final String languageCode;
+  final bool enabled;
+  final ValueChanged<String> onLanguage;
+  final PdfPageSize pageSize;
+  final ValueChanged<PdfPageSize>? onPageSize;
+  final String en;
+  final String bn;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Row(
+      children: [
+        Expanded(
+          child: SegmentedButton<String>(
+            segments: [
+              ButtonSegment(value: en, label: Text(l10n.languageEnglish)),
+              ButtonSegment(value: bn, label: Text(l10n.languageBangla)),
+            ],
+            selected: {languageCode == bn ? bn : en},
+            onSelectionChanged: enabled
+                ? (next) {
+                    if (next.isEmpty) return;
+                    onLanguage(next.first);
+                  }
+                : null,
+            style: const ButtonStyle(
+              visualDensity: VisualDensity.compact,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+          ),
+        ),
+        if (onPageSize case final onSize?)
+          PdfPageSizeMenu(
+            pageSize: pageSize,
+            onSelected: enabled ? onSize : null,
+          ),
+      ],
     );
   }
 }

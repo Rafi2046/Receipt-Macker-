@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
@@ -55,6 +56,7 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
 
     return AppScaffold(
       title: l10n.settingsTitle,
+      variant: AppBarVariant.pushed,
       body: ListView(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.pagePadding,

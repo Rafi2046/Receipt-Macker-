@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
@@ -31,6 +32,7 @@ class InvoiceListView extends ConsumerWidget {
     final invoices = ref.watch(invoiceListViewModelProvider);
     return AppScaffold(
       title: l10n.invoicesTitle,
+      variant: AppBarVariant.root,
       body: invoices.when(
         skipLoadingOnReload: true,
         data: (state) => _InvoiceList(state: state),

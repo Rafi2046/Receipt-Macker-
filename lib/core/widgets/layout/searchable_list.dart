@@ -21,6 +21,7 @@ class SearchableList extends StatelessWidget {
     required this.itemBuilder,
     this.cards = false,
     this.header,
+    this.showSearch = true,
     super.key,
   });
 
@@ -41,24 +42,28 @@ class SearchableList extends StatelessWidget {
   /// instead of full-width rows with dividers.
   final bool cards;
 
+  /// When false, the AppBar owns search (e.g. [AppBarVariant.search]).
+  final bool showSearch;
+
   @override
   Widget build(BuildContext context) {
     if (isEmpty) return empty;
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.pagePadding,
-            AppSpacing.sm,
-            AppSpacing.pagePadding,
-            AppSpacing.sm,
+        if (showSearch)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.pagePadding,
+              AppSpacing.sm,
+              AppSpacing.pagePadding,
+              AppSpacing.sm,
+            ),
+            child: AppSearchField(
+              hint: searchHint,
+              initialValue: query,
+              onChanged: onSearch,
+            ),
           ),
-          child: AppSearchField(
-            hint: searchHint,
-            initialValue: query,
-            onChanged: onSearch,
-          ),
-        ),
         ?header,
         Expanded(
           child: itemCount == 0

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/widgets/layout/app_card.dart';
@@ -32,6 +33,7 @@ class PickerPageFrame extends StatelessWidget {
     final listTitle = this.listTitle;
     return AppScaffold(
       title: title,
+      variant: AppBarVariant.pushed,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

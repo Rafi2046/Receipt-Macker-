@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
@@ -86,6 +87,7 @@ class _LineItemSheetState extends ConsumerState<LineItemSheet> {
 
     return AppScaffold(
       title: isNew ? l10n.lineNewTitle : l10n.lineEditTitle,
+      variant: AppBarVariant.pushed,
       bottomBarAboveKeyboard: true,
       actions: [
         AppIconButton(

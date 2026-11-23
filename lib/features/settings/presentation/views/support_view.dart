@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
@@ -28,6 +29,7 @@ class SupportView extends StatelessWidget {
     ];
     return AppScaffold(
       title: l10n.menuSupport,
+      variant: AppBarVariant.pushed,
       body: ListView(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.pagePadding,

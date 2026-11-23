@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/errors/result.dart';
 import '../../../../core/utils/extensions/failure_message_extension.dart';
@@ -95,6 +96,7 @@ class InvoiceDetailView extends ConsumerWidget {
     final isDraft = state?.invoice.stage == InvoiceStage.draft;
     return AppScaffold(
       title: l10n.invoicesTitle,
+      variant: AppBarVariant.pushed,
       actions: [
         if (state != null) ...[
           AppIconButton(

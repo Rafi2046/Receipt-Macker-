@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/app_bar_variant.dart';
 import '../../constants/app_icons.dart';
 import '../../constants/app_spacing.dart';
 import '../../utils/extensions/l10n_extension.dart';
@@ -66,6 +67,7 @@ class EditorScaffold extends StatelessWidget {
       },
       child: AppScaffold(
         title: title,
+        variant: AppBarVariant.editor,
         actions: [
           if (delete != null)
             AppIconButton(

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/services/ads/list_ad_banner.dart';
@@ -29,21 +30,29 @@ class ClientListView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final clients = ref.watch(clientListViewModelProvider);
-    final showFab = clients.value?.isEmpty == false;
+    final state = clients.asData?.value;
+    final showFab = state?.isEmpty == false;
+    final showSearch = state != null && !state.isEmpty;
     return AppScaffold(
       // A list screen: the one place a banner ad may show (CLAUDE §9.2).
       bottomBar: const ListAdBanner(),
       title: l10n.clientsTitle,
+      variant: AppBarVariant.search,
+      searchHint: l10n.clientsSearchHint,
+      searchQuery: state?.query ?? '',
+      onSearch: showSearch
+          ? ref.read(clientListViewModelProvider.notifier).search
+          : null,
       floatingActionButton: showFab
           ? AppFab(
               label: l10n.clientAdd,
               onPressed: () => _openNewClient(context, ref),
             )
           : null,
-      // Keep the list (and the search box) on screen while a new search runs.
+      // Keep the list on screen while a new search runs.
       body: clients.when(
         skipLoadingOnReload: true,
-        data: (state) => _ClientList(state: state),
+        data: (listState) => _ClientList(state: listState),
         loading: () => const LoadingView(),
         error: (e, _) => ErrorView.fromError(
           e,
@@ -66,6 +75,7 @@ class _ClientList extends ConsumerWidget {
       searchHint: l10n.clientsSearchHint,
       query: state.query,
       onSearch: ref.read(clientListViewModelProvider.notifier).search,
+      showSearch: false,
       isEmpty: state.isEmpty,
       empty: EmptyState(
         icon: AppIcons.client,

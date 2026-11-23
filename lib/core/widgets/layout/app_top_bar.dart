@@ -1,38 +1,42 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../constants/app_bar_variant.dart';
 import '../../constants/app_durations.dart';
-import '../../constants/app_icons.dart';
 import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
-import '../../utils/extensions/l10n_extension.dart';
-import 'top_bar_button.dart';
+import '../inputs/app_search_field.dart';
+import 'app_top_bar_title.dart';
+import 'top_bar_back_link.dart';
 
-/// Page header that blends into the page. A tab root shows a large
-/// left-aligned title; a pushed screen shows a round back button
-/// and a centered title. Once content scrolls under it ([scrolled]) the bar
-/// takes the surface color and a hairline.
+/// Page header — flat, airy chrome (no floating pill). Layout by [variant].
 class AppTopBar extends StatelessWidget {
   const AppTopBar({
     required this.title,
+    required this.variant,
+    this.subtitle,
     this.actions,
     this.scrolled = false,
     this.showTitle = true,
+    this.searchHint,
+    this.searchQuery,
+    this.onSearch,
     super.key,
   });
 
   final String title;
+  final AppBarVariant variant;
+  final String? subtitle;
   final List<Widget>? actions;
   final bool scrolled;
-
-  /// When false, the title is kept for screen readers only (e.g. Settings
-  /// already leads with the business name below the bar).
   final bool showTitle;
+  final String? searchHint;
+  final String? searchQuery;
+  final ValueChanged<String>? onSearch;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final canPop = ModalRoute.of(context)?.canPop ?? false;
     final barActions = actions ?? const <Widget>[];
     return AnimatedContainer(
       duration: AppDurations.medium,
@@ -47,105 +51,223 @@ class AppTopBar extends StatelessWidget {
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.xs,
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            AppSpacing.xs,
+            AppSpacing.md,
+            AppSpacing.sm,
           ),
-          child: SizedBox(
-            height: MediaQuery.textScalerOf(context)
-                .scale(AppSizes.topBarHeight),
-            child: canPop
-                ? _PushedBar(
-                    title: title,
-                    actions: barActions,
-                    showTitle: showTitle,
-                  )
-                : _RootBar(
-                    title: title,
-                    actions: barActions,
-                    showTitle: showTitle,
-                  ),
-          ),
+          child: _content(context, barActions),
         ),
       ),
     );
   }
+
+  Widget _content(BuildContext context, List<Widget> barActions) {
+    return switch (variant) {
+      AppBarVariant.home => _HomeRow(
+          title: title,
+          subtitle: subtitle,
+          actions: barActions,
+          showTitle: showTitle,
+        ),
+      AppBarVariant.root => _RootRow(
+          title: title,
+          subtitle: subtitle,
+          actions: barActions,
+          showTitle: showTitle,
+        ),
+      AppBarVariant.search => _SearchRow(
+          title: title,
+          actions: barActions,
+          showTitle: showTitle,
+          searchHint: searchHint ?? '',
+          searchQuery: searchQuery ?? '',
+          onSearch: onSearch,
+          showBack: ModalRoute.of(context)?.canPop ?? false,
+        ),
+      AppBarVariant.pushed || AppBarVariant.editor => _PushedRow(
+          title: title,
+          subtitle: subtitle,
+          actions: barActions,
+          showTitle: showTitle,
+        ),
+    };
+  }
 }
 
-class _RootBar extends StatelessWidget {
-  const _RootBar({
+class _HomeRow extends StatelessWidget {
+  const _HomeRow({
     required this.title,
     required this.actions,
     required this.showTitle,
+    this.subtitle,
   });
 
   final String title;
+  final String? subtitle;
   final List<Widget> actions;
   final bool showTitle;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const SizedBox(width: AppSpacing.xs),
-        Expanded(
-          child: showTitle
-              ? Semantics(
-                  header: true,
-                  child: Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.textStyles.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                )
-              : Semantics(header: true, label: title, child: const SizedBox()),
-        ),
-        ...actions,
-      ],
-    );
-  }
-}
-
-class _PushedBar extends StatelessWidget {
-  const _PushedBar({
-    required this.title,
-    required this.actions,
-    required this.showTitle,
-  });
-
-  final String title;
-  final List<Widget> actions;
-  final bool showTitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return NavigationToolbar(
-      middleSpacing: AppSpacing.sm,
-      leading: TopBarButton(
-        icon: AppIcons.back,
-        semanticLabel: context.l10n.back,
-        onPressed: () => Navigator.of(context).maybePop(),
-      ),
-      middle: showTitle
-          ? Semantics(
-              header: true,
-              child: Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: context.textStyles.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+    return SizedBox(
+      height: MediaQuery.textScalerOf(context).scale(AppSizes.topBarHeight),
+      child: Row(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: AppSpacing.xs),
+              child: AppTopBarTitle(
+                title: title,
+                subtitle: subtitle,
+                large: true,
+                subtitleAbove: true,
+                showTitle: showTitle,
               ),
-            )
-          : Semantics(header: true, label: title, child: const SizedBox()),
-      trailing: actions.isEmpty
-          ? null
-          : Row(mainAxisSize: MainAxisSize.min, children: actions),
+            ),
+          ),
+          ...actions,
+        ],
+      ),
+    );
+  }
+}
+
+class _RootRow extends StatelessWidget {
+  const _RootRow({
+    required this.title,
+    required this.actions,
+    required this.showTitle,
+    this.subtitle,
+  });
+
+  final String title;
+  final String? subtitle;
+  final List<Widget> actions;
+  final bool showTitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.textScalerOf(context).scale(AppSizes.topBarHeight),
+      child: Row(
+        children: [
+          const SizedBox(width: AppSpacing.xs),
+          Expanded(
+            child: AppTopBarTitle(
+              title: title,
+              subtitle: subtitle,
+              large: true,
+              showTitle: showTitle,
+            ),
+          ),
+          ...actions,
+        ],
+      ),
+    );
+  }
+}
+
+/// Pushed / editor: text Back · centered title · trailing actions.
+class _PushedRow extends StatelessWidget {
+  const _PushedRow({
+    required this.title,
+    required this.actions,
+    required this.showTitle,
+    this.subtitle,
+  });
+
+  final String title;
+  final String? subtitle;
+  final List<Widget> actions;
+  final bool showTitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.textScalerOf(context).scale(AppSizes.topBarHeight),
+      child: NavigationToolbar(
+        middleSpacing: AppSpacing.sm,
+        leading: const TopBarBackLink(),
+        middle: AppTopBarTitle(
+          title: title,
+          subtitle: subtitle,
+          align: TextAlign.center,
+          showTitle: showTitle,
+        ),
+        trailing: actions.isEmpty
+            ? null
+            : Row(mainAxisSize: MainAxisSize.min, children: actions),
+      ),
+    );
+  }
+}
+
+class _SearchRow extends StatelessWidget {
+  const _SearchRow({
+    required this.title,
+    required this.actions,
+    required this.showTitle,
+    required this.searchHint,
+    required this.searchQuery,
+    required this.showBack,
+    this.onSearch,
+  });
+
+  final String title;
+  final List<Widget> actions;
+  final bool showTitle;
+  final String searchHint;
+  final String searchQuery;
+  final ValueChanged<String>? onSearch;
+  final bool showBack;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SizedBox(
+          height: MediaQuery.textScalerOf(context).scale(AppSizes.topBarHeight),
+          child: showBack
+              ? NavigationToolbar(
+                  middleSpacing: AppSpacing.sm,
+                  leading: const TopBarBackLink(),
+                  middle: AppTopBarTitle(
+                    title: title,
+                    align: TextAlign.center,
+                    showTitle: showTitle,
+                  ),
+                  trailing: actions.isEmpty
+                      ? null
+                      : Row(mainAxisSize: MainAxisSize.min, children: actions),
+                )
+              : Row(
+                  children: [
+                    const SizedBox(width: AppSpacing.xs),
+                    Expanded(
+                      child: AppTopBarTitle(
+                        title: title,
+                        large: true,
+                        showTitle: showTitle,
+                      ),
+                    ),
+                    ...actions,
+                  ],
+                ),
+        ),
+        if (onSearch != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+            child: AppSearchField(
+              hint: searchHint,
+              initialValue: searchQuery,
+              onChanged: onSearch!,
+            ),
+          ),
+      ],
     );
   }
 }

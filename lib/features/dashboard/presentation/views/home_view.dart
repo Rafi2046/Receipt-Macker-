@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/services/clock.dart';
@@ -30,14 +31,97 @@ class HomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final home = ref.watch(homeViewModelProvider);
+    final l10n = context.l10n;
+    final part = DayPart.at(ref.watch(clockProvider)());
+    final greeting = switch (part) {
+      DayPart.morning => l10n.greetingMorning,
+      DayPart.afternoon => l10n.greetingAfternoon,
+      DayPart.evening => l10n.greetingEvening,
+    };
+    final snapshot = home.asData?.value;
+    final title = snapshot?.businessName ?? l10n.appTitle;
     return AppScaffold(
+      title: title,
+      subtitle: greeting,
+      variant: AppBarVariant.home,
+      actions: [
+        if (snapshot != null) _HomeSettingsAvatar(snapshot: snapshot),
+      ],
       body: home.when(
         loading: () => const LoadingView(),
         error: (error, _) => ErrorView.fromError(
           error,
           onRetry: () => ref.invalidate(homeViewModelProvider),
         ),
-        data: (snapshot) => _HomeBody(snapshot: snapshot),
+        data: (data) => _HomeBody(snapshot: data),
+      ),
+    );
+  }
+}
+
+class _HomeSettingsAvatar extends ConsumerWidget {
+  const _HomeSettingsAvatar({required this.snapshot});
+
+  final HomeSnapshot snapshot;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final profile = ref.watch(currentBusinessProfileProvider).asData?.value;
+    return Tooltip(
+      message: l10n.settingsTitle,
+      child: Material(
+        color: context.appColors.surface.withValues(alpha: 0),
+        shape: const CircleBorder(),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          key: const Key('home_profile_avatar_button'),
+          onTap: () => context.pushNamed(RouteNames.settings),
+          child: Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: context.appColors.primary.withValues(alpha: 0.35),
+                width: 1.5,
+              ),
+            ),
+            child: _HomeAvatar(
+              name: snapshot.businessName,
+              logoPath: profile?.logoPath,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HomeAvatar extends ConsumerWidget {
+  const _HomeAvatar({required this.name, this.logoPath});
+
+  final String name;
+  final String? logoPath;
+
+  static const double _size = 42;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final relative = logoPath;
+    if (relative == null || relative.isEmpty) {
+      return AvatarInitials(name: name, size: _size);
+    }
+    final absolute = ref.watch(profileImagePathProvider(relative)).value;
+    if (absolute == null) {
+      return AvatarInitials(name: name, size: _size);
+    }
+    return ClipOval(
+      child: Image.file(
+        File(absolute),
+        width: _size,
+        height: _size,
+        fit: BoxFit.cover,
+        errorBuilder: (_, _, _) => AvatarInitials(name: name, size: _size),
       ),
     );
   }
@@ -63,15 +147,12 @@ class _HomeBody extends StatelessWidget {
           ),
           sliver: SliverList.list(
             children: [
-              _HomeHeader(snapshot: snapshot),
-              const SizedBox(height: AppSpacing.md),
               HomeHeroCard(snapshot: snapshot),
               const SizedBox(height: AppSpacing.lg),
               HomeOverviewRow(snapshot: snapshot),
             ],
           ),
         ),
-        // The empty prompt stretches to the bottom so no blank band is left.
         SliverPadding(
           padding: _side.copyWith(bottom: AppSizes.fabClearance),
           sliver: snapshot.hasInvoices
@@ -82,106 +163,6 @@ class _HomeBody extends StatelessWidget {
                 ),
         ),
       ],
-    );
-  }
-}
-
-class _HomeHeader extends ConsumerWidget {
-  const _HomeHeader({required this.snapshot});
-
-  final HomeSnapshot snapshot;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
-    final profile = ref.watch(currentBusinessProfileProvider).asData?.value;
-    final part = DayPart.at(ref.watch(clockProvider)());
-    final greeting = switch (part) {
-      DayPart.morning => l10n.greetingMorning,
-      DayPart.afternoon => l10n.greetingAfternoon,
-      DayPart.evening => l10n.greetingEvening,
-    };
-    return Row(
-      children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(left: AppSpacing.xs),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  greeting,
-                  style: context.textStyles.bodyMedium?.copyWith(
-                    color: context.appColors.textSecondary,
-                  ),
-                ),
-                Text(
-                  snapshot.businessName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.textStyles.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Tooltip(
-          message: l10n.settingsTitle,
-          child: Material(
-            color: context.appColors.surface.withValues(alpha: 0),
-            shape: const CircleBorder(),
-            clipBehavior: Clip.antiAlias,
-            child: InkWell(
-              key: const Key('home_profile_avatar_button'),
-              onTap: () => context.pushNamed(RouteNames.settings),
-              child: Container(
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: context.appColors.primary.withValues(alpha: 0.35),
-                    width: 1.5,
-                  ),
-                ),
-                child: _HomeAvatar(
-                  name: snapshot.businessName,
-                  logoPath: profile?.logoPath,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _HomeAvatar extends ConsumerWidget {
-  const _HomeAvatar({required this.name, this.logoPath});
-
-  final String name;
-  final String? logoPath;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final relative = logoPath;
-    if (relative == null || relative.isEmpty) {
-      return AvatarInitials(name: name, size: 42);
-    }
-    final absolute = ref.watch(profileImagePathProvider(relative)).value;
-    if (absolute == null) {
-      return AvatarInitials(name: name, size: 42);
-    }
-    return ClipOval(
-      child: Image.file(
-        File(absolute),
-        width: 42,
-        height: 42,
-        fit: BoxFit.cover,
-        errorBuilder: (_, _, _) => AvatarInitials(name: name, size: 42),
-      ),
     );
   }
 }

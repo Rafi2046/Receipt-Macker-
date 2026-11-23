@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
@@ -39,6 +40,7 @@ class QuoteListView extends ConsumerWidget {
     final hasAdvanced = async.value?.hasAdvancedFilters ?? false;
     return AppScaffold(
       title: l10n.quotesTitle,
+      variant: AppBarVariant.root,
       body: async.when(
         skipLoadingOnReload: true,
         data: (state) => SearchableList(

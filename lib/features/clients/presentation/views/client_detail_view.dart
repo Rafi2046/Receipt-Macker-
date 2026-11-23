@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
@@ -47,9 +48,14 @@ class ClientDetailView extends ConsumerWidget {
 
     return asyncState.when(
       loading: () =>
-          AppScaffold(title: l10n.clientDetailTitle, body: const LoadingView()),
+          AppScaffold(
+            title: l10n.clientDetailTitle,
+            variant: AppBarVariant.pushed,
+            body: const LoadingView(),
+          ),
       error: (e, _) => AppScaffold(
         title: l10n.clientDetailTitle,
+        variant: AppBarVariant.pushed,
         body: ErrorView.fromError(
           e,
           onRetry: () =>
@@ -61,6 +67,7 @@ class ClientDetailView extends ConsumerWidget {
         if (client == null) {
           return AppScaffold(
             title: l10n.clientDetailTitle,
+            variant: AppBarVariant.pushed,
             body: ErrorView(
               message: l10n.errorNotFound,
               onRetry: () => Navigator.of(context).maybePop(),
@@ -75,6 +82,7 @@ class ClientDetailView extends ConsumerWidget {
 
         return AppScaffold(
           title: client.name,
+          variant: AppBarVariant.pushed,
           actions: [
             AppIconButton(
               icon: AppIcons.edit,

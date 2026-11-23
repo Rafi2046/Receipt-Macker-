@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../../core/constants/app_bar_variant.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/failure_message_extension.dart';
@@ -114,6 +115,7 @@ class QuoteEditorView extends ConsumerWidget {
       },
       child: AppScaffold(
         title: quoteId == null ? l10n.quoteNewTitle : l10n.quoteEditTitle,
+        variant: AppBarVariant.editor,
         body: async.when(
           data: (form) => Column(
             children: [

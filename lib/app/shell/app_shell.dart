@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/services/ads/list_ad_banner.dart';
 import '../../core/utils/extensions/l10n_extension.dart';
+import '../../core/widgets/feedback/confirm_dialog.dart';
 import '../../core/widgets/layout/app_nav_bar.dart';
 import '../router/route_names.dart';
 import 'create_choice_sheet.dart';
 
 /// The four tabs that stay on screen: Home, Invoices, Estimates, Clients,
 /// with the create button between them. Nested screens cover the bar.
+///
+/// Android back: pop nested routes, else jump to Home, else confirm exit.
 class AppShell extends StatelessWidget {
   const AppShell({required this.shell, required this.path, super.key});
 
@@ -23,34 +27,63 @@ class AppShell extends StatelessWidget {
       path == RouteNames.quotesPath ||
       path == RouteNames.clientsPath;
 
+  Future<void> _onBack(BuildContext context) async {
+    final router = GoRouter.of(context);
+    if (router.canPop()) {
+      router.pop();
+      return;
+    }
+    if (shell.currentIndex != 0) {
+      shell.goBranch(0);
+      return;
+    }
+    final l10n = context.l10n;
+    final shouldExit = await ConfirmDialog.show(
+      context,
+      title: l10n.exitAppTitle,
+      message: l10n.exitAppMessage,
+      confirmLabel: l10n.exitAppConfirm,
+      destructive: true,
+    );
+    if (shouldExit) await SystemNavigator.pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Scaffold(
-      // Pages show their own snackbars. Without this messenger the shell
-      // scaffold would draw them over a Save bar.
-      body: Column(
-        children: [
-          Expanded(child: ScaffoldMessenger(child: shell)),
-          if (path == RouteNames.invoicesPath || path == RouteNames.quotesPath)
-            const ListAdBanner(),
-          if (showsTabBar(path))
-            AppNavBar(
-              index: shell.currentIndex,
-              labels: [
-                l10n.navHome,
-                l10n.invoicesTitle,
-                l10n.quotesTitle,
-                l10n.clientsTitle,
-              ],
-              createLabel: l10n.createChooseTitle,
-              onSelected: (index) => shell.goBranch(
-                index,
-                initialLocation: index == shell.currentIndex,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _onBack(context);
+      },
+      child: Scaffold(
+        // Pages show their own snackbars. Without this messenger the shell
+        // scaffold would draw them over a Save bar.
+        body: Column(
+          children: [
+            Expanded(child: ScaffoldMessenger(child: shell)),
+            if (path == RouteNames.invoicesPath ||
+                path == RouteNames.quotesPath)
+              const ListAdBanner(),
+            if (showsTabBar(path))
+              AppNavBar(
+                index: shell.currentIndex,
+                labels: [
+                  l10n.navHome,
+                  l10n.invoicesTitle,
+                  l10n.quotesTitle,
+                  l10n.clientsTitle,
+                ],
+                createLabel: l10n.createChooseTitle,
+                onSelected: (index) => shell.goBranch(
+                  index,
+                  initialLocation: index == shell.currentIndex,
+                ),
+                onCreate: () => CreateChoiceSheet.show(context),
               ),
-              onCreate: () => CreateChoiceSheet.show(context),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
