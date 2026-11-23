@@ -48,11 +48,13 @@ class DiscountInput extends StatelessWidget {
             onChanged(type == null ? null : Discount(type: type, value: 0));
           },
         ),
+        // Label is already shown above the segments — keep the value field
+        // unlabeled so SoftInputBorder cannot cut through floating text.
         switch (current?.type) {
           null => const SizedBox.shrink(),
           DiscountType.percent => PercentField(
             key: const ValueKey(DiscountType.percent),
-            label: label,
+            label: '',
             basisPoints: _initial(current),
             errorText: errorText,
             onChanged: (v) =>
@@ -60,7 +62,7 @@ class DiscountInput extends StatelessWidget {
           ),
           DiscountType.flat => AmountField(
             key: const ValueKey(DiscountType.flat),
-            label: label,
+            label: '',
             currencyCode: currencyCode,
             initialMinor: _initial(current),
             errorText: errorText,
