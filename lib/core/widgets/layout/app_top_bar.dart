@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../../../app/theme/app_colors.dart';
 import '../../constants/app_bar_variant.dart';
-import '../../constants/app_durations.dart';
 import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 import '../inputs/app_search_field.dart';
 import 'app_top_bar_title.dart';
 import 'top_bar_back_link.dart';
 
-/// Page header — flat, airy chrome (no floating pill). Layout by [variant].
+/// Page header — title only on the scaffold background (no bar fill / line).
 class AppTopBar extends StatelessWidget {
   const AppTopBar({
     required this.title,
     required this.variant,
     this.subtitle,
     this.actions,
-    this.scrolled = false,
     this.showTitle = true,
     this.searchHint,
     this.searchQuery,
@@ -28,7 +25,6 @@ class AppTopBar extends StatelessWidget {
   final AppBarVariant variant;
   final String? subtitle;
   final List<Widget>? actions;
-  final bool scrolled;
   final bool showTitle;
   final String? searchHint;
   final String? searchQuery;
@@ -36,29 +32,18 @@ class AppTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     final barActions = actions ?? const <Widget>[];
-    return AnimatedContainer(
-      duration: AppDurations.medium,
-      decoration: BoxDecoration(
-        color: scrolled ? colors.surface : colors.background,
-        border: Border(
-          bottom: BorderSide(
-            color: scrolled ? colors.border : colors.background,
-          ),
+    // Transparent over the scaffold background — no fill, no bottom line.
+    return SafeArea(
+      bottom: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.md,
+          AppSpacing.xs,
+          AppSpacing.md,
+          AppSpacing.sm,
         ),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.md,
-            AppSpacing.xs,
-            AppSpacing.md,
-            AppSpacing.sm,
-          ),
-          child: _content(context, barActions),
-        ),
+        child: _content(context, barActions),
       ),
     );
   }
