@@ -14,7 +14,11 @@ import '../../../../core/utils/id_generator.dart';
 import '../../../business_profile/business_profile.dart';
 import '../../../clients/clients.dart';
 import '../../../items/items.dart';
+import '../../../payments/domain/models/payment.dart';
+import '../../../payments/domain/models/payment_method.dart';
+import '../../../payments/providers.dart';
 import '../../data/repositories/invoice_repository_impl.dart';
+import '../../domain/logic/invoice_calculator.dart';
 import '../../domain/logic/invoice_drafting.dart';
 import '../../domain/logic/invoice_validator.dart';
 import '../../domain/models/bill_to.dart';
@@ -22,6 +26,7 @@ import '../../domain/models/discount.dart';
 import '../../domain/models/discount_type.dart';
 import '../../domain/models/due_term.dart';
 import '../../domain/models/invoice.dart';
+import '../../domain/models/invoice_stage.dart';
 import '../../domain/models/line_item.dart';
 import '../../providers.dart';
 import 'invoice_editor_state.dart';
@@ -178,21 +183,32 @@ class InvoiceEditorViewModel extends _$InvoiceEditorViewModel {
   void setPaymentInstructions(String value) =>
       _edit((d) => d.copyWith(paymentInstructions: value));
 
+  void setMarkPaidOnSave({required bool value}) =>
+      _patch((f) => f.copyWith(markPaidOnSave: value));
+
   void clearFailure() => _patch((f) => f.copyWith(failure: null));
 
   /// Validates and saves. Returns the stored invoice, or null when invalid
-  /// or the save failed (the reason is in state).
+  /// or the save failed (the reason is in state). When [markPaidOnSave] is
+  /// set, also records a cash payment for the remaining balance.
   Future<Invoice?> save() async {
     final f = form;
     if (f == null || f.isSaving) return null;
     final wasNew = f.isNew || f.isCopy;
+    final markPaid = f.markPaidOnSave;
     _patch((f) => f.copyWith(showErrors: true));
     if (!f.validation.isValid) return null;
     _patch((f) => f.copyWith(isSaving: true));
     final now = ref.read(clockProvider)();
-    final result = await ref
-        .read(invoiceRepositoryProvider)
-        .save(f.draft.copyWith(updatedAt: now));
+    // Leaving the editor issues the invoice: Draft → Sent so Unpaid/Paid
+    // filters match (Draft stays only while still editing).
+    final toSave = f.draft.copyWith(
+      updatedAt: now,
+      stage: f.draft.stage == InvoiceStage.draft
+          ? InvoiceStage.sent
+          : f.draft.stage,
+    );
+    final result = await ref.read(invoiceRepositoryProvider).save(toSave);
     switch (result) {
       case Ok(:final value):
         if (wasNew) {
@@ -207,17 +223,21 @@ class InvoiceEditorViewModel extends _$InvoiceEditorViewModel {
                 ),
           );
         }
+        final paid = markPaid
+            ? await _recordFullPayment(value, now)
+            : value;
         _patch(
           (f) => f.copyWith(
-            draft: value,
-            initial: value,
+            draft: paid,
+            initial: paid,
             isNew: false,
             isCopy: false,
             isSaving: false,
-            validation: InvoiceValidator.validate(value),
+            markPaidOnSave: false,
+            validation: InvoiceValidator.validate(paid),
           ),
         );
-        return value;
+        return paid;
       case Err(
         failure: ValidationFailure(field: InvoiceRepositoryImpl.numberField),
       ):
@@ -226,6 +246,36 @@ class InvoiceEditorViewModel extends _$InvoiceEditorViewModel {
       case Err(:final failure):
         _patch((f) => f.copyWith(isSaving: false, failure: failure));
         return null;
+    }
+  }
+
+  /// Records cash for the remaining balance. On payment failure the invoice
+  /// is left saved and [failure] is set; returns the unpaid invoice.
+  Future<Invoice> _recordFullPayment(Invoice invoice, DateTime now) async {
+    final due = InvoiceCalculator.calculate(
+      invoice,
+      paidMinor: invoice.paidMinor,
+    ).balance;
+    if (due <= 0) return invoice;
+    final result = await ref.read(paymentRepositoryProvider).save(
+      Payment(
+        id: IdGenerator.next(),
+        invoiceId: invoice.id,
+        amountMinor: due,
+        paidOn: CalendarDate.fromLocal(now),
+        method: PaymentMethod.cash,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    );
+    switch (result) {
+      case Ok(:final value):
+        return invoice.copyWith(
+          paidMinor: invoice.paidMinor + value.amountMinor,
+        );
+      case Err(:final failure):
+        _patch((f) => f.copyWith(failure: failure));
+        return invoice;
     }
   }
 

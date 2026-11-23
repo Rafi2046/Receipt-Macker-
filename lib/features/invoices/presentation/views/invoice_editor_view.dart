@@ -42,9 +42,19 @@ class InvoiceEditorView extends ConsumerWidget {
 
   Future<void> _save(BuildContext context, WidgetRef ref) async {
     final l10n = context.l10n;
+    final wantPaid =
+        ref.read(_provider).value?.markPaidOnSave ?? false;
     final saved = await _store(context, ref);
     if (saved == null || !context.mounted) return;
-    AppSnackbar.show(context, l10n.invoiceSaved, tone: AppSnackbarTone.success);
+    final payFailed = wantPaid && ref.read(_provider).value?.failure != null;
+    if (!payFailed) {
+      final asPaid = wantPaid && saved.paidMinor > 0;
+      AppSnackbar.show(
+        context,
+        asPaid ? l10n.invoiceSavedPaid : l10n.invoiceSaved,
+        tone: AppSnackbarTone.success,
+      );
+    }
     if (invoiceId != null) {
       Navigator.of(context).pop(saved);
       return;

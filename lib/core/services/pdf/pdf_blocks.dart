@@ -13,9 +13,9 @@ abstract final class PdfBlocks {
       .map((l) => '<div class="$cls">${PdfHtml.multiline(l)}</div>')
       .join();
 
-  /// The draft stamp, or nothing.
+  /// Small title badge when there is no circular seal (e.g. receipts).
   static String stamp(PdfDocument doc) {
-    final stamp = doc.stamp;
+    final stamp = doc.badgeStamp;
     return stamp == null
         ? ''
         : '<div class="stamp">${PdfHtml.esc(stamp)}</div>';

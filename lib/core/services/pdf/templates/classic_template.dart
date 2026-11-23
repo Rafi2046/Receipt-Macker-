@@ -24,7 +24,7 @@ abstract final class ClassicTemplate {
 
   static String _body(PdfDocument doc) {
     final buyer = doc.buyer;
-    final stamp = doc.stamp;
+    final stamp = doc.badgeStamp;
     return '''
 <div class="head keep">
   <div class="seller">${PdfHtml.logo(doc.seller)}${PdfHtml.party(doc.seller)}</div>

@@ -25,7 +25,7 @@ abstract final class CompactTemplate {
 
   static String _body(PdfDocument doc) {
     final buyer = doc.buyer;
-    final stamp = doc.stamp;
+    final stamp = doc.badgeStamp;
     return '''
 <div class="compact-head keep">
   <div class="seller-col">

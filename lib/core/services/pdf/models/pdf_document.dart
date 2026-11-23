@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../stamp_placement.dart';
 import 'pdf_field.dart';
 import 'pdf_line.dart';
 import 'pdf_party.dart';
@@ -10,6 +11,8 @@ part 'pdf_document.freezed.dart';
 /// templates only lay it out. Used for invoices now and receipts in M6.
 @freezed
 abstract class PdfDocument with _$PdfDocument {
+  const PdfDocument._();
+
   const factory PdfDocument({
     /// `en` or `bn`: the HTML language and the page-number digits.
     required String languageCode,
@@ -45,7 +48,14 @@ abstract class PdfDocument with _$PdfDocument {
     String? signatureDataUri,
     @Default('') String signatureLabel,
 
-    /// A short status shown on drafts ("Draft"), or null.
+    /// Status label (e.g. Paid, Unpaid). With [stampPlacement] → circular
+    /// seal; without placement → small title badge (receipts).
     String? stamp,
+
+    /// When set with [stamp], draws the circular seal on page 1.
+    StampPlacement? stampPlacement,
   }) = _PdfDocument;
+
+  /// Small title badge; null when the circular seal is used instead.
+  String? get badgeStamp => stampPlacement != null ? null : stamp;
 }

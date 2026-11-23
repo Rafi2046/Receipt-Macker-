@@ -38,13 +38,20 @@ abstract class InvoiceEditorState with _$InvoiceEditorState {
     /// that currency); their price was left empty for the user to enter.
     @Default({}) Map<String, String> foreignPriceLines,
 
+    /// When true, Save also records a full (remaining) payment as cash.
+    @Default(false) bool markPaidOnSave,
+
     /// Last failure, shown once as a snackbar, then cleared.
     Failure? failure,
   }) = _InvoiceEditorState;
 
   const InvoiceEditorState._();
 
-  InvoiceTotals get totals => InvoiceCalculator.calculate(draft);
+  InvoiceTotals get totals =>
+      InvoiceCalculator.calculate(draft, paidMinor: draft.paidMinor);
+
+  /// Show Unpaid / Paid now when there is still something to collect.
+  bool get showCollectPayment => isNew || isCopy || totals.balance > 0;
 
   DueTerm get dueTerm => draft.dueTerm;
 

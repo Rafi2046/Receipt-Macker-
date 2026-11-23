@@ -123,6 +123,8 @@ class InvoicePdfView extends ConsumerWidget {
               setTemplate: vm.setTemplate,
             ),
             onLanguage: vm.setLanguage,
+            stampPlacement: state.stampPlacement,
+            onStampPlacement: vm.setStampPlacement,
           ),
           Expanded(
             child: _Pages(state: state, provider: _provider),

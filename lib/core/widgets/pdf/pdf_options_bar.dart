@@ -8,10 +8,12 @@ import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 import '../../services/pdf/pdf_page_size.dart';
 import '../../services/pdf/pdf_template.dart';
+import '../../services/pdf/stamp_placement.dart';
 import '../../utils/extensions/l10n_extension.dart';
 import 'accent_color_row.dart';
 import 'pdf_page_size_menu.dart';
 import 'pdf_template_labels.dart';
+import 'stamp_placement_row.dart';
 
 /// Compact template / accent / language toolbar above a PDF preview.
 class PdfOptionsBar extends StatelessWidget {
@@ -26,6 +28,8 @@ class PdfOptionsBar extends StatelessWidget {
     this.logoAccentHex,
     this.pageSize = PdfPageSize.a4,
     this.onPageSize,
+    this.stampPlacement,
+    this.onStampPlacement,
     this.enabled = true,
     super.key,
   });
@@ -44,6 +48,10 @@ class PdfOptionsBar extends StatelessWidget {
 
   /// Shows the paper size choice when set.
   final ValueChanged<PdfPageSize>? onPageSize;
+
+  /// Invoice status stamp position; omitted on quotes/receipts.
+  final StampPlacement? stampPlacement;
+  final ValueChanged<StampPlacement>? onStampPlacement;
   final bool enabled;
 
   static String templateLabel(AppLocalizations l10n, PdfTemplate template) {
@@ -95,6 +103,8 @@ class PdfOptionsBar extends StatelessWidget {
                 onLanguage: onLanguage,
                 pageSize: pageSize,
                 onPageSize: onPageSize,
+                stampPlacement: stampPlacement,
+                onStampPlacement: onStampPlacement,
                 en: _en,
                 bn: _bn,
               ),
@@ -206,6 +216,8 @@ class _LanguageAndSize extends StatelessWidget {
     required this.en,
     required this.bn,
     this.onPageSize,
+    this.stampPlacement,
+    this.onStampPlacement,
   });
 
   final String languageCode;
@@ -213,6 +225,8 @@ class _LanguageAndSize extends StatelessWidget {
   final ValueChanged<String> onLanguage;
   final PdfPageSize pageSize;
   final ValueChanged<PdfPageSize>? onPageSize;
+  final StampPlacement? stampPlacement;
+  final ValueChanged<StampPlacement>? onStampPlacement;
   final String en;
   final String bn;
 
@@ -240,6 +254,13 @@ class _LanguageAndSize extends StatelessWidget {
             ),
           ),
         ),
+        if (stampPlacement case final placement?
+            when onStampPlacement != null)
+          StampPlacementRow(
+            placement: placement,
+            enabled: enabled,
+            onSelected: onStampPlacement!,
+          ),
         if (onPageSize case final onSize?)
           PdfPageSizeMenu(
             pageSize: pageSize,

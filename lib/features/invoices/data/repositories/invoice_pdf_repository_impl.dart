@@ -11,10 +11,13 @@ import '../../../../core/services/pdf/pdf_fonts.dart';
 import '../../../../core/services/pdf/pdf_page_size.dart';
 import '../../../../core/services/pdf/pdf_template.dart';
 import '../../../../core/services/pdf/pdf_template_renderer.dart';
+import '../../../../core/services/pdf/stamp_placement.dart';
+import '../../../../core/utils/calendar_date.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../business_profile/business_profile.dart';
 import '../../domain/logic/invoice_calculator.dart';
+import '../../domain/logic/invoice_status_resolver.dart';
 import '../../domain/models/invoice.dart';
 import '../../domain/repositories/invoice_pdf_repository.dart';
 import '../../domain/repositories/invoice_repository.dart';
@@ -53,6 +56,7 @@ class InvoicePdfRepositoryImpl implements InvoicePdfRepository {
     required String languageCode,
     bool showBranding = false,
     String? accentColor,
+    StampPlacement stampPlacement = StampPlacement.center,
   }) => Result.guard(() async {
     final (invoice, html) = await _html(
       invoiceId,
@@ -60,6 +64,7 @@ class InvoicePdfRepositoryImpl implements InvoicePdfRepository {
       languageCode,
       showBranding: showBranding,
       accentColor: accentColor,
+      stampPlacement: stampPlacement,
     );
     final fileName = fileNameFor(invoice.number);
     final dir = await _cacheDirectory();
@@ -85,6 +90,7 @@ class InvoicePdfRepositoryImpl implements InvoicePdfRepository {
     required String languageCode,
     bool showBranding = false,
     String? accentColor,
+    StampPlacement stampPlacement = StampPlacement.center,
   }) => Result.guard(() async {
     final (invoice, html) = await _html(
       invoiceId,
@@ -92,6 +98,7 @@ class InvoicePdfRepositoryImpl implements InvoicePdfRepository {
       languageCode,
       showBranding: showBranding,
       accentColor: accentColor,
+      stampPlacement: stampPlacement,
     );
     await _converter.printWithSystemDialog(html: html, jobName: invoice.number);
   }, onError: _pdf);
@@ -108,11 +115,17 @@ class InvoicePdfRepositoryImpl implements InvoicePdfRepository {
     String languageCode, {
     required bool showBranding,
     String? accentColor,
+    required StampPlacement stampPlacement,
   }) async {
     final invoice = _value(await _invoices.find(invoiceId));
     final profile = _value(await _profiles.load());
     if (profile == null) throw const NotFoundFailure();
-    final doc = await _document(invoice, profile, languageCode);
+    final doc = await _document(
+      invoice,
+      profile,
+      languageCode,
+      stampPlacement: stampPlacement,
+    );
     final l10n = lookupAppLocalizations(Locale(languageCode));
     final html = PdfTemplateRenderer.render(
       template,
@@ -128,18 +141,30 @@ class InvoicePdfRepositoryImpl implements InvoicePdfRepository {
   Future<PdfDocument> _document(
     Invoice invoice,
     BusinessProfile profile,
-    String languageCode,
-  ) async =>
-      InvoicePdfMapper(
-        lookupAppLocalizations(Locale(languageCode)),
-        AppFormatters(languageCode),
-      ).map(
-        invoice: invoice,
-        totals: InvoiceCalculator.calculate(invoice),
-        seller: profile,
-        logoDataUri: await _dataUri(profile.logoPath),
-        signatureDataUri: await _dataUri(profile.signaturePath),
-      );
+    String languageCode, {
+    required StampPlacement stampPlacement,
+  }) async {
+    final totals = InvoiceCalculator.calculate(invoice);
+    final status = InvoiceStatusResolver.resolve(
+      stage: invoice.stage,
+      totalMinor: totals.total,
+      paidMinor: totals.paid,
+      dueDate: invoice.dueDate,
+      today: CalendarDate.fromLocal(DateTime.now()),
+    );
+    return InvoicePdfMapper(
+      lookupAppLocalizations(Locale(languageCode)),
+      AppFormatters(languageCode),
+    ).map(
+      invoice: invoice,
+      totals: totals,
+      seller: profile,
+      logoDataUri: await _dataUri(profile.logoPath),
+      signatureDataUri: await _dataUri(profile.signaturePath),
+      status: status,
+      stampPlacement: stampPlacement,
+    );
+  }
 
   /// The stored image as a `data:` URI; null when missing or unreadable.
   Future<String?> _dataUri(String? relativePath) async {

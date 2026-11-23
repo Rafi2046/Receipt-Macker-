@@ -2,12 +2,14 @@ import '../../../../core/services/pdf/models/pdf_document.dart';
 import '../../../../core/services/pdf/models/pdf_field.dart';
 import '../../../../core/services/pdf/models/pdf_line.dart';
 import '../../../../core/services/pdf/models/pdf_party.dart';
+import '../../../../core/services/pdf/stamp_placement.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../business_profile/business_profile.dart';
 import '../../domain/models/discount.dart';
 import '../../domain/models/discount_type.dart';
 import '../../domain/models/invoice.dart';
+import '../../domain/models/invoice_status.dart';
 import '../../domain/models/invoice_totals.dart';
 
 /// Builds the printable document of an invoice: every label in the PDF's
@@ -22,6 +24,17 @@ class InvoicePdfMapper {
   static const String _page = '\u0001';
   static const String _pages = '\u0002';
 
+  /// Filter-aligned stamp text for the PDF badge and watermark.
+  /// `sent` uses Unpaid so it matches the list filter language.
+  static String stampLabel(AppLocalizations l10n, InvoiceStatus status) =>
+      switch (status) {
+        InvoiceStatus.draft => l10n.statusDraft,
+        InvoiceStatus.sent => l10n.filterUnpaid,
+        InvoiceStatus.partiallyPaid => l10n.statusPartiallyPaid,
+        InvoiceStatus.paid => l10n.statusPaid,
+        InvoiceStatus.overdue => l10n.statusOverdue,
+      };
+
   PdfDocument map({
     required Invoice invoice,
     required InvoiceTotals totals,
@@ -29,6 +42,8 @@ class InvoicePdfMapper {
     String? logoDataUri,
     String? signatureDataUri,
     String? documentTitle,
+    InvoiceStatus? status,
+    StampPlacement? stampPlacement,
   }) {
     final currency = invoice.currencyCode;
     String money(int minor) => format.currency(minor, currency);
@@ -110,6 +125,8 @@ class InvoicePdfMapper {
       pageLabelParts: l10n
           .pdfPageOf(_page, _pages)
           .split(RegExp('[$_page$_pages]')),
+      stamp: status == null ? null : stampLabel(l10n, status),
+      stampPlacement: status == null ? null : stampPlacement,
     );
   }
 

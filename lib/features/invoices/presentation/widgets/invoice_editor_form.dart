@@ -14,6 +14,7 @@ import '../view_models/invoice_editor_view_model.dart';
 import 'client_picker_sheet.dart';
 import 'invoice_adjustment_card.dart';
 import 'invoice_adjustments_section.dart';
+import 'invoice_collect_card.dart';
 import 'invoice_editor_sheet.dart';
 import 'invoice_header_section.dart';
 import 'invoice_items_card.dart';
@@ -133,6 +134,14 @@ class InvoiceEditorForm extends ConsumerWidget {
             (form, vm) => InvoiceAdjustmentsSection(form: form, vm: vm),
           ),
         ),
+        if (form.showCollectPayment) ...[
+          const _Gap(),
+          InvoiceCollectCard(
+            markPaidOnSave: form.markPaidOnSave,
+            onChanged: (paid) =>
+                ref.read(provider.notifier).setMarkPaidOnSave(value: paid),
+          ),
+        ],
         const _Gap(),
         InvoiceOptionsCard(
           draft: draft,

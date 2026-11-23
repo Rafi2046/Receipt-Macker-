@@ -2,6 +2,7 @@ import 'dart:ui' show Locale;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:receipt_maker/core/services/pdf/stamp_placement.dart';
 import 'package:receipt_maker/core/utils/calendar_date.dart';
 import 'package:receipt_maker/core/utils/formatters.dart';
 import 'package:receipt_maker/features/business_profile/business_profile.dart';
@@ -11,6 +12,7 @@ import 'package:receipt_maker/features/invoices/domain/models/bill_to.dart';
 import 'package:receipt_maker/features/invoices/domain/models/discount.dart';
 import 'package:receipt_maker/features/invoices/domain/models/discount_type.dart';
 import 'package:receipt_maker/features/invoices/domain/models/invoice.dart';
+import 'package:receipt_maker/features/invoices/domain/models/invoice_status.dart';
 import 'package:receipt_maker/features/invoices/domain/models/line_item.dart';
 import 'package:receipt_maker/l10n/gen/app_localizations.dart';
 
@@ -81,6 +83,7 @@ void main() {
     expect(doc.buyer?.name, 'Karim');
     expect(doc.notes.single.value, 'Thanks');
     expect(doc.pageLabelParts, ['Page ', ' of ', '']);
+    expect(doc.stamp, isNull);
   });
 
   test('Bangla: labels and every digit in Bangla', () {
@@ -114,5 +117,44 @@ void main() {
     expect(doc.buyer, isNull);
     expect(doc.notes, isEmpty);
     expect(doc.totals.map((f) => f.label), ['Subtotal']);
+  });
+
+  test('status stamp uses filter-aligned English labels', () {
+    final l10n = lookupAppLocalizations(const Locale('en'));
+    expect(InvoicePdfMapper.stampLabel(l10n, InvoiceStatus.draft), 'Draft');
+    expect(InvoicePdfMapper.stampLabel(l10n, InvoiceStatus.sent), 'Unpaid');
+    expect(
+      InvoicePdfMapper.stampLabel(l10n, InvoiceStatus.partiallyPaid),
+      'Partially paid',
+    );
+    expect(InvoicePdfMapper.stampLabel(l10n, InvoiceStatus.paid), 'Paid');
+    expect(InvoicePdfMapper.stampLabel(l10n, InvoiceStatus.overdue), 'Overdue');
+
+    final doc = mapper('en').map(
+      invoice: invoice,
+      totals: InvoiceCalculator.calculate(invoice),
+      seller: seller,
+      status: InvoiceStatus.paid,
+      stampPlacement: StampPlacement.bottomRight,
+    );
+    expect(doc.stamp, 'Paid');
+    expect(doc.stampPlacement, StampPlacement.bottomRight);
+    expect(doc.badgeStamp, isNull);
+  });
+
+  test('status stamp uses Bangla labels', () {
+    final l10n = lookupAppLocalizations(const Locale('bn'));
+    expect(InvoicePdfMapper.stampLabel(l10n, InvoiceStatus.sent), 'অপরিশোধিত');
+    expect(InvoicePdfMapper.stampLabel(l10n, InvoiceStatus.paid), 'পরিশোধিত');
+
+    final doc = mapper('bn').map(
+      invoice: invoice,
+      totals: InvoiceCalculator.calculate(invoice),
+      seller: seller,
+      status: InvoiceStatus.overdue,
+      stampPlacement: StampPlacement.center,
+    );
+    expect(doc.stamp, 'মেয়াদোত্তীর্ণ');
+    expect(doc.stampPlacement, StampPlacement.center);
   });
 }

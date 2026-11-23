@@ -24,7 +24,7 @@ abstract final class ModernTemplate {
 
   static String _body(PdfDocument doc) {
     final buyer = doc.buyer;
-    final stamp = doc.stamp;
+    final stamp = doc.badgeStamp;
     return '''
 <div class="bar"></div>
 <div class="head keep">

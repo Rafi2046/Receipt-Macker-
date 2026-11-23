@@ -6,6 +6,7 @@ import 'models/pdf_field.dart';
 import 'models/pdf_party.dart';
 import 'pdf_page_size.dart';
 import 'pdf_palette.dart';
+import 'status_stamp_svg.dart';
 
 /// HTML and CSS pieces shared by the templates. Everything the user typed
 /// goes through [esc], so names like `<b>` or `A & B` print as written.
@@ -37,12 +38,25 @@ abstract final class PdfHtml {
         ':root { --brand-accent: $accent; --brand-accent-soft: $soft; '
         '--brand-deep: ${BrandSwatch.deepFor(accent)}; '
         '--brand-pair: ${BrandSwatch.pairFor(accent)}; }\n';
+    final stampLabel = doc.stamp;
+    final placement = doc.stampPlacement;
+    final circular = stampLabel != null &&
+            stampLabel.trim().isNotEmpty &&
+            placement != null
+        ? StatusStampSvg.overlay(label: stampLabel, placement: placement)
+        : '';
     return '<!doctype html><html lang="${esc(doc.languageCode)}"><head>'
         '<meta charset="utf-8"><style>$root$fontsCss${_baseCss(doc, size)}'
-        '$templateCss</style></head><body>$body</body></html>';
+        '$templateCss</style></head><body>$circular$body</body></html>';
   }
 
   static String _baseCss(PdfDocument doc, PdfPageSize size) {
+    final stampCss =
+        doc.stamp != null &&
+            doc.stamp!.trim().isNotEmpty &&
+            doc.stampPlacement != null
+        ? StatusStampSvg.css()
+        : '';
     return '''
 @page { size: ${size.cssName}; margin: 14mm 14mm 16mm 14mm;
   @bottom-center { content: ${_pageCounter(doc)}; font-family: $fontStack;
@@ -63,7 +77,7 @@ tr, .keep { break-inside: avoid; page-break-inside: avoid; }
 .logo { max-height: 18mm; max-width: 45mm; object-fit: contain; }
 .signature { max-height: 16mm; max-width: 50mm; object-fit: contain; }
 .notes { flex: 1; max-width: 120mm; }
-''';
+$stampCss''';
   }
 
   /// "Page 1 of 2" as a CSS `content` value, with Bangla digits in Bangla.

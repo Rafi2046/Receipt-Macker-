@@ -9,6 +9,7 @@ abstract final class AppIcons {
   static const IconData moreFilled = LucideIcons.layoutGrid;
   static const IconData menu = LucideIcons.menu;
   static const IconData pageSize = LucideIcons.fileText;
+  static const IconData stamp = LucideIcons.stamp;
   static const IconData support = LucideIcons.headset;
   static const IconData invoiceFilled = LucideIcons.receiptText;
   static const IconData clientFilled = LucideIcons.users;

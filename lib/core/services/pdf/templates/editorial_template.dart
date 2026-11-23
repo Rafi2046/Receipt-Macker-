@@ -24,7 +24,7 @@ abstract final class EditorialTemplate {
 
   static String _body(PdfDocument doc) {
     final buyer = doc.buyer;
-    final stamp = doc.stamp;
+    final stamp = doc.badgeStamp;
     return '''
 <div class="editorial-frame">
   <div class="top-rule"></div>

@@ -6,6 +6,7 @@ import '../../../../core/errors/failure.dart';
 import '../../../../core/services/pdf/models/rendered_pdf.dart';
 import '../../../../core/services/pdf/pdf_page_size.dart';
 import '../../../../core/services/pdf/pdf_template.dart';
+import '../../../../core/services/pdf/stamp_placement.dart';
 
 part 'invoice_pdf_state.freezed.dart';
 
@@ -18,6 +19,7 @@ abstract class InvoicePdfState with _$InvoicePdfState {
     required String languageCode,
     String? brandAccentColor,
     @Default(PdfPageSize.a4) PdfPageSize pageSize,
+    @Default(StampPlacement.center) StampPlacement stampPlacement,
     RenderedPdf? pdf,
 
     /// The pages as PNG images for the preview.

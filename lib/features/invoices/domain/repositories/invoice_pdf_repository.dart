@@ -1,6 +1,7 @@
 import '../../../../core/errors/result.dart';
 import '../../../../core/services/pdf/models/rendered_pdf.dart';
 import '../../../../core/services/pdf/pdf_template.dart';
+import '../../../../core/services/pdf/stamp_placement.dart';
 
 /// Makes the PDF of an invoice. Fails with `PdfFailure` when the PDF could
 /// not be made.
@@ -12,6 +13,7 @@ abstract interface class InvoicePdfRepository {
     required String languageCode,
     bool showBranding = false,
     String? accentColor,
+    StampPlacement stampPlacement = StampPlacement.center,
   });
 
   /// Fallback when [render] fails: the system print dialog, which can also
@@ -22,5 +24,6 @@ abstract interface class InvoicePdfRepository {
     required String languageCode,
     bool showBranding = false,
     String? accentColor,
+    StampPlacement stampPlacement = StampPlacement.center,
   });
 }

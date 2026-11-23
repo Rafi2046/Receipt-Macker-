@@ -9,6 +9,7 @@ import '../../../../core/services/clock.dart';
 import '../../../../core/services/pdf/models/rendered_pdf.dart';
 import '../../../../core/services/pdf/pdf_page_size.dart';
 import '../../../../core/services/pdf/pdf_template.dart';
+import '../../../../core/services/pdf/stamp_placement.dart';
 import '../../../../core/services/purchases/free_plan.dart';
 import '../../../../core/services/purchases/purchase_providers.dart';
 import '../../../../core/services/purchases/template_choice.dart';
@@ -60,6 +61,7 @@ class InvoicePdfViewModel extends _$InvoicePdfViewModel {
           languageCode: s.languageCode,
           showBranding: _showBranding,
           accentColor: s.brandAccentColor,
+          stampPlacement: s.stampPlacement,
         );
     if (!ref.mounted) return;
     switch (result) {
@@ -119,6 +121,12 @@ class InvoicePdfViewModel extends _$InvoicePdfViewModel {
     await render();
   }
 
+  Future<void> setStampPlacement(StampPlacement placement) async {
+    if (placement == state.stampPlacement) return;
+    state = state.copyWith(stampPlacement: placement);
+    await render();
+  }
+
   /// Opens the share sheet. Returns true when the invoice is still a draft
   /// after sharing, so the view can offer "Mark as sent".
   Future<bool> share({required String subject}) => _act((pdf) async {
@@ -160,6 +168,7 @@ class InvoicePdfViewModel extends _$InvoicePdfViewModel {
           languageCode: s.languageCode,
           showBranding: _showBranding,
           accentColor: s.brandAccentColor,
+          stampPlacement: s.stampPlacement,
         );
     if (result case Err(:final failure) when ref.mounted) {
       state = state.copyWith(actionFailure: failure);

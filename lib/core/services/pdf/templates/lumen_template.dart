@@ -24,7 +24,7 @@ abstract final class LumenTemplate {
 
   static String _body(PdfDocument doc) {
     final buyer = doc.buyer;
-    final stamp = doc.stamp;
+    final stamp = doc.badgeStamp;
     return '''
 <div class="hero keep">
   <div class="hero-left">

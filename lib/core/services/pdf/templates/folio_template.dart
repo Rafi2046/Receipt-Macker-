@@ -24,7 +24,7 @@ abstract final class FolioTemplate {
 
   static String _body(PdfDocument doc) {
     final buyer = doc.buyer;
-    final stamp = doc.stamp;
+    final stamp = doc.badgeStamp;
     return '''
 <div class="mast keep">
   <div class="title">${PdfHtml.esc(doc.title)}</div>

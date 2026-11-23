@@ -24,7 +24,7 @@ abstract final class AtelierTemplate {
 
   static String _body(PdfDocument doc) {
     final buyer = doc.buyer;
-    final stamp = doc.stamp;
+    final stamp = doc.badgeStamp;
     return '''
 <div class="frame">
   <div class="rail"></div>

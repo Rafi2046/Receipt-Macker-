@@ -17,6 +17,9 @@ import 'package:receipt_maker/features/invoices/domain/models/invoice_stage.dart
 import 'package:receipt_maker/features/invoices/presentation/view_models/invoice_editor_state.dart';
 import 'package:receipt_maker/features/invoices/presentation/view_models/invoice_editor_view_model.dart';
 import 'package:receipt_maker/features/invoices/providers.dart';
+import 'package:receipt_maker/features/payments/domain/models/payment.dart';
+import 'package:receipt_maker/features/payments/domain/models/payment_method.dart';
+import 'package:receipt_maker/features/payments/providers.dart';
 
 import '../../../helpers/fake_app_preferences.dart';
 import '../../../helpers/mock_repositories.dart';
@@ -25,6 +28,7 @@ void main() {
   setUpAll(registerRepositoryFallbacks);
 
   late MockInvoiceRepository repo;
+  late MockPaymentRepository payments;
   late MockBusinessProfileRepository profiles;
   late ProviderContainer container;
   final now = DateTime(2026, 10, 20, 15);
@@ -38,6 +42,7 @@ void main() {
     container = ProviderContainer(
       overrides: [
         invoiceRepositoryProvider.overrideWithValue(repo),
+        paymentRepositoryProvider.overrideWithValue(payments),
         businessProfileRepositoryProvider.overrideWithValue(profiles),
         appPreferencesProvider.overrideWithValue(
           FakeAppPreferences(defaultCurrency: 'BDT'),
@@ -55,11 +60,15 @@ void main() {
 
   setUp(() {
     repo = MockInvoiceRepository();
+    payments = MockPaymentRepository();
     profiles = MockBusinessProfileRepository();
     when(() => repo.suggestNumber())
         .thenAnswer((_) async => const Ok('INV-0007'));
     when(() => repo.save(any()))
         .thenAnswer((i) async => Ok(i.positionalArguments.first as Invoice));
+    when(() => payments.save(any())).thenAnswer(
+      (i) async => Ok(i.positionalArguments.first as Payment),
+    );
     when(() => profiles.load()).thenAnswer(
       (_) async => Ok(
         BusinessProfile(
@@ -157,9 +166,38 @@ void main() {
     expect(form(p).hasUnsavedChanges, isTrue);
     final saved = await vm.save();
     expect(saved?.number, 'INV-0007');
-    expect(saved?.stage, InvoiceStage.draft);
+    expect(saved?.stage, InvoiceStage.sent, reason: 'issued as unpaid');
     expect(form(p).hasUnsavedChanges, isFalse);
     expect(form(p).isNew, isFalse);
+    verifyNever(() => payments.save(any()));
+  });
+
+  test('Paid now records a full cash payment on save', () async {
+    final p = await open();
+    final vm = container.read(p.notifier)
+      ..addItem(testItem())
+      ..setMarkPaidOnSave(value: true);
+    final saved = await vm.save();
+    expect(saved?.paidMinor, 500000);
+    final captured = verify(() => payments.save(captureAny())).captured.single
+        as Payment;
+    expect(captured.amountMinor, 500000);
+    expect(captured.method, PaymentMethod.cash);
+    expect(captured.paidOn, today);
+    expect(form(p).markPaidOnSave, isFalse);
+  });
+
+  test('Paid now payment failure keeps the invoice and reports failure', () async {
+    when(() => payments.save(any()))
+        .thenAnswer((_) async => const Err(DatabaseFailure()));
+    final p = await open();
+    final vm = container.read(p.notifier)
+      ..addItem(testItem())
+      ..setMarkPaidOnSave(value: true);
+    final saved = await vm.save();
+    expect(saved, isNotNull);
+    expect(saved?.paidMinor, 0);
+    expect(form(p).failure, isA<DatabaseFailure>());
   });
 
   test('a duplicate number shows on the number field', () async {

@@ -6,6 +6,7 @@ import 'package:receipt_maker/core/services/pdf/models/pdf_party.dart';
 import 'package:receipt_maker/core/services/pdf/pdf_page_size.dart';
 import 'package:receipt_maker/core/services/pdf/pdf_template.dart';
 import 'package:receipt_maker/core/services/pdf/pdf_template_renderer.dart';
+import 'package:receipt_maker/core/services/pdf/stamp_placement.dart';
 
 void main() {
   PdfDocument doc({
@@ -46,6 +47,36 @@ void main() {
     expect(html, contains('A &amp; B &lt;Traders&gt;'));
     expect(html, contains('&lt;script&gt;'));
     expect(html, isNot(contains('<script>')));
+  });
+
+  test('circular status stamp uses accent color and placement', () {
+    expect(render(doc()), isNot(contains('qb-status-stamp')));
+    final html = render(
+      doc().copyWith(
+        stamp: 'Paid',
+        stampPlacement: StampPlacement.topRight,
+      ),
+    );
+    expect(html, contains('class="qb-status-stamp qb-stamp-topRight"'));
+    expect(html, contains('>PAID</text>'));
+    expect(html, contains('color: var(--brand-accent)'));
+    expect(html, contains('qb-stamp-topRight'));
+  });
+
+  test('circular status stamp escapes label text', () {
+    final html = render(
+      doc().copyWith(
+        stamp: 'A & B <Paid>',
+        stampPlacement: StampPlacement.center,
+      ),
+    );
+    expect(html, contains('A &amp; B &lt;PAID&gt;'));
+  });
+
+  test('stamp without placement keeps title badge only', () {
+    final html = render(doc().copyWith(stamp: 'Paid'));
+    expect(html, isNot(contains('qb-status-stamp')));
+    expect(html, contains('class="stamp">Paid</div>'));
   });
 
   test('line breaks in descriptions are kept', () {
