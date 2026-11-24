@@ -42,7 +42,8 @@ abstract final class PdfHtml {
     final placement = doc.stampPlacement;
     final circular = stampLabel != null &&
             stampLabel.trim().isNotEmpty &&
-            placement != null
+            placement != null &&
+            placement.showsSeal
         ? StatusStampSvg.overlay(label: stampLabel, placement: placement)
         : '';
     return '<!doctype html><html lang="${esc(doc.languageCode)}"><head>'
@@ -51,10 +52,12 @@ abstract final class PdfHtml {
   }
 
   static String _baseCss(PdfDocument doc, PdfPageSize size) {
+    final placement = doc.stampPlacement;
     final stampCss =
         doc.stamp != null &&
             doc.stamp!.trim().isNotEmpty &&
-            doc.stampPlacement != null
+            placement != null &&
+            placement.showsSeal
         ? StatusStampSvg.css()
         : '';
     return '''

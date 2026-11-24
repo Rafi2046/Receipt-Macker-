@@ -666,6 +666,7 @@
   "pdfPageSizeLegal": "Legal",
   "pdfPageSizeA5": "A5",
   "stampPlacementLabel": "Stamp position",
+  "stampPlacementNone": "No stamp",
   "stampPlacementCenter": "Center",
   "stampPlacementTopRight": "Top right",
   "stampPlacementBottomRight": "Bottom right",

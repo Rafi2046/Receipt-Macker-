@@ -52,10 +52,11 @@ abstract class PdfDocument with _$PdfDocument {
     /// seal; without placement → small title badge (receipts).
     String? stamp,
 
-    /// When set with [stamp], draws the circular seal on page 1.
+    /// When set with [stamp] and [StampPlacement.showsSeal], draws the
+    /// circular seal on page 1. [StampPlacement.none] hides every seal.
     StampPlacement? stampPlacement,
   }) = _PdfDocument;
 
-  /// Small title badge; null when the circular seal is used instead.
+  /// Small title badge; null when invoice stamp placement is set (incl. none).
   String? get badgeStamp => stampPlacement != null ? null : stamp;
 }

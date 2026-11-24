@@ -525,6 +525,7 @@
   "pdfPageSizeLegal": "লিগ্যাল",
   "pdfPageSizeA5": "A5",
   "stampPlacementLabel": "স্ট্যাম্পের অবস্থান",
+  "stampPlacementNone": "স্ট্যাম্প নেই",
   "stampPlacementCenter": "মাঝে",
   "stampPlacementTopRight": "উপরে ডানে",
   "stampPlacementBottomRight": "নিচে ডানে",

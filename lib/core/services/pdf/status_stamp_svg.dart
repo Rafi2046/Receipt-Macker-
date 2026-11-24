@@ -6,13 +6,14 @@ import 'stamp_placement.dart';
 abstract final class StatusStampSvg {
   static const HtmlEscape _escape = HtmlEscape();
 
-  /// Full overlay markup + placement class when [label] is non-empty.
+  /// Full overlay markup + placement class when [label] is non-empty
+  /// and [placement] shows a seal.
   static String overlay({
     required String label,
     required StampPlacement placement,
   }) {
     final text = label.trim();
-    if (text.isEmpty) return '';
+    if (text.isEmpty || !placement.showsSeal) return '';
     return '<div class="qb-status-stamp qb-stamp-${placement.id}" '
         'aria-hidden="true">${svg(text)}</div>';
   }

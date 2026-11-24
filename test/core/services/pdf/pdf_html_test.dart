@@ -79,6 +79,14 @@ void main() {
     expect(html, contains('class="stamp">Paid</div>'));
   });
 
+  test('none placement draws no circular stamp and no title badge', () {
+    final html = render(
+      doc().copyWith(stamp: 'Paid', stampPlacement: StampPlacement.none),
+    );
+    expect(html, isNot(contains('qb-status-stamp')));
+    expect(html, isNot(contains('class="stamp"')));
+  });
+
   test('line breaks in descriptions are kept', () {
     expect(render(doc()), contains('Line one<br>Line two'));
   });

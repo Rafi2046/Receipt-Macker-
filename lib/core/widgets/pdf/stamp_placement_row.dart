@@ -23,6 +23,7 @@ class StampPlacementRow extends StatelessWidget {
 
   static String labelFor(AppLocalizations l10n, StampPlacement p) =>
       switch (p) {
+        StampPlacement.none => l10n.stampPlacementNone,
         StampPlacement.center => l10n.stampPlacementCenter,
         StampPlacement.topRight => l10n.stampPlacementTopRight,
         StampPlacement.bottomRight => l10n.stampPlacementBottomRight,
