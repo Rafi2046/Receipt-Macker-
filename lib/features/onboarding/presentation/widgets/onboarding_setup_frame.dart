@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_radius.dart';
 import '../../../../core/constants/app_spacing.dart';
 
-/// Full coral page with a white sheet docked at the bottom — tour language.
+/// Brand hero field with a surface sheet docked to the bottom.
 class OnboardingSetupFrame extends StatelessWidget {
   const OnboardingSetupFrame({
     required this.progress,
@@ -15,7 +16,7 @@ class OnboardingSetupFrame extends StatelessWidget {
 
   final Widget progress;
 
-  /// Optional block on the coral field (logo, title) above the sheet.
+  /// Optional block on the brand field (logo, title) above the sheet.
   final Widget? hero;
   final Widget body;
   final Widget? bottomBar;
@@ -39,16 +40,16 @@ class OnboardingSetupFrame extends StatelessWidget {
               ),
               child: progress,
             ),
-            // At large font sizes the hero may take at most half the space
-            // and scrolls inside it, so the sheet below keeps room.
+            // Flexible (loose): only the space the hero needs, so the
+            // sheet always fills down to the bottom edge.
             if (hero != null)
               Flexible(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.fromLTRB(
                     AppSpacing.pagePadding,
-                    0,
+                    AppSpacing.sm,
                     AppSpacing.pagePadding,
-                    AppSpacing.lg,
+                    AppSpacing.xl,
                   ),
                   child: hero,
                 ),
@@ -57,12 +58,10 @@ class OnboardingSetupFrame extends StatelessWidget {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: colors.surface,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(AppSpacing.xxxl),
-                  ),
+                  borderRadius: AppRadius.sheet,
                   boxShadow: [
                     BoxShadow(
-                      color: colors.textPrimary.withValues(alpha: 0.18),
+                      color: colors.textPrimary.withValues(alpha: 0.16),
                       blurRadius: AppSpacing.xxl,
                       offset: const Offset(0, -AppSpacing.sm),
                     ),

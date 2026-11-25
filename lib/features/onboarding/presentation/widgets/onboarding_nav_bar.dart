@@ -36,9 +36,9 @@ class OnboardingNavBar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.xl,
-          AppSpacing.sm,
+          AppSpacing.md,
           AppSpacing.xl,
-          AppSpacing.lg,
+          AppSpacing.xl,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

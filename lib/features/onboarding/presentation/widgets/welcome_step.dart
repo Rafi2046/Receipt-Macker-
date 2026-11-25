@@ -8,7 +8,7 @@ import '../../../settings/domain/models/app_language.dart';
 import '../../../settings/presentation/view_models/app_settings_view_model.dart';
 import 'language_option_card.dart';
 
-/// Language picker inside the white sheet. Title lives in the coral hero.
+/// Language picker inside the surface sheet. Title lives in the brand hero.
 class WelcomeStep extends ConsumerWidget {
   const WelcomeStep({super.key});
 
@@ -28,20 +28,25 @@ class WelcomeStep extends ConsumerWidget {
         AppSpacing.lg,
       ),
       children: [
-        Text(
-          l10n.onboardingChooseLanguage,
-          style: context.textStyles.titleLarge?.copyWith(
-            fontWeight: FontWeight.w700,
+        Semantics(
+          header: true,
+          child: Text(
+            l10n.onboardingChooseLanguage,
+            style: context.textStyles.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: colors.textPrimary,
+            ),
           ),
         ),
-        const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.md),
         Text(
           l10n.onboardingWelcomeBody,
-          style: context.textStyles.bodyMedium?.copyWith(
+          style: context.textStyles.bodyLarge?.copyWith(
             color: colors.textSecondary,
+            height: 1.45,
           ),
         ),
-        const SizedBox(height: AppSpacing.xl),
+        const SizedBox(height: AppSpacing.xxl),
         LanguageOptionCard(
           label: l10n.languageBangla,
           selected: language == AppLanguage.bn,
@@ -58,7 +63,7 @@ class WelcomeStep extends ConsumerWidget {
   }
 }
 
-/// Logo + headline on the coral field above the sheet.
+/// Brand name + pitch on the coral field above the sheet.
 class WelcomeHero extends StatelessWidget {
   const WelcomeHero({super.key});
 
@@ -71,17 +76,19 @@ class WelcomeHero extends StatelessWidget {
       children: [
         Text(
           l10n.appTitle,
-          style: context.textStyles.titleMedium?.copyWith(
-            color: colors.onPrimary.withValues(alpha: 0.85),
-            fontWeight: FontWeight.w600,
+          style: context.textStyles.titleLarge?.copyWith(
+            color: colors.onPrimary,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.3,
           ),
         ),
         const SizedBox(height: AppSpacing.md),
         Text(
           l10n.onboardingWelcomeTitle,
-          style: context.textStyles.headlineSmall?.copyWith(
+          style: context.textStyles.headlineMedium?.copyWith(
             color: colors.onPrimary,
             fontWeight: FontWeight.w700,
+            height: 1.2,
           ),
         ),
       ],

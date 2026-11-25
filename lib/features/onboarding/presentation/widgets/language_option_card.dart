@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/constants/app_durations.dart';
 import '../../../../core/constants/app_icons.dart';
+import '../../../../core/constants/app_radius.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 
@@ -21,13 +23,17 @@ class LanguageOptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.appColors;
+    // Label always uses textPrimary so selected coral stays readable on
+    // dark surfaces (primary-colored text on charcoal fails contrast).
     return Semantics(
       selected: selected,
       button: true,
       child: Material(
-        color: selected ? c.primary.withValues(alpha: 0.12) : c.surface,
+        color: selected
+            ? Color.alphaBlend(c.primary.withValues(alpha: 0.14), c.surfaceAlt)
+            : c.surfaceAlt,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.lg),
+          borderRadius: AppRadius.card,
           side: BorderSide(
             color: selected ? c.primary : c.border,
             width: selected
@@ -36,40 +42,45 @@ class LanguageOptionCard extends StatelessWidget {
           ),
         ),
         child: InkWell(
-          borderRadius: BorderRadius.circular(AppSpacing.lg),
+          borderRadius: AppRadius.card,
           onTap: onTap,
           child: ConstrainedBox(
             constraints: const BoxConstraints(
               minHeight: AppSizes.languageCardHeight,
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.md,
+              ),
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
                       label,
                       style: context.textStyles.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: selected ? c.primary : c.textPrimary,
+                        fontWeight: FontWeight.w700,
+                        color: c.textPrimary,
                       ),
                     ),
                   ),
-                  if (selected)
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: c.primary,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(AppSpacing.xs),
-                        child: Icon(
-                          AppIcons.check,
-                          size: AppSizes.iconSm,
-                          color: c.onPrimary,
-                        ),
-                      ),
+                  AnimatedContainer(
+                    duration: AppDurations.fast,
+                    width: AppSizes.iconMd,
+                    height: AppSizes.iconMd,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: selected ? c.primary : null,
+                      border: selected ? null : Border.all(color: c.border),
                     ),
+                    child: selected
+                        ? Icon(
+                            AppIcons.check,
+                            size: AppSizes.iconSm,
+                            color: c.onPrimary,
+                          )
+                        : null,
+                  ),
                 ],
               ),
             ),
