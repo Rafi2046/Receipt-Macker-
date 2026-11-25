@@ -5,7 +5,7 @@ import '../../../../core/constants/app_radius.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 
-/// "Step 2 of 3" on the coral field — light label, white track.
+/// "Step 2 of 3" on the brand field — light label, soft track.
 class StepProgress extends StatelessWidget {
   const StepProgress({required this.current, required this.total, super.key});
 
@@ -27,8 +27,9 @@ class StepProgress extends StatelessWidget {
           Text(
             label,
             style: context.textStyles.labelLarge?.copyWith(
-              color: colors.onPrimary.withValues(alpha: 0.9),
+              color: colors.onPrimary.withValues(alpha: 0.92),
               fontWeight: FontWeight.w600,
+              letterSpacing: 0.2,
             ),
           ),
           ClipRRect(
@@ -36,7 +37,7 @@ class StepProgress extends StatelessWidget {
             child: LinearProgressIndicator(
               value: current / total,
               minHeight: AppSpacing.sm,
-              backgroundColor: colors.onPrimary.withValues(alpha: 0.28),
+              backgroundColor: colors.onPrimary.withValues(alpha: 0.22),
               color: colors.onPrimary,
             ),
           ),
