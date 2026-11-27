@@ -7,7 +7,7 @@ import 'package:receipt_maker/features/invoices/domain/models/invoice_field.dart
 import 'package:receipt_maker/features/invoices/domain/models/line_item.dart';
 
 void main() {
-  final t = DateTime.utc(2026, 11, 1);
+  final t = DateTime.utc(2026, 11);
   final day = CalendarDate(2026, 11, 1);
 
   Invoice invoice({required int price, required int paid}) => Invoice(

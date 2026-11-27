@@ -62,7 +62,7 @@ class AppSwitch extends StatelessWidget {
                       color: colors.onPanel,
                       boxShadow: [
                         BoxShadow(
-                          color: colors.textPrimary.withValues(alpha: 0.18),
+                          color: colors.shadowOf(0.18),
                           blurRadius: AppSizes.borderWidth * 3,
                           offset: const Offset(0, AppSizes.borderWidth),
                         ),

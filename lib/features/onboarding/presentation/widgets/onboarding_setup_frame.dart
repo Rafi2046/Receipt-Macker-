@@ -76,9 +76,7 @@ class OnboardingSetupFrame extends StatelessWidget {
                       borderRadius: AppRadius.sheet,
                       boxShadow: [
                         BoxShadow(
-                          color: colors.textPrimary.withValues(
-                            alpha: AppOpacity.shadow,
-                          ),
+                          color: colors.shadowOf(AppOpacity.shadow),
                           blurRadius: AppSpacing.xxxl,
                           offset: const Offset(0, -AppSpacing.md),
                         ),

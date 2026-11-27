@@ -40,7 +40,7 @@ class HomeHeroCard extends StatelessWidget {
         border: Border(left: BorderSide(color: colors.primary, width: 3)),
         boxShadow: [
           BoxShadow(
-            color: colors.textPrimary.withValues(alpha: AppOpacity.shadow),
+            color: colors.shadowOf(AppOpacity.shadow),
             blurRadius: AppSpacing.xl,
             offset: const Offset(0, AppSpacing.sm),
           ),

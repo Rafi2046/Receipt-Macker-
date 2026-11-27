@@ -32,6 +32,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.panel,
     required this.onPanel,
     required this.onPanelMuted,
+    required this.shadow,
   });
 
   factory AppColors.light() => const AppColors(
@@ -58,6 +59,7 @@ class AppColors extends ThemeExtension<AppColors> {
     panel: Color(0xFF111827),
     onPanel: Color(0xFFFFFFFF),
     onPanelMuted: Color(0xFF9CA3AF),
+    shadow: Color(0xFF111827),
   );
 
   /// Soft charcoal, not pure black: layered greys so cards lift off the
@@ -86,6 +88,8 @@ class AppColors extends ThemeExtension<AppColors> {
     panel: Color(0xFF22252A),
     onPanel: Color(0xFFF5F6F7),
     onPanelMuted: Color(0xFF9EA3AB),
+    // A shadow cannot darken a near-black page; a light one would glow.
+    shadow: Color(0x00000000),
   );
 
   final Color primary, onPrimary, secondary, onSecondary;
@@ -96,6 +100,15 @@ class AppColors extends ThemeExtension<AppColors> {
 
   /// A deep card that stays dark in both themes (Home's outstanding total).
   final Color panel, onPanel, onPanelMuted;
+
+  /// Drop-shadow color: dark ink in light mode, none in dark mode. Read it
+  /// through [shadowOf], never `shadow.withValues(alpha: …)`, which would
+  /// turn the transparent dark-mode value back into a visible shadow.
+  final Color shadow;
+
+  /// [shadow] at [opacity]; stays fully transparent in dark mode.
+  Color shadowOf(double opacity) =>
+      shadow.withValues(alpha: shadow.a * opacity);
 
   @override
   AppColors copyWith({
@@ -122,6 +135,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? panel,
     Color? onPanel,
     Color? onPanelMuted,
+    Color? shadow,
   }) => AppColors(
     primary: primary ?? this.primary,
     onPrimary: onPrimary ?? this.onPrimary,
@@ -146,6 +160,7 @@ class AppColors extends ThemeExtension<AppColors> {
     panel: panel ?? this.panel,
     onPanel: onPanel ?? this.onPanel,
     onPanelMuted: onPanelMuted ?? this.onPanelMuted,
+    shadow: shadow ?? this.shadow,
   );
 
   @override
@@ -176,6 +191,7 @@ class AppColors extends ThemeExtension<AppColors> {
       panel: mix(panel, other.panel),
       onPanel: mix(onPanel, other.onPanel),
       onPanelMuted: mix(onPanelMuted, other.onPanelMuted),
+      shadow: mix(shadow, other.shadow),
     );
   }
 }

@@ -20,7 +20,7 @@ class BottomActionBar extends StatelessWidget {
         border: Border(top: BorderSide(color: colors.border)),
         boxShadow: [
           BoxShadow(
-            color: colors.textPrimary.withValues(alpha: AppOpacity.shadow),
+            color: colors.shadowOf(AppOpacity.shadow),
             blurRadius: AppSpacing.lg,
             offset: const Offset(0, -AppSpacing.xs),
           ),

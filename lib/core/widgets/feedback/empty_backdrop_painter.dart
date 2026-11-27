@@ -64,7 +64,7 @@ class EmptyBackdropPainter extends CustomPainter {
         width: side * _shadowWidth * (1 - 0.14 * lift),
         height: side * _shadowHeight,
       ),
-      Paint()..color = shadow.withValues(alpha: _shadowAlpha),
+      Paint()..color = shadow.withValues(alpha: shadow.a * _shadowAlpha),
     );
     for (final (i, (x, y, r)) in _stars.indexed) {
       final glow =

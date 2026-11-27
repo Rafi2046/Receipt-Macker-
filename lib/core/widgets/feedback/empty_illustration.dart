@@ -77,7 +77,7 @@ class _EmptyIllustrationState extends State<EmptyIllustration>
                   progress: t,
                   tint: colors.primary,
                   sparkle: colors.warning,
-                  shadow: colors.textPrimary,
+                  shadow: colors.shadow,
                 ),
                 child: Center(
                   child: Transform.translate(

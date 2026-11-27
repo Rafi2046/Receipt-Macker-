@@ -238,7 +238,7 @@ class _ImageCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSpacing.xxl),
         boxShadow: [
           BoxShadow(
-            color: context.appColors.textPrimary.withValues(alpha: 0.12),
+            color: context.appColors.shadowOf(0.12),
             blurRadius: AppSpacing.xxl,
             offset: const Offset(0, AppSpacing.md),
           ),

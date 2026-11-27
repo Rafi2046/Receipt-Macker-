@@ -23,7 +23,7 @@ class _FakeQuote extends Fake implements Quote {}
 class _FakeInvoice extends Fake implements Invoice {}
 
 void main() {
-  final t = DateTime.utc(2026, 11, 1);
+  final t = DateTime.utc(2026, 11);
   final day = CalendarDate(2026, 11, 1);
 
   Quote quote({List<LineItem>? lines, String currency = 'BDT'}) => Quote(

@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:receipt_maker/core/widgets/feedback/list_skeleton.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:receipt_maker/core/constants/app_icons.dart';
 import 'package:receipt_maker/core/errors/failure.dart';
+import 'package:receipt_maker/core/widgets/feedback/list_skeleton.dart';
 import 'package:receipt_maker/features/clients/domain/models/client.dart';
 import 'package:receipt_maker/features/clients/presentation/views/client_list_view.dart';
 import 'package:receipt_maker/features/clients/providers.dart';

@@ -81,9 +81,7 @@ class _Segment extends StatelessWidget {
               boxShadow: [
                 if (selected)
                   BoxShadow(
-                    color: colors.textPrimary.withValues(
-                      alpha: AppOpacity.shadow,
-                    ),
+                    color: colors.shadowOf(AppOpacity.shadow),
                     blurRadius: AppSpacing.sm,
                     offset: const Offset(0, AppSpacing.xxs),
                   ),
