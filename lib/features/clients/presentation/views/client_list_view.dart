@@ -14,7 +14,7 @@ import '../../../../core/widgets/buttons/app_fab.dart';
 import '../../../../core/widgets/feedback/confirm_dialog.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
-import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/feedback/list_skeleton.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../core/widgets/layout/searchable_list.dart';
 import '../../providers.dart';
@@ -53,7 +53,8 @@ class ClientListView extends ConsumerWidget {
       body: clients.when(
         skipLoadingOnReload: true,
         data: (listState) => _ClientList(state: listState),
-        loading: () => const LoadingView(),
+        loading: () =>
+            const ListSkeleton(showSearch: false, showFilters: false),
         error: (e, _) => ErrorView.fromError(
           e,
           onRetry: () => ref.invalidate(clientListViewModelProvider),
@@ -76,6 +77,10 @@ class _ClientList extends ConsumerWidget {
       query: state.query,
       onSearch: ref.read(clientListViewModelProvider.notifier).search,
       showSearch: false,
+      onRefresh: () async {
+        ref.invalidate(clientListViewModelProvider);
+        await ref.read(clientListViewModelProvider.future);
+      },
       isEmpty: state.isEmpty,
       empty: EmptyState(
         icon: AppIcons.client,

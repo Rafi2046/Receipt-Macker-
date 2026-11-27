@@ -149,9 +149,8 @@ void main() {
     });
 
     test('opens with more fields when secondary details already set', () async {
-      when(() => repo.find('c1')).thenAnswer(
-        (_) async => Ok(testClient().copyWith(notes: 'VIP')),
-      );
+      when(() => repo.find('c1'))
+          .thenAnswer((_) async => Ok(testClient().copyWith(notes: 'VIP')));
       await open('c1');
       expect(form('c1').showMoreFields, isTrue);
     });

@@ -10,7 +10,7 @@ import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/feedback/app_snackbar.dart';
 import '../../../../core/widgets/feedback/confirm_dialog.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
-import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/feedback/form_skeleton.dart';
 import '../../../../core/widgets/layout/editor_scaffold.dart';
 import '../view_models/client_editor_view_model.dart';
 import '../widgets/client_form_fields.dart';
@@ -97,7 +97,7 @@ class ClientEditorView extends ConsumerWidget {
               ref.read(provider.notifier).importFromContacts(),
           onToggleMoreFields: ref.read(provider.notifier).toggleMoreFields,
         ),
-        loading: () => const LoadingView(),
+        loading: () => const FormSkeleton(),
         error: (e, _) =>
             ErrorView.fromError(e, onRetry: () => ref.invalidate(provider)),
       ),

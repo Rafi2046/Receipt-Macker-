@@ -223,9 +223,7 @@ class InvoiceEditorViewModel extends _$InvoiceEditorViewModel {
                 ),
           );
         }
-        final paid = markPaid
-            ? await _recordFullPayment(value, now)
-            : value;
+        final paid = markPaid ? await _recordFullPayment(value, now) : value;
         _patch(
           (f) => f.copyWith(
             draft: paid,
@@ -257,17 +255,19 @@ class InvoiceEditorViewModel extends _$InvoiceEditorViewModel {
       paidMinor: invoice.paidMinor,
     ).balance;
     if (due <= 0) return invoice;
-    final result = await ref.read(paymentRepositoryProvider).save(
-      Payment(
-        id: IdGenerator.next(),
-        invoiceId: invoice.id,
-        amountMinor: due,
-        paidOn: CalendarDate.fromLocal(now),
-        method: PaymentMethod.cash,
-        createdAt: now,
-        updatedAt: now,
-      ),
-    );
+    final result = await ref
+        .read(paymentRepositoryProvider)
+        .save(
+          Payment(
+            id: IdGenerator.next(),
+            invoiceId: invoice.id,
+            amountMinor: due,
+            paidOn: CalendarDate.fromLocal(now),
+            method: PaymentMethod.cash,
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
     switch (result) {
       case Ok(:final value):
         return invoice.copyWith(

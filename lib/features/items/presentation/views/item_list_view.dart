@@ -14,7 +14,7 @@ import '../../../../core/widgets/buttons/app_fab.dart';
 import '../../../../core/widgets/feedback/confirm_dialog.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
-import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/feedback/list_skeleton.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../core/widgets/layout/searchable_list.dart';
 import '../../providers.dart';
@@ -55,7 +55,8 @@ class ItemListView extends ConsumerWidget {
       body: items.when(
         skipLoadingOnReload: true,
         data: (listState) => _ItemList(state: listState),
-        loading: () => const LoadingView(),
+        loading: () =>
+            const ListSkeleton(showSearch: false, showFilters: false),
         error: (e, _) => ErrorView.fromError(
           e,
           onRetry: () => ref.invalidate(itemListViewModelProvider),
@@ -78,6 +79,10 @@ class _ItemList extends ConsumerWidget {
       query: state.query,
       onSearch: ref.read(itemListViewModelProvider.notifier).search,
       showSearch: false,
+      onRefresh: () async {
+        ref.invalidate(itemListViewModelProvider);
+        await ref.read(itemListViewModelProvider.future);
+      },
       isEmpty: state.isEmpty,
       empty: EmptyState(
         icon: AppIcons.item,
@@ -116,9 +121,7 @@ Future<void> _openNewItem(BuildContext context, WidgetRef ref) async {
     final confirmed = await ConfirmDialog.show(
       context,
       title: context.l10n.itemLimitReachedTitle,
-      message: context.l10n.itemLimitReachedMessage(
-        AppConstants.freeItemLimit,
-      ),
+      message: context.l10n.itemLimitReachedMessage(AppConstants.freeItemLimit),
       confirmLabel: context.l10n.upgradeToPro,
     );
     if (confirmed && context.mounted) {

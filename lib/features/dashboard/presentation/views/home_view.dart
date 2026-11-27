@@ -12,8 +12,9 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/services/clock.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/display/avatar_initials.dart';
+import '../../../../core/widgets/feedback/app_refresh.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
-import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/feedback/home_skeleton.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../business_profile/providers.dart';
 import '../../domain/models/day_part.dart';
@@ -44,16 +45,22 @@ class HomeView extends ConsumerWidget {
       title: title,
       subtitle: greeting,
       variant: AppBarVariant.home,
-      actions: [
-        if (snapshot != null) _HomeSettingsAvatar(snapshot: snapshot),
-      ],
+      actions: [if (snapshot != null) _HomeSettingsAvatar(snapshot: snapshot)],
       body: home.when(
-        loading: () => const LoadingView(),
+        // A pull-to-refresh keeps the page; only the first load shows bones.
+        skipLoadingOnReload: true,
+        loading: () => const HomeSkeleton(),
         error: (error, _) => ErrorView.fromError(
           error,
           onRetry: () => ref.invalidate(homeViewModelProvider),
         ),
-        data: (data) => _HomeBody(snapshot: data),
+        data: (data) => AppRefresh(
+          onRefresh: () async {
+            ref.invalidate(homeViewModelProvider);
+            await ref.read(homeViewModelProvider.future);
+          },
+          child: _HomeBody(snapshot: data),
+        ),
       ),
     );
   }
@@ -137,6 +144,8 @@ class _HomeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
+      // Always pullable, even when the content is shorter than the screen.
+      physics: const AlwaysScrollableScrollPhysics(),
       slivers: [
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(

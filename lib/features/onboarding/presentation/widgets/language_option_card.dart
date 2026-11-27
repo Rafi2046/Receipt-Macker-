@@ -58,9 +58,7 @@ class LanguageOptionCard extends StatelessWidget {
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(AppRadius.lg),
-            ),
+            borderRadius: const BorderRadius.all(Radius.circular(AppRadius.lg)),
             onTap: onTap,
             child: ConstrainedBox(
               constraints: const BoxConstraints(
@@ -107,9 +105,7 @@ class LanguageOptionCard extends StatelessWidget {
                         color: selected
                             ? c.onPrimary.withValues(alpha: 0.2)
                             : null,
-                        border: selected
-                            ? null
-                            : Border.all(color: c.border),
+                        border: selected ? null : Border.all(color: c.border),
                       ),
                       child: selected
                           ? Icon(

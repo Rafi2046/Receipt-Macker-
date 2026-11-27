@@ -12,7 +12,7 @@ import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/feedback/app_snackbar.dart';
 import '../../../../core/widgets/feedback/confirm_dialog.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
-import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/feedback/form_skeleton.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../view_models/quote_editor_view_model.dart';
 import '../widgets/quote_editor_form.dart';
@@ -143,7 +143,7 @@ class QuoteEditorView extends ConsumerWidget {
                 ),
             ],
           ),
-          loading: () => const LoadingView(),
+          loading: () => const FormSkeleton(),
           error: (e, _) =>
               ErrorView.fromError(e, onRetry: () => ref.invalidate(_provider)),
         ),

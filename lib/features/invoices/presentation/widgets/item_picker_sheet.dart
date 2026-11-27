@@ -8,7 +8,7 @@ import '../../../../core/constants/app_icons.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
-import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/feedback/list_skeleton.dart';
 import '../../../../core/widgets/layout/editor_row.dart';
 import '../../../../core/widgets/layout/searchable_list.dart';
 import '../../../items/items.dart';
@@ -65,7 +65,7 @@ class ItemPickerSheet extends ConsumerWidget {
       ],
       body: items.when(
         skipLoadingOnReload: true,
-        loading: () => const LoadingView(),
+        loading: () => const ListSkeleton(showFilters: false),
         error: (e, _) => ErrorView.fromError(
           e,
           onRetry: () => ref.invalidate(itemListViewModelProvider),

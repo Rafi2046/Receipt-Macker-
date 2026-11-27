@@ -22,7 +22,9 @@ abstract final class StatusStampSvg {
   static String svg(String label) {
     final t = _escape.convert(label.trim().toUpperCase());
     // Long labels (e.g. Partially paid / Bangla) need a smaller center size.
-    final centerSize = label.trim().length > 10 ? 22 : (label.trim().length > 6 ? 28 : 36);
+    final centerSize = label.trim().length > 10
+        ? 22
+        : (label.trim().length > 6 ? 28 : 36);
     final arcSize = label.trim().length > 10 ? 9 : 11;
     return '''
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">

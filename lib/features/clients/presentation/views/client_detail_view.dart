@@ -18,7 +18,7 @@ import '../../../../core/widgets/display/amount_text.dart';
 import '../../../../core/widgets/display/avatar_initials.dart';
 import '../../../../core/widgets/feedback/app_snackbar.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
-import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/feedback/form_skeleton.dart';
 import '../../../../core/widgets/layout/app_card.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../core/widgets/layout/section_header.dart';
@@ -47,12 +47,11 @@ class ClientDetailView extends ConsumerWidget {
     });
 
     return asyncState.when(
-      loading: () =>
-          AppScaffold(
-            title: l10n.clientDetailTitle,
-            variant: AppBarVariant.pushed,
-            body: const LoadingView(),
-          ),
+      loading: () => AppScaffold(
+        title: l10n.clientDetailTitle,
+        variant: AppBarVariant.pushed,
+        body: const FormSkeleton(),
+      ),
       error: (e, _) => AppScaffold(
         title: l10n.clientDetailTitle,
         variant: AppBarVariant.pushed,

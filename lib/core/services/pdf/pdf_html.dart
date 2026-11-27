@@ -40,7 +40,8 @@ abstract final class PdfHtml {
         '--brand-pair: ${BrandSwatch.pairFor(accent)}; }\n';
     final stampLabel = doc.stamp;
     final placement = doc.stampPlacement;
-    final circular = stampLabel != null &&
+    final circular =
+        stampLabel != null &&
             stampLabel.trim().isNotEmpty &&
             placement != null &&
             placement.showsSeal

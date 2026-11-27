@@ -254,8 +254,7 @@ class _LanguageAndSize extends StatelessWidget {
             ),
           ),
         ),
-        if (stampPlacement case final placement?
-            when onStampPlacement != null)
+        if (stampPlacement case final placement? when onStampPlacement != null)
           StampPlacementRow(
             placement: placement,
             enabled: enabled,

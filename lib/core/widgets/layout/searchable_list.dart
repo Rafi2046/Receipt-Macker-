@@ -4,6 +4,7 @@ import '../../constants/app_icons.dart';
 import '../../constants/app_sizes.dart';
 import '../../constants/app_spacing.dart';
 import '../../utils/extensions/l10n_extension.dart';
+import '../feedback/app_refresh.dart';
 import '../feedback/empty_state.dart';
 import '../inputs/app_search_field.dart';
 import 'app_divider.dart';
@@ -21,6 +22,7 @@ class SearchableList extends StatelessWidget {
     required this.itemBuilder,
     this.cards = false,
     this.header,
+    this.onRefresh,
     this.showSearch = true,
     super.key,
   });
@@ -41,6 +43,9 @@ class SearchableList extends StatelessWidget {
   /// Rows are cards: inset to the page margin with gaps between them
   /// instead of full-width rows with dividers.
   final bool cards;
+
+  /// Reloads the list when the user pulls down; null disables the pull.
+  final Future<void> Function()? onRefresh;
 
   /// When false, the AppBar owns search (e.g. [AppBarVariant.search]).
   final bool showSearch;
@@ -65,29 +70,46 @@ class SearchableList extends StatelessWidget {
             ),
           ),
         ?header,
-        Expanded(
-          child: itemCount == 0
-              ? _NoMatches(query: query.trim())
-              : ListView.separated(
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
-                  padding: EdgeInsets.fromLTRB(
-                    cards ? AppSpacing.pagePadding : 0,
-                    cards ? AppSpacing.xs : 0,
-                    cards ? AppSpacing.pagePadding : 0,
-                    AppSizes.fabClearance,
-                  ),
-                  itemCount: itemCount,
-                  itemBuilder: itemBuilder,
-                  separatorBuilder: (_, _) => cards
-                      ? const SizedBox(height: AppSpacing.sm)
-                      : const AppDivider(
-                          spacing: AppSpacing.xxs,
-                          indent: AppSpacing.pagePadding,
-                        ),
-                ),
-        ),
+        Expanded(child: _refreshable(_list())),
       ],
+    );
+  }
+
+  Widget _refreshable(Widget list) {
+    final refresh = onRefresh;
+    return refresh == null ? list : AppRefresh(onRefresh: refresh, child: list);
+  }
+
+  /// The rows, or "no matches" kept scrollable so it can still be pulled.
+  Widget _list() {
+    if (itemCount == 0) {
+      return LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: SizedBox(
+            height: constraints.maxHeight,
+            child: _NoMatches(query: query.trim()),
+          ),
+        ),
+      );
+    }
+    return ListView.separated(
+      physics: const AlwaysScrollableScrollPhysics(),
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      padding: EdgeInsets.fromLTRB(
+        cards ? AppSpacing.pagePadding : 0,
+        cards ? AppSpacing.xs : 0,
+        cards ? AppSpacing.pagePadding : 0,
+        AppSizes.fabClearance,
+      ),
+      itemCount: itemCount,
+      itemBuilder: itemBuilder,
+      separatorBuilder: (_, _) => cards
+          ? const SizedBox(height: AppSpacing.sm)
+          : const AppDivider(
+              spacing: AppSpacing.xxs,
+              indent: AppSpacing.pagePadding,
+            ),
     );
   }
 }

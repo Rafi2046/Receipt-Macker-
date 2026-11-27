@@ -7,7 +7,7 @@ import '../../../../core/utils/extensions/failure_message_extension.dart';
 import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/feedback/app_snackbar.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
-import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/feedback/form_skeleton.dart';
 import '../../../../core/widgets/layout/editor_scaffold.dart';
 import '../../domain/models/invoice.dart';
 import '../view_models/invoice_editor_view_model.dart';
@@ -42,8 +42,7 @@ class InvoiceEditorView extends ConsumerWidget {
 
   Future<void> _save(BuildContext context, WidgetRef ref) async {
     final l10n = context.l10n;
-    final wantPaid =
-        ref.read(_provider).value?.markPaidOnSave ?? false;
+    final wantPaid = ref.read(_provider).value?.markPaidOnSave ?? false;
     final saved = await _store(context, ref);
     if (saved == null || !context.mounted) return;
     final payFailed = wantPaid && ref.read(_provider).value?.failure != null;
@@ -99,7 +98,7 @@ class InvoiceEditorView extends ConsumerWidget {
       onSecondary: form == null ? null : () => _preview(context, ref),
       body: async.when(
         data: (form) => InvoiceEditorForm(provider: provider, form: form),
-        loading: () => const LoadingView(),
+        loading: () => const FormSkeleton(),
         error: (e, _) =>
             ErrorView.fromError(e, onRetry: () => ref.invalidate(provider)),
       ),

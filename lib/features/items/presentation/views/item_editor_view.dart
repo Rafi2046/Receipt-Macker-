@@ -10,7 +10,7 @@ import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/feedback/app_snackbar.dart';
 import '../../../../core/widgets/feedback/confirm_dialog.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
-import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/feedback/form_skeleton.dart';
 import '../../../../core/widgets/layout/editor_scaffold.dart';
 import '../view_models/item_editor_view_model.dart';
 import '../widgets/item_form_fields.dart';
@@ -92,7 +92,7 @@ class ItemEditorView extends ConsumerWidget {
       body: async.when(
         data: (form) =>
             ItemFormFields(form: form, vm: ref.read(provider.notifier)),
-        loading: () => const LoadingView(),
+        loading: () => const FormSkeleton(),
         error: (e, _) =>
             ErrorView.fromError(e, onRetry: () => ref.invalidate(provider)),
       ),

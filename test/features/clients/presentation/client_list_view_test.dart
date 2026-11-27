@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:receipt_maker/core/widgets/feedback/list_skeleton.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:receipt_maker/core/constants/app_icons.dart';
 import 'package:receipt_maker/core/errors/failure.dart';
@@ -35,12 +36,13 @@ void main() {
       when(() => repo.watchAll(query: any(named: 'query')))
           .thenAnswer((i) => answer(i.namedArguments[#query] as String));
 
-  testWidgets('loading shows a spinner', (tester) async {
+  testWidgets('loading shows the list skeleton', (tester) async {
     final never = StreamController<List<Client>>();
     addTearDown(never.close);
     stub((_) => never.stream);
     await pump(tester, settle: false);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(ListSkeleton), findsOneWidget);
+    expect(find.bySemanticsLabel('Loading…'), findsOneWidget);
   });
 
   testWidgets('empty offers to add the first client, no search box', (

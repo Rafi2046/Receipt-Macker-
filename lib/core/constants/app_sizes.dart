@@ -44,6 +44,13 @@ abstract final class AppSizes {
   static const double selectedBorderWidth = 2;
   static const double maxContentWidth = 640;
 
+  /// Skeleton bones: line heights and a few widths for loading shapes.
+  static const double boneXs = 4, boneSm = 10, boneMd = 14, boneLg = 22;
+  static const double boneXl = 28, bonePill = 36;
+  static const double boneW1 = 48, boneW2 = 72, boneW3 = 96;
+  static const double boneW4 = 140, boneW5 = 190;
+  static const double skeletonRecentHeight = 320;
+
   /// Space under the last list row so the floating button never covers it.
   static const double fabClearance = 88;
 

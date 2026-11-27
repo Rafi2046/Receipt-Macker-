@@ -12,7 +12,7 @@ import '../../../../core/widgets/buttons/app_icon_button.dart';
 import '../../../../core/widgets/feedback/app_snackbar.dart';
 import '../../../../core/widgets/feedback/confirm_dialog.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
-import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/feedback/form_skeleton.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../domain/models/invoice_stage.dart';
 import '../view_models/invoice_detail_view_model.dart';
@@ -134,7 +134,7 @@ class InvoiceDetailView extends ConsumerWidget {
       body: async.when(
         data: (s) =>
             InvoiceDetailBody(state: s, onPreview: () => _openPdf(context)),
-        loading: () => const LoadingView(),
+        loading: () => const FormSkeleton(),
         error: (e, _) => ErrorView.fromError(
           e,
           onRetry: () =>

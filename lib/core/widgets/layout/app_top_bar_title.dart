@@ -30,7 +30,9 @@ class AppTopBarTitle extends StatelessWidget {
     }
     final subtitleText = subtitle;
     final titleStyle = large
-        ? context.textStyles.headlineSmall?.copyWith(fontWeight: FontWeight.w700)
+        ? context.textStyles.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+          )
         : context.textStyles.titleMedium?.copyWith(fontWeight: FontWeight.w700);
     final sub = subtitleText != null && subtitleText.isNotEmpty
         ? Text(

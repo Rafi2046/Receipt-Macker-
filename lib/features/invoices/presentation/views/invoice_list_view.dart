@@ -10,7 +10,7 @@ import '../../../../core/utils/extensions/l10n_extension.dart';
 import '../../../../core/widgets/buttons/filter_icon_button.dart';
 import '../../../../core/widgets/feedback/empty_state.dart';
 import '../../../../core/widgets/feedback/error_view.dart';
-import '../../../../core/widgets/feedback/loading_view.dart';
+import '../../../../core/widgets/feedback/list_skeleton.dart';
 import '../../../../core/widgets/inputs/filter_pill.dart';
 import '../../../../core/widgets/layout/app_scaffold.dart';
 import '../../../../core/widgets/layout/searchable_list.dart';
@@ -36,7 +36,7 @@ class InvoiceListView extends ConsumerWidget {
       body: invoices.when(
         skipLoadingOnReload: true,
         data: (state) => _InvoiceList(state: state),
-        loading: () => const LoadingView(),
+        loading: () => const ListSkeleton(),
         error: (e, _) => ErrorView.fromError(
           e,
           onRetry: () => ref.invalidate(invoiceListViewModelProvider),
@@ -59,6 +59,10 @@ class _InvoiceList extends ConsumerWidget {
       searchHint: l10n.invoicesSearchHint,
       query: state.query,
       onSearch: vm.search,
+      onRefresh: () async {
+        ref.invalidate(invoiceListViewModelProvider);
+        await ref.read(invoiceListViewModelProvider.future);
+      },
       isEmpty: state.isEmpty,
       header: Padding(
         padding: const EdgeInsets.fromLTRB(
